@@ -1,0 +1,28 @@
+{
+  "name": "LeyMedica",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/auth-next": "5.0.0-1637745161.ea53f98",
+    "@nuxtjs/axios": "^5.13.6",
+    "bootstrap-vue": "^2.21.2",
+    "core-js": "^3.15.1",
+    "element-ui": "^2.15.6",
+    "luxon": "^2.1.1",
+    "nuxt": "^2.15.7",
+    "vue-router": "^3.5.3"
+  },
+  "devDependencies": {
+    "@nuxtjs/pwa": "^3.3.5",
+    "babel-plugin-component": "^1.1.1",
+    "fibers": "^5.0.0",
+    "sass": "^1.43.5",
+    "sass-loader": "^10.2.0"
+  }
+}

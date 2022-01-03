@@ -25,6 +25,7 @@
                   <option value="" selected disabled>-- Seleccione campo --</option>
                   <option v-for="(campo, index) in establecimientos" :key="index" :value="campo">{{campo.nombre}} {{ (campo.grado_complejidad != null) ? `- °${campo.grado_complejidad.grado}` : '' }}</option>
               </select>
+              <span class="pt-2" v-if="destinacion.red != '' && establecimientos.length == 0"><i>No existen establecimientos con ° de complejidad</i></span>
               <span class="text-danger" v-if="errors.establecimiento_id">{{errors.establecimiento_id[0]}}</span>
           </div>
           <div class="col-md-3">
@@ -98,14 +99,14 @@ export default {
   computed:{
     ...mapGetters({
       redesHospitalarias:'mantenedores/redesHospitalarias',
-      establecimientos:'mantenedores/establecimientos',
+      establecimientos:'mantenedores/establecimientosGradoComplejidad',
       unidades:'mantenedores/unidades',
     })
   },
   methods:{
     ...mapActions({
       getRedesHospitalarias:'mantenedores/getRedesHospitalarias',
-      getEstablecimientosAction: 'mantenedores/getEstablecimientos',
+      getEstablecimientosAction: 'mantenedores/getEstablecimientosGradoComplejidad',
       getUnidades: 'mantenedores/getUnidades',
     }),
     ...mapMutations({

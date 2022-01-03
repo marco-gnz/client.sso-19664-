@@ -48,6 +48,7 @@ export default {
       await this.$auth.logout();
       this.$router.replace({name: 'login'});
       this.fullscreenLoading = !this.fullscreenLoading;
+      localStorage.removeItem('filtros');
     }
   }
 }

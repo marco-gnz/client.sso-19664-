@@ -7,13 +7,15 @@ export const state = () => ({
   centros_formadores:[],
   tipo_perfeccionamientos:[],
   establecimientos:[],
+  establecimientosGradoComplejidad:[],
   redes_hospitalarias:[],
   tipo_contratos:[],
   unidades:[],
   situaciones_factura:[],
   tipos_factura:[],
   redesHospitalariasUserAuth:[],
-  tipoDocumentos:[]
+  tipoDocumentos:[],
+  perfeccionamientos:[],
 });
 
 export const mutations = {
@@ -41,6 +43,9 @@ export const mutations = {
   SET_ESTABLECIMIENTOS(state, establecimientos){
     state.establecimientos = establecimientos;
   },
+  SET_ESTABLECIMIENTOS_GRADO_COMPLEJIDAD(state, establecimientos){
+    state.establecimientosGradoComplejidad = establecimientos;
+  },
   SET_REDES_HOSPITALARIAS(state, redes_hospitalarias){
     state.redes_hospitalarias = redes_hospitalarias;
   },
@@ -61,6 +66,9 @@ export const mutations = {
   },
   SET_TIPO_DOCUMENTOS(state, tipoDocumentos){
     state.tipoDocumentos = tipoDocumentos;
+  },
+  SET_PERFECCIONAMIENTOS(state, perfeccionamientos){
+    state.perfeccionamientos = perfeccionamientos;
   }
 };
 
@@ -89,6 +97,9 @@ export const getters = {
   establecimientos(state){
     return state.establecimientos;
   },
+  establecimientosGradoComplejidad(state){
+    return state.establecimientosGradoComplejidad;
+  },
   redesHospitalarias(state){
     return state.redes_hospitalarias;
   },
@@ -109,6 +120,9 @@ export const getters = {
   },
   tipoDocumentos(state){
     return state.tipoDocumentos;
+  },
+  perfeccionamientos(state){
+    return state.perfeccionamientos;
   }
 };
 
@@ -154,7 +168,11 @@ export const actions = {
     },
     async getEstablecimientos({ commit }, red_hospitalaria){
       const response = await this.$axios.$get('/api/mantenedores/redes-hospitalarias/establecimientos', {params: {red_hospitalaria:red_hospitalaria}});
-      commit('SET_ESTABLECIMIENTOS', response);
+        commit('SET_ESTABLECIMIENTOS', response);
+    },
+    async getEstablecimientosGradoComplejidad({ commit }, red_hospitalaria){
+      const response = await this.$axios.$get('/api/mantenedores/redes-hospitalarias/establecimientos-grado-complejidad', {params: {red_hospitalaria:red_hospitalaria}});
+      commit('SET_ESTABLECIMIENTOS_GRADO_COMPLEJIDAD', response);
     },
     async getTipoContratos({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/tipo-contratos');
@@ -179,6 +197,10 @@ export const actions = {
     async getTipoDocumentos({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/tipo-documentos');
       commit('SET_TIPO_DOCUMENTOS', response);
+    },
+    async getPerfeccionamientosAll({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/perfeccionamiento-all');
+      commit('SET_PERFECCIONAMIENTOS', response);
     }
 };
 

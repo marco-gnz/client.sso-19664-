@@ -16,12 +16,46 @@ export const state = () => ({
     etapa:'',
     calidad:''
   },
+  pagination:{
+    total:0,
+    current_page:0,
+    per_page:0,
+    last_page:0,
+    from:0,
+    to:0
+  },
+  search:{
+    input:'',
+    perfeccion:[],
+    f_ed:[],
+    f_ef:[],
+    f_pao:[],
+    checkedEtapas:[],
+    red:'',
+    establecimiento:'',
+    active_filtro_avanzado:false
+  },
+  offset: 3,
+  openModal:false,
+  fullscreenLoading:false
 });
 
 //para actualizar/sobrescribir lo que esta en state
 export const mutations = {
+  SET_LOADING(state){
+    state.fullscreenLoading = !state.fullscreenLoading;
+  },
+  OPEN_MODAL(state){
+    state.openModal = !state.openModal;
+  },
   SET_PROFESIONALES(state, profesionales){
     state.profesionales = profesionales;
+  },
+  SET_PAGINATION_PROFESIONALES(state, pagination){
+    state.pagination = pagination;
+  },
+  SET_CURRENT_PAGE(state, page){
+    state.pagination.current_page = page;
   },
   SET_PROFESIONAL(state, profesional){
     state.profesional = profesional;
@@ -50,6 +84,36 @@ export const mutations = {
   CHAGE_ESTADO(state, value){
       /* console.log(value);
       state.profesionales[value.index].estado = value.newValue; */
+  },
+  SET_INPUT_SEARCH(state, value){
+    state.search.input = value;
+  },
+  SET_ETAPAS(state, value){
+    state.search.checkedEtapas = value;
+  },
+  SET_PERFECCION(state, value){
+    state.search.perfeccion = value;
+  },
+  SET_FECHA_ETAPA_DESTINACION(state, value){
+    state.search.f_ed = value;
+  },
+  SET_FECHA_ETAPA_FORMACION(state, value){
+    state.search.f_ef = value;
+  },
+  SET_RED(state, value){
+    state.search.red = value;
+  },
+  SET_ESTABLECIMIENTO(state, value){
+    state.search.establecimiento = value;
+  },
+  SET_FECHA_PAO(state, value){
+    state.search.f_pao = value;
+  },
+  REFRESH_ESTABLECIMIENTO(state){
+    state.search.establecimiento = '';
+  },
+  SET_ACTIVE_FILTRO_AVANZADO(state){
+    state.search.active_filtro_avanzado = !state.search.active_filtro_avanzado;
   }
 };
 
@@ -63,21 +127,63 @@ export const getters = {
   },
   profesionalEdit(state){
     return state.datosPersonalesEdit;
+  },
+  modalStatus(state){
+    return state.openModal;
+  },
+  inputSearch(state){
+    return state.search.input;
+  },
+  checkedEtapas(state){
+    return state.search.checkedEtapas;
+  },
+  perfeccion(state){
+    return state.search.perfeccion;
+  },
+  fechaEtapaDestinacion(state){
+    return state.search.f_ed;
+  },
+  fechaEtapaFormacion(state){
+    return state.search.f_ef;
+  },
+  red(state){
+    return state.search.red;
+  },
+  establecimiento(state){
+    return state.search.establecimiento;
+  },
+  fechaPao(state){
+    return state.search.f_pao;
+  },
+  activeFiltroAvanzado(state){
+    return state.search.active_filtro_avanzado;
   }
 };
 
 //metodos para interactuar con la api
 export const actions = {
-  async getProfesionales({ commit }){
-    const response = await this.$axios.$get('/api/profesionales/profesional/get-profesionales');
+  async getProfesionales({ commit }, object){
+    commit('SET_LOADING');
+    let search      = (object != undefined) ? object.search : '';
+    let page        = (object != undefined) ? object.page : '';
+    const response  = await this.$axios.$get(`/api/profesionales/profesional/get-profesionales?page=${page}`, {params: search});
 
-    //pasamos la respuesta de la api a la mutations
+    if(response){
+      commit('SET_LOADING');
+    }
 
-    commit('SET_PROFESIONALES', response);
+    commit('SET_PROFESIONALES', response.profesionales.data);
+    commit('SET_PAGINATION_PROFESIONALES', response.pagination);
   },
   async getProfesional({ commit }, uuid){
     const response = await this.$axios.$get(`/api/profesionales/profesional/get-profesional/${uuid}`);
     commit('SET_PROFESIONAL', response);
     commit('SET_PROFESIONAL_EDIT', response);
+  },
+  updateModal({ commit }){
+    commit('OPEN_MODAL');
+  },
+  refreshEstablecimiento({commit}){
+    commit('REFRESH_ESTABLECIMIENTO');
   }
 };

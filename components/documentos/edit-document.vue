@@ -9,9 +9,9 @@
         <div class="col-md-12">
             <label>1. Seleccione tipo de documento</label>
             <select v-model="tipoDocumento" disabled class="form-control" @change="selectTipoDoc">
-                <option :value="0">Convenio</option>
-                <option :value="1">Escritura pública</option>
-                <option :value="2">Genérico</option>
+                <option :disabled="!$auth.user.permissions_roles.includes('editar-convenio') || !$auth.user.permissions.includes('editar-convenio')"  :value="0">Convenio</option>
+                <option :disabled="!$auth.user.permissions_roles.includes('editar-escritura') || !$auth.user.permissions.includes('editar-escritura')" :value="1">Escritura pública</option>
+                <option :disabled="!$auth.user.permissions_roles.includes('editar-documento') || !$auth.user.permissions.includes('editar-documento')" :value="2">Genérico</option>
             </select>
         </div>
       </div>
@@ -90,6 +90,7 @@
             <div class="row pt-lg-3">
                 <div class="col-md-12">
                     <el-button
+                        :disabled="!$auth.user.permissions_roles.includes('editar-convenio') || !$auth.user.permissions.includes('editar-convenio')"
                         size="mini"
                         type="primary"
                         class="mt-3 btn btn-primary float-lg-right"
@@ -144,6 +145,7 @@
             <div class="row pt-lg-3">
                 <div class="col-md-12">
                     <el-button
+                        :disabled="!$auth.user.permissions_roles.includes('editar-escritura') || !$auth.user.permissions.includes('editar-escritura')"
                         size="mini"
                         type="primary"
                         class="mt-3 btn btn-primary float-lg-right"
@@ -198,6 +200,7 @@
                 <div class="row pt-lg-3">
                     <div class="col-md-12">
                         <el-button
+                            :disabled="!$auth.user.permissions_roles.includes('editar-documento') || !$auth.user.permissions.includes('editar-documento')"
                             size="mini"
                             type="primary"
                             class="mt-3 btn btn-primary float-lg-right"

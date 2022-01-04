@@ -5,7 +5,7 @@
         <h6>Sección Etapa Destinación y Formación (EDF)</h6>
       </div>
       <div class="col-md-6">
-        <button v-b-modal.modal-add-destinacion class="btn btn-success float-right">Ingresar destinación</button>
+        <button v-if="$auth.user.permissions_roles.includes('ingresar-etapa-destinacion') || $auth.user.permissions.includes('ingresar-etapa-destinacion')" v-b-modal.modal-add-destinacion class="btn btn-success float-right">Ingresar destinación</button>
         <AddDestinacion :profesional="profesional"/>
       </div>
     </div>
@@ -16,7 +16,7 @@
     </div>
     <div class="row pt-lg-3">
       <div class="col-md-12">
-        <button :disabled="destinaciones.length === 0" v-b-modal.modal-add-formacion-edf class="btn btn-primary float-right">Ingresar formación</button>
+        <button v-if="$auth.user.permissions_roles.includes('ingresar-etapa-formacion') || $auth.user.permissions.includes('ingresar-etapa-formacion')" :disabled="destinaciones.length === 0" v-b-modal.modal-add-formacion-edf class="btn btn-primary float-right">Ingresar formación</button>
         <AddFormacion :profesional="profesional"/>
       </div>
     </div>

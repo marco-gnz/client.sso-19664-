@@ -5,7 +5,7 @@
           <h6>Registro y cálculo de Periodo Asistencial Obligatorio (PAO)</h6>
         </div>
         <div class="col-md-6">
-          <button v-b-modal.modal-add-calculo class="btn btn-success float-right">Ingresar cálculo PAO</button>
+          <button v-if="$auth.user.permissions_roles.includes('ingresar-calculo-pao') || $auth.user.permissions.includes('ingresar-calculo-pao')" v-b-modal.modal-add-calculo class="btn btn-success float-right">Ingresar cálculo PAO</button>
           <AddCalculo />
         </div>
       </div>
@@ -21,14 +21,20 @@
                             <i class="fas fa-user-md float-left"></i>
                         </div>
                         <div class="col-md-6">
-                          <el-dropdown class="float-right">
+                          <el-dropdown class="float-right" v-show="nonePermisos">
                               <span class="el-dropdown-link">
                                   Opciones<i class="el-icon-arrow-down el-icon--right"></i>
                               </span>
                               <el-dropdown-menu slot="dropdown">
+                                <template v-if="$auth.user.permissions_roles.includes('ingresar-devolucion-pao') || $auth.user.permissions.includes('ingresar-devolucion-pao')">
                                   <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus" v-b-modal.modal-add-devolucion>Devolución</el-dropdown-item>
+                                </template>
+                                <template v-if="$auth.user.permissions_roles.includes('ingresar-interrupcion-pao') || $auth.user.permissions.includes('ingresar-interrupcion-pao')">
                                   <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus" v-b-modal.modal-add-interrupcion>Interrupción</el-dropdown-item>
+                                </template>
+                                <template v-if="$auth.user.permissions_roles.includes('eliminar-calculo-pao') || $auth.user.permissions.includes('eliminar-calculo-pao')">
                                   <el-dropdown-item :disabled="pao.devoluciones.length > 0  || pao.interrupciones.length > 0" @click.native="clickDeleteDevolucion(pao, index)" icon="el-icon-delete-solid">Eliminar PAO</el-dropdown-item>
+                                </template>
                               </el-dropdown-menu>
                           </el-dropdown>
                         </div>
@@ -124,6 +130,17 @@ export default {
       ...mapGetters({
         paos:'calculoPao/paos'
       }),
+      nonePermisos(){
+        let permiso = true;
+
+        if(!this.$auth.user.permissions_roles.includes('ingresar-devolucion-pao') && !this.$auth.user.permissions.includes('ingresar-devolucion-pao') &&
+            !this.$auth.user.permissions_roles.includes('ingresar-interrupcion-pao') && !this.$auth.user.permissions.includes('ingresar-interrupcion-pao') &&
+            !this.$auth.user.permissions_roles.includes('eliminar-calculo-pao') && !this.$auth.user.permissions.includes('eliminar-calculo-pao'))
+            {
+              permiso = false;
+            }
+        return permiso;
+      },
       calculateTotalDevolucion(){
         let dias  = 0;
         let meses = 0;

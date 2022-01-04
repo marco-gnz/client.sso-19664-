@@ -4,12 +4,16 @@
         <div class="col-md-12">
           <div class="card shadow">
             <div class="card-header py-3">
+              <template v-if="$auth.user.roles.includes('SUPER-ADMIN') || $auth.user.roles.includes('ADMIN')">
+                <span>SUPER ADMIN</span>
+              </template>
+
                 <div class="row">
                     <div class="col-md-6">
                         <h6 class="m-0 font-weight-bold text-primary">Listado de profesionales</h6>
                     </div>
                     <div class="col-md-6">
-                        <b-button variant="primary" to="/ingresar/profesional" class="btn btn-primary btn-sm float-right">Ingresar profesional</b-button>
+                        <b-button v-if="$auth.user.permissions_roles.includes('ingresar-profesional') || $auth.user.permissions.includes('ingresar-profesional')" variant="primary" to="/ingresar/profesional" class="btn btn-primary btn-sm float-right">Ingresar profesional</b-button>
                     </div>
                 </div>
             </div>
@@ -22,13 +26,13 @@
                             <!-- <template #append>
                                 <b-button @click.prevent="searchProfesionales" size="sm" text="Button" variant="success">Buscar</b-button>
                             </template> -->
-                            <b-form-input size="small" v-model="searchInput" @keyup="keySearchProfesionales" placeholder="Busque por Rut, Nombre o Apellidos..."></b-form-input>
+                            <b-form-input :disabled="!$auth.user.permissions_roles.includes('buscar-profesional') && !$auth.user.permissions.includes('buscar-profesional')" size="small" v-model="searchInput" @keyup="keySearchProfesionales" placeholder="Busque por Rut, Nombre o Apellidos..."></b-form-input>
                         </b-input-group>
                     </div>
                   </div>
                   <div class="row">
                       <div class="col-xs-2">
-                          <el-button @click.prevent="openFilter" type="text" size="medium" icon="el-icon-plus">Filtro avanzado</el-button>
+                          <el-button :disabled="!$auth.user.permissions_roles.includes('buscar-profesional') && !$auth.user.permissions.includes('buscar-profesional')" @click.prevent="openFilter" type="text" size="medium" icon="el-icon-plus">Filtro avanzado</el-button>
                       </div>
                       <div class="col-md-10 pt-lg-3" v-if="searchAll.active_filtro_avanzado">
                         <span class="float-right"><i>Existen filtros activados. Para eliminar, favor hacer click en "Refrescar campos".</i></span>
@@ -56,15 +60,22 @@
                             <td>{{profesional.apellidos}} {{profesional.nombres}}</td>
                             <td>{{profesional.etapa.nombre}}</td>
                             <td>
-                              <el-tooltip :content="`Estado: ${profesional.estado == 1 ? `Habilitado` : `Deshabilitado`}`" placement="top">
-                                <el-switch :active-value="profesional.estado === 0" :inactive-value="profesional.estado === 1" @change="editStatus(profesional.uuid, index, profesional.estado)" v-loading.fullscreen.lock="fullscreenLoading"></el-switch>
-                              </el-tooltip>
+                              <template v-if="$auth.user.permissions_roles.includes('estado-profesional') || $auth.user.permissions.includes('estado-profesional')">
+                                <el-tooltip :content="`Estado: ${profesional.estado == 1 ? `Habilitado` : `Deshabilitado`}`" placement="top">
+                                  <el-switch :active-value="profesional.estado === 0" :inactive-value="profesional.estado === 1" @change="editStatus(profesional.uuid, index, profesional.estado)" v-loading.fullscreen.lock="fullscreenLoading"></el-switch>
+                                </el-tooltip>
+                              </template>
+                              <template v-else>
+                                <el-tag size="mini" :type="profesional.estado === 1 ? 'success' : 'danger'">{{ `${profesional.estado == 1 ? `Habilitado` : `Deshabilitado`}` }}</el-tag>
+                              </template>
                             </td>
                             <td @click.stop="" class="no">
                                 <el-dropdown>
                                   <span class="el-dropdown-link">Acción<i class="el-icon-arrow-down el-icon--right"></i></span>
                                   <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item icon="el-icon-edit"><nuxt-link  :to="'/profesionales/'+profesional.uuid">Ver mas</nuxt-link></el-dropdown-item>
+                                    <template v-if="$auth.user.permissions_roles.includes('ver-profesional') || $auth.user.permissions.includes('ver-profesional')">
+                                      <el-dropdown-item icon="el-icon-edit"><nuxt-link  :to="'/profesionales/'+profesional.uuid">Ver mas</nuxt-link></el-dropdown-item>
+                                    </template>
                                   </el-dropdown-menu>
                                 </el-dropdown>
                             </td>

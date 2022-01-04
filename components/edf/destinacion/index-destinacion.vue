@@ -24,8 +24,12 @@
                     Acción<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
+                  <template v-if="$auth.user.permissions_roles.includes('editar-etapa-destinacion') || $auth.user.permissions.includes('editar-etapa-destinacion')">
                     <el-dropdown-item icon="el-icon-edit">Editar</el-dropdown-item>
+                  </template>
+                  <template v-if="$auth.user.permissions_roles.includes('eliminar-etapa-destinacion') || $auth.user.permissions.includes('eliminar-etapa-destinacion')">
                     <el-dropdown-item icon="el-icon-delete" @click.native="deleteDestinacion(destinacion, index)" v-loading.fullscreen.lock="fullscreenLoading">Eliminar</el-dropdown-item>
+                  </template>
                 </el-dropdown-menu>
             </el-dropdown>
           </td>

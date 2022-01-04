@@ -89,7 +89,18 @@
                         <strong>Perfiles</strong>:
                       </div>
                       <div class="col-md-6">
-                        <span>----</span>
+                        <span>{{ ($auth.user.roles.length > 0) ? $auth.user.roles.map(r => r).join(' - ') : '--' }}</span>
+                      </div>
+                    </div>
+                  </b-list-group-item>
+                  <b-list-group-item>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>Permisos vía Perfiles</strong>:
+                      </div>
+                      <div class="col-md-6">
+                        <!-- <span>{{ ($auth.user.roles.length > 0) ? $auth.user.roles.map(rol => rol.permissions.map(permiso => permiso.name).join(', ')).join('') : '--' }}</span> -->
+                        <span>{{ ($auth.user.permissions_roles.length > 0) ? $auth.user.permissions_roles.map(p => p).join(' - ') : '--' }}</span>
                       </div>
                     </div>
                   </b-list-group-item>

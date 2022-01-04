@@ -5,7 +5,7 @@
         <h6>Lista de facturas</h6>
       </div>
       <div class="col-md-6">
-        <button v-b-modal.modal-add-factura class="btn btn-success float-right">Ingresar factura</button>
+        <button v-if="$auth.user.permissions_roles.includes('ingresar-factura') || $auth.user.permissions.includes('ingresar-factura')" v-b-modal.modal-add-factura class="btn btn-success float-right">Ingresar factura</button>
         <ModalAddFactura />
       </div>
     </div>
@@ -36,18 +36,22 @@
                           Acción<i class="el-icon-arrow-down el-icon--right"></i>
                       </span>
                       <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item icon="el-icon-edit" v-b-modal.modal-edit-situacion @click.native="updateEstado(factura)">Cambiar situación</el-dropdown-item>
-                        <el-popconfirm
-                            @confirm="deleteFactura(factura.uuid)"
-                            v-loading.fullscreen.lock="fullscreenLoading"
-                            confirm-button-text='Si, eliminar'
-                            cancel-button-text='No'
-                            icon="el-icon-info"
-                            icon-color="red"
-                            title="¿Eliminar factura?"
-                            >
-                            <el-dropdown-item slot="reference" icon="el-icon-delete">Eliminar</el-dropdown-item>
-                        </el-popconfirm>
+                        <template v-if="$auth.user.permissions_roles.includes('estado-factura') || $auth.user.permissions.includes('estado-factura')">
+                          <el-dropdown-item icon="el-icon-edit" v-b-modal.modal-edit-situacion @click.native="updateEstado(factura)">Cambiar situación</el-dropdown-item>
+                        </template>
+                        <template v-if="$auth.user.permissions_roles.includes('eliminar-factura') || $auth.user.permissions.includes('eliminar-factura')">
+                          <el-popconfirm
+                              @confirm="deleteFactura(factura.uuid)"
+                              v-loading.fullscreen.lock="fullscreenLoading"
+                              confirm-button-text='Si, eliminar'
+                              cancel-button-text='No'
+                              icon="el-icon-info"
+                              icon-color="red"
+                              title="¿Eliminar factura?"
+                              >
+                              <el-dropdown-item slot="reference" icon="el-icon-delete">Eliminar</el-dropdown-item>
+                          </el-popconfirm>
+                        </template>
                       </el-dropdown-menu>
                   </el-dropdown>
                 </td>

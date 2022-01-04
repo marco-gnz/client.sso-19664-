@@ -20,7 +20,7 @@
       </div>
       <div class="row pt-lg-2">
           <div class="col-md-12">
-              <el-button class="float-right" @click.prevent="openDocument">Agregar documento</el-button>
+              <el-button v-if="nonePermisos" class="float-right" @click.prevent="openDocument">Agregar documento</el-button>
           </div>
       </div>
       <div class="row pt-lg-2">
@@ -46,18 +46,22 @@
                               <span class="el-dropdown-link"><i class="el-icon-more"></i>
                               </span>
                               <el-dropdown-menu slot="dropdown">
+                                <template v-if="$auth.user.permissions_roles.includes('editar-convenio') || $auth.user.permissions.includes('editar-convenio')">
                                   <el-dropdown-item icon="el-icon-edit" @click.native="editConvenio(convenio, index, 0)">Editar</el-dropdown-item>
-                                      <el-popconfirm
-                                          @confirm="deleteConvenio(convenio.uuid)"
-                                          v-loading.fullscreen.lock="fullscreenLoading"
-                                          confirm-button-text='Si, eliminar'
-                                          cancel-button-text='No'
-                                          icon="el-icon-info"
-                                          icon-color="red"
-                                          title="¿Eliminar convenio?"
-                                          >
-                                          <el-dropdown-item slot="reference" icon="el-icon-delete">Eliminar</el-dropdown-item>
-                                      </el-popconfirm>
+                                </template>
+                                <template v-if="$auth.user.permissions_roles.includes('eliminar-convenio') || $auth.user.permissions.includes('eliminar-convenio')">
+                                  <el-popconfirm
+                                      @confirm="deleteConvenio(convenio.uuid)"
+                                      v-loading.fullscreen.lock="fullscreenLoading"
+                                      confirm-button-text='Si, eliminar'
+                                      cancel-button-text='No'
+                                      icon="el-icon-info"
+                                      icon-color="red"
+                                      title="¿Eliminar convenio?"
+                                      >
+                                      <el-dropdown-item slot="reference" icon="el-icon-delete">Eliminar</el-dropdown-item>
+                                  </el-popconfirm>
+                                </template>
                               </el-dropdown-menu>
                           </el-dropdown>
                       </div>
@@ -133,17 +137,21 @@
                                           <span class="el-dropdown-link"><i class="el-icon-more"></i>
                                           </span>
                                           <el-dropdown-menu slot="dropdown">
+                                            <template v-if="$auth.user.permissions_roles.includes('editar-escritura') || $auth.user.permissions.includes('editar-escritura')">
                                               <el-dropdown-item icon="el-icon-edit" @click.native="editEscritura(escritura, index, 1)">Editar</el-dropdown-item>
-                                                  <el-popconfirm
-                                                      @confirm="deleteEscritura(escritura.uuid)"
-                                                      confirm-button-text='Si, eliminar'
-                                                      cancel-button-text='No'
-                                                      icon="el-icon-info"
-                                                      icon-color="red"
-                                                      title="¿Eliminar escritura?"
-                                                      >
-                                                      <el-dropdown-item slot="reference" icon="el-icon-delete">Eliminar</el-dropdown-item>
-                                                  </el-popconfirm>
+                                            </template>
+                                            <template v-if="$auth.user.permissions_roles.includes('eliminar-escritura') || $auth.user.permissions.includes('eliminar-escritura')">
+                                              <el-popconfirm
+                                                    @confirm="deleteEscritura(escritura.uuid)"
+                                                    confirm-button-text='Si, eliminar'
+                                                    cancel-button-text='No'
+                                                    icon="el-icon-info"
+                                                    icon-color="red"
+                                                    title="¿Eliminar escritura?"
+                                                    >
+                                                    <el-dropdown-item slot="reference" icon="el-icon-delete">Eliminar</el-dropdown-item>
+                                                </el-popconfirm>
+                                            </template>
                                           </el-dropdown-menu>
                                       </el-dropdown>
                                   </div>
@@ -217,7 +225,7 @@
                           <div class="text-xs font-weight-bold text-info text-uppercase mb-1">°{{factura.n_resolucion}} / {{DateTime.fromISO(factura.fecha_resolucion).toFormat('dd-LL-yyyy')}}</div>
                       </div>
                       <div class="col-md-2">
-                        <el-dropdown class="float-right">
+                        <el-dropdown class="float-right" v-if="$auth.user.permissions_roles.includes('eliminar-factura') || $auth.user.permissions.includes('eliminar-factura')">
                             <span class="el-dropdown-link"><i class="el-icon-more"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
@@ -304,7 +312,10 @@
                               <span class="el-dropdown-link"><i class="el-icon-more"></i>
                               </span>
                               <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item icon="el-icon-edit" @click.native="editDocumentoGenerico(generico, index, 2)">Editar</el-dropdown-item>
+                                <template v-if="$auth.user.permissions_roles.includes('editar-documento') || $auth.user.permissions.includes('editar-documento')">
+                                  <el-dropdown-item icon="el-icon-edit" @click.native="editDocumentoGenerico(generico, index, 2)">Editar</el-dropdown-item>
+                                </template>
+                                <template v-if="$auth.user.permissions_roles.includes('eliminar-documento') || $auth.user.permissions.includes('eliminar-documento')">
                                   <el-popconfirm
                                       @confirm="deleteDocumentoGenerico(generico.uuid)"
                                       v-loading.fullscreen.lock="fullscreenLoading"
@@ -316,6 +327,7 @@
                                       >
                                       <el-dropdown-item slot="reference" icon="el-icon-delete">Eliminar</el-dropdown-item>
                                   </el-popconfirm>
+                                </template>
                               </el-dropdown-menu>
                           </el-dropdown>
                       </div>
@@ -399,7 +411,18 @@ export default {
       }),
       convenioEdit(){
         return {...this.$store.state.documentos.convenio}
-      }
+      },
+      nonePermisos(){
+        let permiso = true;
+
+        if(!this.$auth.user.permissions_roles.includes('ingresar-convenio') && !this.$auth.user.permissions.includes('ingresar-convenio') &&
+            !this.$auth.user.permissions_roles.includes('ingresar-escritura') && !this.$auth.user.permissions.includes('ingresar-escritura') &&
+            !this.$auth.user.permissions_roles.includes('ingresar-documento') && !this.$auth.user.permissions.includes('ingresar-documento'))
+            {
+              permiso = false;
+            }
+        return permiso;
+      },
     },
     methods: {
         ...mapMutations({

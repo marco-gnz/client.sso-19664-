@@ -95,7 +95,7 @@
         </div>
         <div class="row pt-4">
             <div class="col-md-12">
-                <button type="submit" class="mt-3 btn btn-success float-right">Editar datos personales</button>
+                <button v-if="$auth.user.permissions_roles.includes('editar-profesional') || $auth.user.permissions.includes('editar-profesional')" type="submit" class="mt-3 btn btn-success float-right">Editar datos personales</button>
             </div>
         </div>
         </form>

@@ -5,7 +5,7 @@
           <h6>Lista de formaciones</h6>
         </div>
         <div class="col-md-6">
-          <button v-b-modal.modal-add-especialidad class="btn btn-success float-right">Ingresar formación</button>
+          <button v-if="$auth.user.permissions_roles.includes('ingresar-formacion') || $auth.user.permissions.includes('ingresar-formacion')" v-b-modal.modal-add-especialidad class="btn btn-success float-right">Ingresar formación</button>
         </div>
       </div>
       <div class="row pt-lg-3">
@@ -38,7 +38,9 @@
                               </span>
                               <el-dropdown-menu slot="dropdown">
                                   <!-- <el-dropdown-item icon="el-icon-edit" v-b-modal.modal-edit-devolucion>Editar</el-dropdown-item> -->
-                                  <el-dropdown-item icon="el-icon-delete" @click.native="deleteEspecialidad(especialidad.uuid)">Eliminar</el-dropdown-item>
+                                  <template v-if="$auth.user.permissions_roles.includes('eliminar-formacion') || $auth.user.permissions.includes('eliminar-formacion')">
+                                    <el-dropdown-item icon="el-icon-delete" @click.native="deleteEspecialidad(especialidad.uuid)">Eliminar</el-dropdown-item>
+                                  </template>
                               </el-dropdown-menu>
                           </el-dropdown>
                       </td>

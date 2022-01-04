@@ -11,11 +11,10 @@
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav v-if="$auth.loggedIn">
             <b-nav-item-dropdown text="Profesional" right>
-                <b-dropdown-item href="#" to="/ingresar/profesional">Ingresar profesional</b-dropdown-item>
+                <b-dropdown-item v-if="$auth.user.permissions_roles.includes('ingresar-profesional') || $auth.user.permissions.includes('ingresar-profesional')" href="#" to="/ingresar/profesional">Ingresar profesional</b-dropdown-item>
                 <b-dropdown-item href="#" to="/profesionales">Lista de profesionales</b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-nav-item href="#">Reportes</b-nav-item>
-            <b-nav-item href="#" to="/mantenedores">Mantenedores</b-nav-item>
+            <b-nav-item href="#" to="/mantenedores" v-if="$auth.user.permissions_roles.includes('ver-dato-maestro') || $auth.user.permissions.includes('ver-dato-maestro')">Mantenedores</b-nav-item>
           </b-navbar-nav>
           <!-- client-only es para que lo que esta dentro de la plantilla html solo se renderice en el cliente y no en server -->
           <client-only>

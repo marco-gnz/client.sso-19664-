@@ -9,7 +9,7 @@
                       <h6 class="m-0 font-weight-bold text-primary">Listado de mantenedores (datos maestro)</h6>
                   </div>
                   <div class="col-md-6">
-                      <button v-b-modal.modal-add-mantenedor class="btn btn-success float-right">Ingresar maestro</button>
+                      <button v-if="$auth.user.permissions_roles.includes('ingresar-dato-maestro') || $auth.user.permissions.includes('ingresar-dato-maestro')" v-b-modal.modal-add-mantenedor class="btn btn-success float-right">Ingresar maestro</button>
                       <ModalAddMaestro />
                   </div>
               </div>

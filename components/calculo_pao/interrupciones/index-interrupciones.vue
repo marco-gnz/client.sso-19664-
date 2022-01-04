@@ -25,7 +25,10 @@
                           Acción<i class="el-icon-arrow-down el-icon--right"></i>
                       </span>
                       <el-dropdown-menu slot="dropdown">
+                        <template v-if="$auth.user.permissions_roles.includes('editar-interrupcion-pao') || $auth.user.permissions.includes('editar-interrupcion-pao')">
                           <el-dropdown-item icon="el-icon-edit" @click.native="clickEditInterrupcion(interrupcion, index)">Editar</el-dropdown-item>
+                        </template>
+                        <template v-if="$auth.user.permissions_roles.includes('eliminar-interrupcion-pao') || $auth.user.permissions.includes('eliminar-interrupcion-pao')">
                           <el-popconfirm
                               @confirm="deleteInterrupcion(interrupcion, index)"
                               confirm-button-text='Si, eliminar'
@@ -36,6 +39,7 @@
                               >
                             <el-dropdown-item slot="reference" icon="el-icon-delete" v-loading.fullscreen.lock="fullscreenLoading" >Eliminar</el-dropdown-item>
                           </el-popconfirm>
+                        </template>
                       </el-dropdown-menu>
                   </el-dropdown>
               </td>

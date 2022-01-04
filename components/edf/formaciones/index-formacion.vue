@@ -24,8 +24,12 @@
                       Acción<i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
+                    <template v-if="$auth.user.permissions_roles.includes('editar-etapa-formacion') || $auth.user.permissions.includes('editar-etapa-formacion')">
                       <el-dropdown-item icon="el-icon-edit">Editar</el-dropdown-item>
+                    </template>
+                    <template v-if="$auth.user.permissions_roles.includes('eliminar-etapa-formacion') || $auth.user.permissions.includes('eliminar-etapa-formacion')">
                       <el-dropdown-item icon="el-icon-delete" @click.native="deleteFormacion(formacion, index)" v-loading.fullscreen.lock="fullscreenLoading">Eliminar</el-dropdown-item>
+                    </template>
                   </el-dropdown-menu>
               </el-dropdown>
             </td>

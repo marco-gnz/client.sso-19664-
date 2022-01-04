@@ -4,10 +4,6 @@
         <div class="col-md-12">
           <div class="card shadow">
             <div class="card-header py-3">
-              <template v-if="$auth.user.roles.includes('SUPER-ADMIN') || $auth.user.roles.includes('ADMIN')">
-                <span>SUPER ADMIN</span>
-              </template>
-
                 <div class="row">
                     <div class="col-md-6">
                         <h6 class="m-0 font-weight-bold text-primary">Listado de profesionales</h6>

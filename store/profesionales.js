@@ -32,7 +32,7 @@ export const state = () => ({
     f_pao:[],
     checkedEtapas:[],
     red:'',
-    establecimiento:'',
+    establecimiento:[],
     active_filtro_avanzado:false
   },
   offset: 3,
@@ -112,8 +112,8 @@ export const mutations = {
   REFRESH_ESTABLECIMIENTO(state){
     state.search.establecimiento = '';
   },
-  SET_ACTIVE_FILTRO_AVANZADO(state){
-    state.search.active_filtro_avanzado = !state.search.active_filtro_avanzado;
+  SET_ACTIVE_FILTRO_AVANZADO(state, value){
+    state.search.active_filtro_avanzado = value;
   }
 };
 

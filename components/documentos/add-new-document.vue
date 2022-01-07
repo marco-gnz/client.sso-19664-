@@ -10,9 +10,9 @@
                 <label>1. Seleccione tipo de documento</label>
                 {{!$auth.user.permissions_roles.includes('ingresar-convenio')}}
                 <select v-model="newDocument.tipo_documento" class="form-control" @change="selectTipoDoc">
-                    <option :disabled="!$auth.user.permissions_roles.includes('ingresar-convenio') || !$auth.user.permissions.includes('ingresar-convenio')" :value="0">Convenio</option>
-                    <option :disabled="!$auth.user.permissions_roles.includes('ingresar-escritura') || !$auth.user.permissions.includes('ingresar-escritura')" :value="1">Escritura pública</option>
-                    <option :disabled="!$auth.user.permissions_roles.includes('ingresar-documento') || !$auth.user.permissions.includes('ingresar-documento')" :value="2">Genérico</option>
+                    <option v-if="$auth.user.permissions_roles.includes('ingresar-convenio') || $auth.user.permissions.includes('ingresar-convenio')" :value="0">Convenio</option>
+                    <option v-if="$auth.user.permissions_roles.includes('ingresar-escritura') || $auth.user.permissions.includes('ingresar-escritura')" :value="1">Escritura pública</option>
+                    <option v-if="$auth.user.permissions_roles.includes('ingresar-documento') || $auth.user.permissions.includes('ingresar-documento')" :value="2">Genérico</option>
                 </select>
             </div>
           </div>
@@ -91,7 +91,7 @@
                 <div class="row pt-lg-3">
                     <div class="col-md-12">
                         <el-button
-                            :disabled="!$auth.user.permissions_roles.includes('ingresar-convenio') || !$auth.user.permissions.includes('ingresar-convenio')"
+                            v-if="$auth.user.permissions_roles.includes('ingresar-convenio') || $auth.user.permissions.includes('ingresar-convenio')"
                             size="mini"
                             type="primary"
                             class="mt-3 btn btn-primary float-lg-right"
@@ -146,7 +146,7 @@
                 <div class="row pt-lg-3">
                     <div class="col-md-12">
                         <el-button
-                            :disabled="!$auth.user.permissions_roles.includes('ingresar-escritura') || !$auth.user.permissions.includes('ingresar-escritura')"
+                            v-if="$auth.user.permissions_roles.includes('ingresar-escritura') || $auth.user.permissions.includes('ingresar-escritura')"
                             size="mini"
                             type="primary"
                             class="mt-3 btn btn-primary float-lg-right"
@@ -200,7 +200,7 @@
                 <div class="row pt-lg-3">
                     <div class="col-md-12">
                         <el-button
-                            :disabled="!$auth.user.permissions_roles.includes('ingresar-documento') || !$auth.user.permissions.includes('ingresar-documento')"
+                            v-if="$auth.user.permissions_roles.includes('ingresar-documento') || $auth.user.permissions.includes('ingresar-documento')"
                             size="mini"
                             type="primary"
                             class="mt-3 btn btn-primary float-lg-right"

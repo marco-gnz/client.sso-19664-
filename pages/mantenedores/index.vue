@@ -36,7 +36,7 @@
                   <div class="col-md-8">
                     <b-input-group>
                         <template #append>
-                            <b-button @click="toggleBusy" size="sm" text="Button" variant="success">Buscar</b-button>
+                            <b-button size="sm" text="Button" variant="success">Buscar</b-button>
                         </template>
                         <b-form-input placeholder="Busque por nombre o código SIRH"></b-form-input>
                     </b-input-group>

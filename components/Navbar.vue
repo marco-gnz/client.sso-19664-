@@ -15,6 +15,7 @@
                 <b-dropdown-item href="#" to="/profesionales">Lista de profesionales</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item href="#" to="/mantenedores" v-if="$auth.user.permissions_roles.includes('ver-dato-maestro') || $auth.user.permissions.includes('ver-dato-maestro')">Mantenedores</b-nav-item>
+            <b-nav-item href="#" to="/usuarios" v-if="$auth.user.permissions_roles.includes('ingresar-usuario') || $auth.user.permissions.includes('ingresar-usuario')">Usuarios del sistema</b-nav-item>
           </b-navbar-nav>
           <!-- client-only es para que lo que esta dentro de la plantilla html solo se renderice en el cliente y no en server -->
           <client-only>

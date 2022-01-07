@@ -66,7 +66,7 @@ export default {
             });
           this.$router.push('/');
           this.$notify.success({
-            message: `Bienvenido ${this.$auth.user.primer_nombre}!`,
+            message: `Bienvenid${this.$auth.user.genero != 1 ? `o` : `a`} ${this.$auth.user.primer_nombre}!`,
             showClose: true
           });
         } catch (error) {

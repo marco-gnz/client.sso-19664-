@@ -56,13 +56,13 @@
                         </div>
                       </div>
                     </b-list-group-item>
-                    <b-list-group-item>
+                    <b-list-group-item v-if="$auth.user.last_login_at">
                       <div class="row">
                         <div class="col-md-6">
-                          <strong>Establecimiento</strong>:
+                          <strong>Último acceso a sistema</strong>:
                         </div>
                         <div class="col-md-6">
-                          <span>HOSPITAL ...</span>
+                          <span>{{DateTime.fromSQL($auth.user.last_login_at).toFormat('ff')}}</span>
                         </div>
                       </div>
                     </b-list-group-item>
@@ -111,7 +111,7 @@
                           <strong>Permisos extras</strong>:
                         </div>
                         <div class="col-md-6">
-                          <span>----</span>
+                          <span>{{ ($auth.user.permissions.length > 0) ? $auth.user.permissions.map(p => p).join(' - ') : '--' }}</span>
                         </div>
                       </div>
                     </b-list-group-item>
@@ -121,7 +121,18 @@
                           <strong>Redes hospitalarias</strong>:
                         </div>
                         <div class="col-md-6">
-                          <span>----</span>
+                          <template v-if="$auth.user.redes_hospitalarias">
+                            <span>{{$auth.user.redes_hospitalarias.map(r => r.nombre).join(', ')}}</span>
+                          </template>
+                          <template>
+                            <el-alert
+                              title="No tienes redes hospitalarias asociadas."
+                              type="warning"
+                              center
+                              :closable="false"
+                              show-icon>
+                            </el-alert>
+                          </template>
                         </div>
                       </div>
                     </b-list-group-item>
@@ -134,8 +145,8 @@
       </div>
     </el-tab-pane>
     <el-tab-pane label="Mi contraseña" name="contrasena">
-      <div class="row pt-lg-4">
-        <div class="col-md-6">
+      <div class="row pt-lg-4 d-flex justify-content-center">
+        <div class="col-md-3">
           <div class="card shadow">
             <div class="card-header py-3">
               <div class="row">

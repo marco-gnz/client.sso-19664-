@@ -15,7 +15,7 @@ export const state = () => ({
   tipos_factura:[],
   redesHospitalariasUserAuth:[],
   tipoDocumentos:[],
-  perfeccionamientos:[],
+  perfeccionamientos:[]
 });
 
 export const mutations = {

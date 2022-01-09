@@ -49,6 +49,7 @@ export default {
       this.$router.replace({name: 'login'});
       this.fullscreenLoading = !this.fullscreenLoading;
       localStorage.removeItem('filtros');
+      localStorage.removeItem('filtros_usuarios');
     }
   }
 }

@@ -121,10 +121,10 @@
                           <strong>Redes hospitalarias</strong>:
                         </div>
                         <div class="col-md-6">
-                          <template v-if="$auth.user.redes_hospitalarias">
+                          <template v-if="$auth.user.redes_hospitalarias.length">
                             <span>{{$auth.user.redes_hospitalarias.map(r => r.nombre).join(', ')}}</span>
                           </template>
-                          <template>
+                          <template v-else>
                             <el-alert
                               title="No tienes redes hospitalarias asociadas."
                               type="warning"

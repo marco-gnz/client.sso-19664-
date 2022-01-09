@@ -48,7 +48,7 @@
                     <tbody>
                       <tr v-for="(usuario, index) in usuarios" :key="index">
                         <td>{{usuario.rut_completo}}</td>
-                        <td>{{usuario.primer_nombre}} {{usuario.apellido_materno}} {{usuario.apellido_paterno}}</td>
+                        <td>{{usuario.nombre_completo}}</td>
                         <td>{{ (usuario.roles.length > 0) ? usuario.roles.map(r => r.name).join(' - ') : '--' }}</td>
                         <td>{{ (usuario.redes_hospitalarias.length) ? usuario.redes_hospitalarias.map(r => r.nombre).join(', ') : '--' }}</td>
                         <td>
@@ -72,7 +72,7 @@
                                         >
                                       <el-dropdown-item slot="reference" icon="el-icon-refresh" v-loading.fullscreen.lock="fullscreenLoading">Restablecer contraseña</el-dropdown-item>
                                     </el-popconfirm>
-                                    <el-dropdown-item icon="el-icon-edit">Editar</el-dropdown-item>
+                                    <el-dropdown-item icon="el-icon-edit"><nuxt-link  :to="'/usuarios/'+usuario.uuid">Editar</nuxt-link></el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </td>

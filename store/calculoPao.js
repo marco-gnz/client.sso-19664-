@@ -25,6 +25,10 @@ export const mutations = {
       state.id_especialidades = [pao.especialidad.id, ...state.id_especialidades];
     });
   },
+  REFRESH_PAO(state, pao){
+    const indice = state.paos.findIndex(p => p.id === pao.id);
+    state.paos.splice(indice, 1, pao);
+  },
   REMOVE_PAO(state, pao){
     console.log(pao);
     state.paos = state.paos.filter(p => p.uuid !== pao.uuid);

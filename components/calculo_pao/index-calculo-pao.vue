@@ -26,10 +26,10 @@
                                   Opciones<i class="el-icon-arrow-down el-icon--right"></i>
                               </span>
                               <el-dropdown-menu slot="dropdown">
-                                <template v-if="$auth.user.permissions_roles.includes('ingresar-devolucion-pao') || $auth.user.permissions.includes('ingresar-devolucion-pao')">
+                                <template v-if="pao.estado === 1 && $auth.user.permissions_roles.includes('ingresar-devolucion-pao') || $auth.user.permissions.includes('ingresar-devolucion-pao')">
                                   <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus" v-b-modal.modal-add-devolucion>Devolución</el-dropdown-item>
                                 </template>
-                                <template v-if="$auth.user.permissions_roles.includes('ingresar-interrupcion-pao') || $auth.user.permissions.includes('ingresar-interrupcion-pao')">
+                                <template v-if="pao.estado === 1 && $auth.user.permissions_roles.includes('ingresar-interrupcion-pao') || $auth.user.permissions.includes('ingresar-interrupcion-pao')">
                                   <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus" v-b-modal.modal-add-interrupcion>Interrupción</el-dropdown-item>
                                 </template>
                                 <template v-if="$auth.user.permissions_roles.includes('eliminar-calculo-pao') || $auth.user.permissions.includes('eliminar-calculo-pao')">
@@ -43,6 +43,12 @@
                           <h5 class="card-title">{{pao.especialidad.perfeccionamiento.nombre}}</h5>
                           <p class="card-text">{{pao.especialidad.perfeccionamiento.tipo.nombre}}</p>
                           <p><a href="#" @click.prevent="showHistorial(pao)" v-loading.fullscreen.lock="fullscreenLoading">Historial de fechas</a></p>
+                          <template v-if="$auth.user.permissions_roles.includes('estado-calculo-pao') || $auth.user.permissions.includes('estado-calculo-pao')">
+                            <p><el-switch class="pb-1" active-color="#13ce66" active-text="Pao activado" :active-value="pao.estado === 0" :inactive-value="pao.estado === 1" inactive-color="#f46f6f" inactive-text="Pao suspendido" @change="editStatus(pao.uuid, index)" v-loading.fullscreen.lock="fullscreenLoading"></el-switch></p>
+                          </template>
+                          <template v-else>
+                            <p><strong>Estado PAO</strong>: <el-tag size="mini" :type="`${pao.estado != 1 ? `danger` : `success`}`">{{ (pao.estado != 1) ? 'suspendido' : 'activo' }}</el-tag></p>
+                          </template>
                       </div>
                       <ul class="list-group list-group-flush">
                         <!-- cálculo de fechas estimadas -->
@@ -206,7 +212,8 @@ export default {
         getEscrituras:'calculoPao/getEscrituras'
       }),
       ...mapMutations({
-        removePaoAction:'calculoPao/REMOVE_PAO'
+        removePaoAction:'calculoPao/REMOVE_PAO',
+        refreshPaoAction:'calculoPao/REFRESH_PAO'
       }),
       showHistorial(pao){
         this.getHistorial(pao.id);
@@ -228,6 +235,27 @@ export default {
             this.deletePao(pao);
         });
         },
+      async editStatus(uuid, index){
+        this.fullscreenLoading = !this.fullscreenLoading;
+        const url = `/api/profesionales/profesional/update-status/${uuid}`;
+
+        await this.$axios.$put(url).then(response => {
+          this.fullscreenLoading = !this.fullscreenLoading;
+          console.log(response);
+          if(response[0] === true){
+            this.refreshPaoAction(response[1]);
+            this.$message({
+                message: `PAO ${response[1].estado != 1 ? `suspendido` : `activado`} con éxito.`,
+                type: 'success'
+            });
+          }else{
+              this.$message.error("Error. Error de servidor.");
+          }
+        }).catch(error => {
+          this.fullscreenLoading = !this.fullscreenLoading;
+          console.log(error);
+        });
+      },
       async deletePao(pao){
         this.fullscreenLoading = !this.fullscreenLoading;
         const url = `/api/profesionales/profesional/delete-calculo-pao/${pao.uuid}`;

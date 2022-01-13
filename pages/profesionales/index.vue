@@ -114,9 +114,6 @@
                     </ul>
                   </nav>
                 </div>
-                <div class="col-md-6">
-                  <el-link class="float-right" type="success" icon="el-icon-download">Descargar Excel</el-link>
-                </div>
               </div>
             </div>
           </div>

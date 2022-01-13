@@ -1,126 +1,6 @@
 <template>
   <div>
     <el-dialog title="Seleccione filtros para buscar profesionales" width="55%"  :lock-scroll="false" :center="true" :visible.sync="filterDialog">
-      <!-- <div class="row">
-        <div class="col-md-6">
-          <label>Etapa de profesional</label>
-          <div class="form-group">
-            <template>
-              <div style="margin: 15px 0;"></div>
-              <el-checkbox-group v-model="checkedEtapas">
-                <el-checkbox v-for="etapa in etapas" :label="etapa.id" :key="etapa.id">
-                  <el-popover transition="el-fade-in-linear" placement="top-start" width="300" trigger="hover" :content="etapa.nombre"><span slot="reference">{{etapa.sigla}}</span></el-popover>
-                </el-checkbox>
-              </el-checkbox-group>
-            </template>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <label>Tipo de perfeccionamiento</label>
-          <div class="form-group">
-            <el-select
-              :disabled="!checkedEtapas.length"
-              v-model="perfeccion"
-              multiple
-              filterable
-              collapse-tags
-              placeholder="Seleccione">
-              <el-option
-                v-for="perfeccionamiento in perfeccionamientos"
-                :key="perfeccionamiento.id"
-                :value="perfeccionamiento.id"
-                :label="perfeccionamiento.nombre">
-                <span style="float: left">{{ perfeccionamiento.nombre }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ perfeccionamiento.tipo.nombre }}</span>
-              </el-option>
-            </el-select>
-          </div>
-        </div>
-      </div>
-      <div class="row pt-lg-3">
-        <template v-if="checkedEtapas.includes(2)">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="col-md-6">
-                <label>Etapa destinación (ED)</label>
-                <div class="form-group">
-                  <el-date-picker
-                    v-model="fechaEtapaDestinacion"
-                    type="monthrange"
-                    format="MM-yyyy"
-                    value-format="yyyy-MM-dd"
-                    range-separator="/"
-                    start-placeholder="Inicio"
-                    end-placeholder="Término">
-                  </el-date-picker>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <label>Etapa formación (EF)</label>
-                <div class="form-group">
-                  <el-date-picker
-                    v-model="fechaEtapaFormacion"
-                    type="monthrange"
-                    format="MM-yyyy"
-                    value-format="yyyy-MM-dd"
-                    range-separator="/"
-                    start-placeholder="Inicio"
-                    end-placeholder="Término">
-                  </el-date-picker>
-                </div>
-              </div>
-            </div>
-          </div>
-        </template>
-        <template v-if="checkedEtapas.some(e => checkedEtapas.includes(e))">
-          <div class="row">
-              <div class="col-md-6">
-                <label>Seleccione Red</label>
-                <div class="form-group">
-                  <el-select v-model="red" placeholder="Seleccione" @change="getEstablecimientosChange">
-                    <el-option
-                      v-for="red in redesHospitalariasUserAuth"
-                      :key="red.id"
-                      :label="red.nombre"
-                      :value="red.id">
-                    </el-option>
-                  </el-select>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <label>Establecimiento <i>destinación/devolución</i></label>
-                <div class="form-group">
-                  <el-select :disabled="red === '' || establecimientos.length === 0" v-model="establecimiento" placeholder="Seleccione">
-                    <el-option
-                      v-for="establecimiento in establecimientos"
-                      :key="establecimiento.id"
-                      :label="establecimiento.nombre"
-                      :value="establecimiento.id">
-                      <span style="float: left">{{ establecimiento.nombre }}</span>
-                      <span style="float: right; color: #8492a6; font-size: 13px">{{ (establecimiento.grado_complejidad != null) ? `°${establecimiento.grado_complejidad.grado}` : '--' }}</span>
-                    </el-option>
-                  </el-select>
-                </div>
-              </div>
-            </div>
-        </template>
-        <template v-if="checkedEtapas.includes(1)">
-          <div class="col-md-6">
-            <label>Etapa devolución (PAO)</label>
-            <div class="form-group">
-              <el-date-picker
-                v-model="fechaPao"
-                type="monthrange"
-                format="MM-yyyy"
-                value-format="yyyy-MM-dd"
-                range-separator="/"
-                start-placeholder="Inicio"
-                end-placeholder="Término">
-              </el-date-picker>
-            </div>
-          </div>
-        </template>
-      </div> -->
       <div class="row">
         <div class="col-md-6">
           <div class="card-body">
@@ -263,6 +143,12 @@
           </div>
         </div>
       </template>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- <a  v-if="checkedEtapas.length === 1" class="float-right" :href="url">Descargar Excel</a> -->
+          <el-link v-if="checkedEtapas.length === 1" @click.prevent="excelReport" class="float-right" type="success" icon="el-icon-download">Descargar Excel</el-link>
+        </div>
+      </div>
       <div class="row pt-lg-5">
         <div class="col-md-6">
           <button @click.prevent="refreshCampos" type="submit" class="btn btn-warning btn-user float-left">Refrescar campos</button>
@@ -282,6 +168,7 @@ export default {
     return{
       isIndeterminate: true,
       checkAll: false,
+      url:''
     };
   },
   mounted(){
@@ -390,7 +277,8 @@ export default {
       getRedesHospitalariasUserAuth:'mantenedores/getRedesHospitalariasUserAuth',
       getEstablecimientosAction: 'mantenedores/getEstablecimientos',
       open: "profesionales/updateModal",
-      refresEstablecimientoAction:'profesionales/refreshEstablecimiento'
+      refresEstablecimientoAction:'profesionales/refreshEstablecimiento',
+      cargando: 'profesionales/loadingApi'
     }),
     getEstablecimientosChange(){
       /* this.search.establecimiento = ''; */
@@ -431,6 +319,37 @@ export default {
     handleCheckAllChange(val) {
       this.search.checkedEtapas = val ? this.etapas : [];
       this.isIndeterminate = false;
+    },
+    async excelReport(){
+      this.cargando();
+      const url   = '/api/profesionales/excel-search';
+      const data  = {
+        perfeccion: this.searchAll.perfeccion,
+        f_ed: this.searchAll.fechaEtapaDestinacion,
+        f_ef:this.searchAll.fechaEtapaFormacion,
+        f_pao:this.searchAll.fechaPao,
+        checkedEtapas:this.searchAll.checkedEtapas,
+        establecimiento:this.searchAll.establecimiento,
+      }
+      console.log(data);
+
+      await this.$axios.$get(url, {params:data}).then(response => {
+        this.cargando();
+        console.log(response);
+        if(response[0] === true){
+          //>0 resultados
+          var url = `http://localhost:8000/api/profesionales/excel-report/${response[1]}/${response[2]}`
+          window.open(url, '_blank');
+        }else{
+          //0 resultados
+          this.$notify.error({
+            message: 'No se encontraron resultados.'
+          });
+        }
+      }).catch(error => {
+        this.cargando();
+        console.log(error);
+      });
     },
     handleCheckedCitiesChange(value) {
       /* let checkedCount = value.length;

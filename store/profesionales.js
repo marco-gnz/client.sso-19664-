@@ -185,5 +185,8 @@ export const actions = {
   },
   refreshEstablecimiento({commit}){
     commit('REFRESH_ESTABLECIMIENTO');
+  },
+  loadingApi({commit}){
+    commit('SET_LOADING');
   }
 };

@@ -19,6 +19,7 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/css/transition.css',
     '@/assets/css/sb-admin-2.min.css',
     './node_modules/element-ui/lib/theme-chalk/index.css'
   ],
@@ -72,5 +73,15 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  loading: {
+    color: '#4e73df',
+    failedColor:'#ee3a44',
+    height: '5px',
+    duración:5000,
+    throttle:300
+  },
+  pageTransition: {
+    name:"slide-fade"
   }
 }

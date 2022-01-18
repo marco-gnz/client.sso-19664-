@@ -17,7 +17,7 @@
         <div class="col-md-6">
           <div class="card-body">
             <div class="form-group">
-              <label>Tipo de perfeccionamiento</label>
+              <label>Perfeccionamiento</label>
               <el-select
                 size="mini"
                 style="width:300px;"
@@ -301,6 +301,7 @@ export default {
       this.activeFiltroAvanzado = true;
       localStorage.setItem('filtros', JSON.stringify(this.searchAll));
       let object = {search: this.searchAll};
+      console.log(object);
       this.getProfesionales(object);
       this.open();
     },

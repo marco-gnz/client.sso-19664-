@@ -67,7 +67,7 @@
           <div class="w-100">
               <button :disabled="destinacion_pasos == 0"  @click.prevent="paso_destinacion_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
               <button v-show="destinacion_pasos != 2"     @click.prevent="paso_destinacion_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
-              <button v-show="destinacion_pasos == 2"     @click.prevent="addDestinacion" v-loading.fullscreen.lock="fullscreenLoading" class="mt-3 btn btn-success float-right">Añadir devolución <i class="fas fa-plus"></i></button>
+              <button v-show="destinacion_pasos == 2"     @click.prevent="addDestinacion" v-loading.fullscreen.lock="fullscreenLoading" class="mt-3 btn btn-success float-right">Añadir destinación <i class="fas fa-plus"></i></button>
           </div>
       </template>
     </b-modal>

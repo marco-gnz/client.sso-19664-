@@ -70,6 +70,7 @@ export default {
             showClose: true
           });
         } catch (error) {
+          console.log(error);
           this.fullscreenLoading = !this.fullscreenLoading;
           if(error.response.status === 422){
             this.errors = error.response.data.errors;

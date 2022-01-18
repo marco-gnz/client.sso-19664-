@@ -19,9 +19,6 @@
                   <div class="row">
                     <div class="col-md-12">
                         <b-input-group>
-                            <!-- <template #append>
-                                <b-button @click.prevent="searchProfesionales" size="sm" text="Button" variant="success">Buscar</b-button>
-                            </template> -->
                             <b-form-input :disabled="!$auth.user.permissions_roles.includes('buscar-profesional') && !$auth.user.permissions.includes('buscar-profesional')" size="small" v-model="searchInput" @keyup="keySearchProfesionales" placeholder="Busque por Rut, Nombre o Apellidos..."></b-form-input>
                         </b-input-group>
                     </div>
@@ -31,7 +28,7 @@
                           <el-button :disabled="!$auth.user.permissions_roles.includes('buscar-profesional') && !$auth.user.permissions.includes('buscar-profesional')" @click.prevent="openFilter" type="text" size="medium" icon="el-icon-plus">Filtro avanzado</el-button>
                       </div>
                       <div class="col-md-10 pt-lg-3" v-if="searchAll.active_filtro_avanzado">
-                        <span class="float-right"><i>Existen filtros activados. Para eliminar, favor hacer click en "Refrescar campos".</i></span>
+                        <span class="float-right"><i class="el-icon-loading text-danger" style="width: 15px;"></i><i>Existen filtros avanzados activados. Para eliminar, favor hacer click en <strong>filtro avanzado</strong> y <strong>refrescar campos</strong></i>.</span>
                       </div>
                   </div>
                 </div>

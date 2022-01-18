@@ -197,7 +197,7 @@ export default {
 
 
 
-        let object = this.Duration.fromObject({ years: anos, months: meses,  days: dias}).toObject();
+        let object = this.Duration.fromObject({ years: anos, months: meses,  days: dias}).normalize().toObject();
         return object;
       },
       calculateTotalPorDevolver(){

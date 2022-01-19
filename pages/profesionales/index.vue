@@ -19,7 +19,7 @@
                   <div class="row">
                     <div class="col-md-12">
                         <b-input-group>
-                            <b-form-input :disabled="!$auth.user.permissions_roles.includes('buscar-profesional') && !$auth.user.permissions.includes('buscar-profesional')" size="small" v-model="searchInput" @keyup="keySearchProfesionales" placeholder="Busque por Rut, Nombre o Apellidos..."></b-form-input>
+                            <b-form-input :state="buscador" :disabled="!$auth.user.permissions_roles.includes('buscar-profesional') && !$auth.user.permissions.includes('buscar-profesional')" size="small" v-model="searchInput" :autofocus="true" @keyup="keySearchProfesionales" placeholder="Busque por Rut, Nombre o Apellidos..."></b-form-input>
                         </b-input-group>
                     </div>
                   </div>
@@ -91,7 +91,7 @@
             <div class="card-footer text-muted text-center clearfix">
               <div class="row">
                 <div class="col-md-6">
-                  <nav aria-label="Page navigation example">
+                  <nav v-show="profesionales.length" aria-label="Page navigation example">
                     <ul class="pagination">
                       <li class="page-item" v-if="pagination.current_page > 1">
                         <button :disabled="profesionales.length === 0" class="page-link" href="#" @click.prevent="changePage(pagination.current_page - 1)">
@@ -141,18 +141,15 @@ export default {
     },
     mounted() {
         this.setFiltro();
-        let filtros = JSON.parse(localStorage.getItem("filtros"));
-        if (filtros) {
-          let object = { search: filtros };
-          this.getProfesionales(object);
-        }else{
-          this.getProfesionales();
-        }
+        this.getProfesionales();
     },
     computed: {
         ...mapGetters({
           profesionales: "profesionales/profesionales"
         }),
+        buscador(){
+          return (this.searchInput.length > 0) ? true : null;
+        },
         searchInput:{
           get() {
             return this.$store.getters['profesionales/inputSearch']
@@ -198,33 +195,32 @@ export default {
         ...mapMutations({
             changeStatusAction: "profesionales/UPDATE_STATUS_PROFESIONAL",
             estadoChange: "profesionales/CHAGE_ESTADO",
-            currentPageAction: "profesionales/SET_CURRENT_PAGE"
+            currentPageAction: "profesionales/SET_CURRENT_PAGE",
+            setParamsFiltro: 'profesionales/SET_PARAMS_FILTRO'
         }),
         openFilter() {
             this.open();
         },
         changePage(page) {
             this.currentPageAction(page);
-            let object = { page: page };
-            this.getProfesionales(object);
+            this.getProfesionales();
         },
         setFiltro(){
-          let filtro = JSON.parse(localStorage.getItem('filtros'));
-          if(filtro){
-            this.searchInput = filtro.input;
-          }
-        },
-        searchProfesionales() {
-            if (this.searchInput.length > 2) {
-              let object = { search: this.searchAll };
-              this.getProfesionales(object);
-              localStorage.setItem('filtros', JSON.stringify(this.searchAll));
-            }else if (this.searchInput.length == 0){
-              this.getProfesionales();
-              localStorage.removeItem('filtros');
+            let filtro = JSON.parse(localStorage.getItem('filtros'));
+            if(filtro){
+              this.setParamsFiltro(filtro);
             }
         },
+        searchProfesionales() {
+          if(this.searchInput.length > 1){
+            this.getProfesionales();
+          }else if (this.searchInput.length == 0){
+            localStorage.setItem('filtros', JSON.stringify(this.searchAll));
+            this.getProfesionales();
+          }
+        },
         keySearchProfesionales() {
+            this.currentPageAction(1);
             clearTimeout(this.setTimeoutBuscador);
             this.setTimeoutBuscador = setTimeout(this.searchProfesionales, 500);
         },
@@ -239,8 +235,6 @@ export default {
                     this.fullscreenLoading = !this.fullscreenLoading;
                     if (response[0] === true) {
                         this.changeStatusAction({ response: response[1], index: index });
-                        /* this.changeStatusAction(response[1]); */
-                        /* this.estadoChange({index:index, newValue:estado}); */
                         this.$notify.success({
                             message: `Profesional ${response[1].estado != false ? `habilitado` : `deshabilitado`}.`,
                             showClose: true

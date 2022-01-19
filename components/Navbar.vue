@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex';
 export default {
   data(){
     return{
@@ -43,11 +44,15 @@ export default {
     };
   },
   methods:{
+    ...mapMutations({
+      refreshFiltro:'profesionales/REFRESH_FILTRO'
+    }),
     async logout(){
       this.fullscreenLoading = !this.fullscreenLoading;
       await this.$auth.logout();
       this.$router.replace({name: 'login'});
       this.fullscreenLoading = !this.fullscreenLoading;
+      this.refreshFiltro();
       localStorage.removeItem('filtros');
       localStorage.removeItem('filtros_usuarios');
     }

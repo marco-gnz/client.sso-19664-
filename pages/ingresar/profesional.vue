@@ -278,7 +278,7 @@ export default {
                                 message: 'Redireccionado a lista de profesionales.'
                             });
                             done();
-                            this.$router.replace('/profesionales/profesionales');
+                            this.$router.replace('/profesionales');
                         }
                     }
                   }).then(action => {

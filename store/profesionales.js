@@ -114,6 +114,27 @@ export const mutations = {
   },
   SET_ACTIVE_FILTRO_AVANZADO(state, value){
     state.search.active_filtro_avanzado = value;
+  },
+  SET_PARAMS_FILTRO(state, filtroLocalStorage){
+    state.search.input                    =  (filtroLocalStorage.input != null) ? filtroLocalStorage.input : '';
+    state.search.perfeccion               = filtroLocalStorage.perfeccion;
+    state.search.f_ed                     = filtroLocalStorage.f_ed;
+    state.search.f_ef                     = filtroLocalStorage.f_ef;
+    state.search.f_pao                    = filtroLocalStorage.f_pao;
+    state.search.checkedEtapas            = filtroLocalStorage.checkedEtapas;
+    state.search.establecimiento          = filtroLocalStorage.establecimiento;
+    state.search.active_filtro_avanzado   = filtroLocalStorage.active_filtro_avanzado;
+  },
+  REFRESH_FILTRO(state){
+    state.search.input                    = '';
+    state.search.perfeccion               = [];
+    state.search.f_ed                     = [];
+    state.search.f_ef                     = [];
+    state.search.f_pao                    = [];
+    state.search.checkedEtapas            = [];
+    state.search.red                      = '';
+    state.search.establecimiento          = [];
+    state.search.active_filtro_avanzado   = false;
   }
 };
 
@@ -162,11 +183,21 @@ export const getters = {
 
 //metodos para interactuar con la api
 export const actions = {
-  async getProfesionales({ commit }, object){
+  async getProfesionales({ commit, state }){
     commit('SET_LOADING');
-    let search      = (object != undefined) ? object.search : '';
-    let page        = (object != undefined) ? object.page : '';
-    const response  = await this.$axios.$get(`/api/profesionales/profesional/get-profesionales?page=${page}`, {params: search});
+    const response  = await this.$axios.$get(`/api/profesionales/profesional/get-profesionales?page=${state.pagination.current_page}`,
+     {params:
+      {
+        input:state.search.input,
+        perfeccion:state.search.perfeccion,
+        f_ed: state.search.f_ed,
+        f_ef: state.search.f_ef,
+        f_pao: state.search.f_pao,
+        checkedEtapas:state.search.checkedEtapas,
+        establecimiento:state.search.establecimiento,
+      }
+    }
+     );
 
     if(response){
       commit('SET_LOADING');

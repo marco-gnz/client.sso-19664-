@@ -162,7 +162,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapMutations} from 'vuex';
 export default {
   data(){
     return{
@@ -280,42 +280,25 @@ export default {
       refresEstablecimientoAction:'profesionales/refreshEstablecimiento',
       cargando: 'profesionales/loadingApi'
     }),
+    ...mapMutations({
+      currentPageAction: "profesionales/SET_CURRENT_PAGE",
+      refreshFiltro:'profesionales/REFRESH_FILTRO'
+    }),
     getEstablecimientosChange(){
-      /* this.search.establecimiento = ''; */
       this.refresEstablecimientoAction();
       this.getEstablecimientosAction(this.red);
     },
-    setFiltro(){
-      let filtro = JSON.parse(localStorage.getItem('filtros'));
-      if(filtro){
-        this.perfeccion               = (filtro.perfeccion != '') ? filtro.perfeccion : '';
-        this.fechaEtapaDestinacion    = (filtro.f_ed != '') ? filtro.f_ed : '';
-        this.fechaEtapaFormacion      = (filtro.f_ef != '') ? filtro.f_ef : '';
-        this.fechaPao                 = (filtro.f_pao != '') ? filtro.f_pao : '';
-        this.checkedEtapas            = (filtro.checkedEtapas != '') ? filtro.checkedEtapas : '';
-        this.red                      = (filtro.red != '') ? filtro.red : '';
-        this.establecimiento          = (filtro.establecimiento != '') ? filtro.establecimiento : [];
-      }
-    },
     searchProfesionales(){
+      this.currentPageAction(1);
       this.activeFiltroAvanzado = true;
       localStorage.setItem('filtros', JSON.stringify(this.searchAll));
-      let object = {search: this.searchAll};
-      console.log(object);
-      this.getProfesionales(object);
+      this.getProfesionales();
       this.open();
     },
     refreshCampos(){
-      this.checkedEtapas          = [];
-      this.perfeccion             = [];
-      this.fechaEtapaDestinacion  = [];
-      this.fechaEtapaFormacion    = [];
-      this.fechaPao               = [];
-      this.red                    = '';
-      this.establecimiento        = [];
-      this.activeFiltroAvanzado   = false;
-      this.getProfesionales();
+      this.refreshFiltro();
       localStorage.removeItem('filtros');
+      this.getProfesionales();
     },
     handleCheckAllChange(val) {
       this.search.checkedEtapas = val ? this.etapas : [];
@@ -332,11 +315,9 @@ export default {
         checkedEtapas:this.searchAll.checkedEtapas,
         establecimiento:this.searchAll.establecimiento,
       }
-      console.log(data);
 
       await this.$axios.$get(url, {params:data}).then(response => {
         this.cargando();
-        console.log(response);
         if(response[0] === true){
           //>0 resultados
           var url = `http://localhost:8000/api/profesionales/excel-report/${response[1]}/${response[2]}`
@@ -351,11 +332,6 @@ export default {
         this.cargando();
         console.log(error);
       });
-    },
-    handleCheckedCitiesChange(value) {
-      /* let checkedCount = value.length;
-      this.checkAll = checkedCount === this.etapas.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.etapas.length; */
     }
   }
 }

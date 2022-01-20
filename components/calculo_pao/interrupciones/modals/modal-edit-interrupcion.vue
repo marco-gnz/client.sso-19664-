@@ -17,7 +17,7 @@
         <section v-if="paso_interrupciones_edit === 0">
           <div class="row d-flex justify-content-center">
             <div class="col-md-6">
-              <label>Seleccione previo proceso de devolución (contrato) afectado</label>
+              <label>Seleccione proceso de devolución (contrato) afectado</label>
               <select class="form-control" v-model="interrupcion.devolucion">
                 <option value="" selected disabled>-- Seleccione devolución --</option>
                 <option v-for="(devolucion, index) in interrupcion.devoluciones" :key="index" :value="devolucion.id">{{devolucion.establecimiento.sigla}} - {{DateTime.fromISO(devolucion.inicio_devolucion).toFormat('dd LLL yyyy')}} a {{DateTime.fromISO(devolucion.termino_devolucion).toFormat('dd LLL yyyy')}} en {{devolucion.tipo_contrato.nombre}} hrs.</option>

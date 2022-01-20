@@ -9,8 +9,8 @@ export const mutations = {
   ADD_FORMACION(state, formacion){
     state.formaciones = [formacion, ...state.formaciones];
   },
-  REMOVE_FORMACION(state, uuid){
-    state.formaciones = state.formaciones.filter(formacion => formacion.uuid !== uuid);
+  REMOVE_FORMACION(state, id){
+    state.formaciones = state.formaciones.filter(f => f.id !== id);
   }
 };
 
@@ -25,11 +25,5 @@ export const actions = {
     const response = await this.$axios.$get('/api/profesionales/profesional/get-formaciones', {params: {uuid:uuid}});
 
     commit('SET_FORMACIONES', response);
-  },
-  async removeFormacion({ commit }, uuid){
-    const response = await this.$axios.$delete(`/api/profesionales/profesional/remove-formacion/${uuid}`);
-    if(response === true){
-      commit('REMOVE_FORMACION', uuid);
-    }
   }
 };

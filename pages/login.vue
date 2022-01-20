@@ -24,10 +24,10 @@
                                         <button type="submit" class="btn btn-primary btn-user btn-block">Ingresar</button>
                                     </form>
                                     <hr>
-                                    <div class="text-center">
+                                    <!-- <div class="text-center">
                                       <i class="fas fa-search fa-sm"></i>
                                         <a class="small" href="forgot-password.html">Restablecer contraseña</a>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

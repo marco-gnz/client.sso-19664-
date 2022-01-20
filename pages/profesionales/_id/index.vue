@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import router from 'vue-router';
+
 import {mapActions, mapGetters} from 'vuex';
 import DatosPersonales from '../../../components/datos_personales/datos-personales.vue';
 import IndexFormaciones from '../../../components/formaciones/index-formaciones.vue';

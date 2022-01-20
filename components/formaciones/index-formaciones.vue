@@ -14,32 +14,31 @@
               <table class="table table-xs pt-2">
                 <thead>
                       <tr>
-                          <th>Origen</th>
                           <th>Centro</th>
                           <th>Tipo</th>
                           <th>Perfeccionamiento</th>
                           <th>Registro</th>
                           <th>Periodo de formación</th>
+                          <th>Motivo</th>
                           <th>&nbsp;</th>
                       </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(especialidad, index) in formaciones" :key="index">
-                      <td>{{especialidad.origen}}</td>
                       <td>{{especialidad.centro_formador.nombre}}</td>
                       <td>{{especialidad.perfeccionamiento.tipo.nombre}}</td>
                       <td>{{especialidad.perfeccionamiento.nombre}}</td>
                       <td>{{DateTime.fromISO(especialidad.fecha_registro).toFormat('dd-LL-yyyy')}}</td>
                       <td>{{DateTime.fromISO(especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</td>
+                      <td>{{especialidad.origen}}</td>
                       <td @click.stop="">
                           <el-dropdown>
                               <span class="el-dropdown-link">
                                   Acción<i class="el-icon-arrow-down el-icon--right"></i>
                               </span>
                               <el-dropdown-menu slot="dropdown">
-                                  <!-- <el-dropdown-item icon="el-icon-edit" v-b-modal.modal-edit-devolucion>Editar</el-dropdown-item> -->
                                   <template v-if="$auth.user.permissions_roles.includes('eliminar-formacion') || $auth.user.permissions.includes('eliminar-formacion')">
-                                    <el-dropdown-item icon="el-icon-delete" @click.native="deleteEspecialidad(especialidad.uuid)">Eliminar</el-dropdown-item>
+                                    <el-dropdown-item icon="el-icon-delete" @click.native="deleteEspecialidad(especialidad.id)">Eliminar</el-dropdown-item>
                                   </template>
                               </el-dropdown-menu>
                           </el-dropdown>
@@ -64,7 +63,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapMutations} from 'vuex';
 import ModalCreate from "./modals/ModalCreate.vue";
 export default {
     props: ['profesional'],
@@ -81,20 +80,51 @@ export default {
     methods:{
         ...mapActions({
           getFormacionesAction: 'formaciones/getFormaciones',
-          removeFormacionAction: 'formaciones/removeFormacion'
         }),
-        deleteEspecialidad(uuid){
+        ...mapMutations({
+          removeFormacionAction:'formaciones/REMOVE_FORMACION'
+        }),
+        deleteEspecialidad(id){
           this.$confirm('¿Eliminar formación?. Se eliminará todo registro asociado a la formación (Devoluciones PAO, documentos, etc...)', 'Alerta', {
           confirmButtonText: 'Si, eliminar',
           cancelButtonText: 'Cancelar',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: 'Formación eliminada con éxito.'
-          });
-          this.removeFormacionAction(uuid);
+          this.removeFormacion(id);
         })
+        },
+        async removeFormacion(id){
+          const url = `/api/profesionales/profesional/remove-formacion/${id}`;
+
+          await this.$axios.$delete(url).then(response => {
+            console.log(response);
+            if(response === 'passing_escrituras'){
+              this.$alert('No es posible eliminar formación. Existen escrituras asociadas a esta formación.', 'Error', {
+                type:'warning',
+                confirmButtonText: 'OK'
+              });
+            }else if (response === 'passing_convenios'){
+              this.$alert('No es posible eliminar formación. Existen convenios asociados a esta formación.', 'Error', {
+                type:'warning',
+                confirmButtonText: 'OK'
+              });
+            }else if (response === 'paos'){
+              this.$alert('No es posible eliminar formación. Existen Periodos Asistenciales asociados a esta formación.', 'Error', {
+                type:'warning',
+                confirmButtonText: 'OK'
+              });
+            }else if (response === true){
+              this.removeFormacionAction(id);
+              this.$message({
+                type: 'success',
+                message: 'Formación eliminada con éxito.'
+              });
+            }else if (response === false){
+              this.$message.error("Error. Error de servidor.");
+            }
+          }).catch(error => {
+            console.log(error);
+          });
         }
     },
     mounted(){

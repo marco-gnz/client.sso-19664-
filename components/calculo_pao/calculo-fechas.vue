@@ -1,9 +1,9 @@
 <template>
   <div>
-    <li class="list-group-item media"><strong>Formación</strong>: <el-popover :disabled=" (pao.observacion_periodo != '') ? true : false " placement="top-start" width="400" trigger="hover" :class="(pao.observacion_periodo) ? 'clickObservacion' : '' " :content="pao.observacion_periodo"><span slot="reference">{{DateTime.fromISO(pao.especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(pao.especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</span></el-popover></li>
-    <li class="list-group-item media"><strong>PAO referencial</strong>: <el-popover placement="top-start" width="400" trigger="hover" class="clickObservacion" :content="totalPaoReferencial"><span slot="reference">{{DateTime.fromISO(pao.periodo_inicio).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(pao.periodo_termino).toFormat('dd-LL-yyyy')}}</span></el-popover></li>
-    <li class="list-group-item media"><strong>Total devolución</strong>: <span class="text-success">{{ `${totalDevolucion.years} ${totalDevolucion.years > 1 ? `años` : `año`}, ${totalDevolucion.months} ${totalDevolucion.months > 1 ? `meses` : `mes`} y ${totalDevolucion.days} ${totalDevolucion.days > 1 ? `días` : `día`}` }}</span></li>
-    <li class="list-group-item media"><strong>Total interrupción</strong>: <span class="text-danger">{{ `${totalInterrupcion.years} ${totalInterrupcion.years > 1 ? `años` : `año`}, ${totalInterrupcion.months} ${totalInterrupcion.months > 1 ? `meses` : `mes`} y ${totalInterrupcion.days} ${totalInterrupcion.days > 1 ? `días` : `día`}` }}</span></li>
+    <li class="list-group-item media"><strong>Perido en formación</strong>: <el-popover :disabled=" (pao.observacion_periodo != '') ? true : false " placement="top-start" width="400" trigger="hover" :class="(pao.observacion_periodo) ? 'clickObservacion' : '' " :content="pao.observacion_periodo"><span slot="reference">{{DateTime.fromISO(pao.especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(pao.especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</span></el-popover></li>
+    <li class="list-group-item media"><strong>Periodo a devolver</strong>: <el-popover placement="top-start" width="500" trigger="hover" class="clickObservacion" :content="totalPaoReferencial"><span slot="reference">{{DateTime.fromISO(pao.periodo_inicio).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(pao.periodo_termino).toFormat('dd-LL-yyyy')}}</span></el-popover></li>
+    <li class="list-group-item media"><strong>Devolución adquirida</strong>: <span class="text-success">{{ `${totalDevolucion.years} ${totalDevolucion.years > 1 ? `años` : `año`}, ${totalDevolucion.months} ${totalDevolucion.months > 1 ? `meses` : `mes`} y ${totalDevolucion.days} ${totalDevolucion.days > 1 ? `días` : `día`}` }}</span></li>
+    <li class="list-group-item media"><strong>Interrupción adquirida</strong>: <span class="text-danger">{{ `${totalInterrupcion.years} ${totalInterrupcion.years > 1 ? `años` : `año`}, ${totalInterrupcion.months} ${totalInterrupcion.months > 1 ? `meses` : `mes`} y ${totalInterrupcion.days} ${totalInterrupcion.days > 1 ? `días` : `día`}` }}</span></li>
     <!-- <li class="list-group-item media"><strong>Fin estimado</strong>: {{ `${fechaFinEstimada != undefined || fechaFinEstimada != null ? `${fechaFinEstimada}` : `${DateTime.fromISO(pao.periodo_termino).toFormat('dd LLLL yyyy')}`}` }}<br></li> -->
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
         let inicio          = this.DateTime.fromISO(this.pao.periodo_inicio);
         let termino         = this.DateTime.fromISO(this.pao.periodo_termino);
         let diferencia_pao  = termino.diff(inicio, ['days', 'months', 'years']);
-        let message         = `Total a realizar de Periodo Asistencial Obligatorio es de ${diferencia_pao.values.years} ${diferencia_pao.values.years > 1 ? `años` : `años`}, ${diferencia_pao.values.months} ${diferencia_pao.values.months > 1 ? `meses` : `mes`} y ${diferencia_pao.values.days} ${diferencia_pao.values.days > 1 ? `días` : `día`}.`;
+        let message         = `Total Periodo Asistencial Obligatorio es de ${diferencia_pao.values.years} ${diferencia_pao.values.years > 1 ? `años` : `años`}, ${diferencia_pao.values.months} ${diferencia_pao.values.months > 1 ? `meses` : `mes`} y ${diferencia_pao.values.days} ${diferencia_pao.values.days > 1 ? `días` : `día`}.`;
 
         return message;
     },

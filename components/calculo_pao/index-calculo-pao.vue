@@ -58,7 +58,7 @@
                           <p class="card-text" ><small class="text-muted">{{pao.observacion}}</small></p>
                       </div>
                       <div class="card-footer">
-                          <p class="card-text"><small class="text-muted">Ingresada el {{DateTime.fromISO(pao.created_at).toFormat('ff')}} - MG</small></p>
+                          <p class="card-text"><small class="text-muted">Ingresada el {{DateTime.fromISO(pao.created_at).toFormat('ff')}} - {{pao.user_add.sigla}}</small></p>
                       </div>
                     </div>
                   </div>
@@ -95,13 +95,13 @@
               <div class="col-md-12 border-bottom border-left border-right">
                 <div class="row pt-lg-4 pb-lg-2">
                   <div class="col-md-4">
+                    <span tyle="font-size:16px;" class="float-lg-left"><strong class="text-success">TOTAL A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ? `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`}, ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` : `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ? `${Math.round(calculateTotalDevolver.days)} días` : `${Math.round(calculateTotalDevolver.days)} día`}` }}</span>
+                  </div>
+                  <div class="col-md-4">
                     <span tyle="font-size:12px;" class="float-left"><strong class="text-primary">LLEVA</strong>: {{ `${calculateTotalDevolucion.years > 1 ? `${calculateTotalDevolucion.years} años` : `${calculateTotalDevolucion.years} año`}, ${calculateTotalDevolucion.months > 1 ? `${calculateTotalDevolucion.months} meses` : `${calculateTotalDevolucion.months} mes`} y ${Math.round(calculateTotalDevolucion.days) > 1 ? `${Math.round(calculateTotalDevolucion.days)} días` : `${Math.round(calculateTotalDevolucion.days)} día`}` }}</span>
                   </div>
                   <div class="col-md-4">
                     <span tyle="font-size:14px;" class="float-left"><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ? `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`}, ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` : `${calculateTotalPorDevolver.months} mes`} y ${Math.round(calculateTotalPorDevolver.days) > 1 ? `${Math.round(calculateTotalPorDevolver.days)} días` : `${Math.round(calculateTotalPorDevolver.days)} día`}` }}</span>
-                  </div>
-                  <div class="col-md-4">
-                    <span tyle="font-size:16px;" class="float-lg-left"><strong class="text-success">TOTAL A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ? `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`}, ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` : `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ? `${Math.round(calculateTotalDevolver.days)} días` : `${Math.round(calculateTotalDevolver.days)} día`}` }}</span>
                   </div>
                 </div>
               </div>

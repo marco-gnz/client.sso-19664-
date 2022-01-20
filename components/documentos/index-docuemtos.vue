@@ -460,8 +460,12 @@ export default {
           const url = `/api/profesionales/profesional/documentos/delete-convenio/${uuid}`;
           await this.$axios.$delete(url).then(response => {
             this.fullscreenLoading = !this.fullscreenLoading;
-            console.log(response);
-            if(response === true){
+            if(response === 'passing_facturas'){
+              this.$alert('No es posible eliminar el convenio. Existen facturas asociadas a este convenio.', 'Error', {
+                type:'warning',
+                confirmButtonText: 'OK'
+              });
+            }else if (response === true){
               this.deleteConvenioAction(uuid);
               this.$message({
                 message: 'Convenio eliminado con éxito.',

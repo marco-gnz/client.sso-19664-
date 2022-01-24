@@ -109,6 +109,11 @@ import ModalEditUnidad from '../../components/mantenedores/unidades/modal-edit-u
 export default {
   middleware: 'auth',
   components: { Pagination, ModalAddUnidad, ModalEditUnidad },
+  head(){
+    return{
+      title: `Unidades`
+    };
+  },
   data(){
     return{
       setTimeoutBuscador:'',

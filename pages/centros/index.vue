@@ -109,6 +109,11 @@ import ModalEditCentro from '../../components/mantenedores/centroFormador/modal-
 export default {
   middleware: 'auth',
   components: { Pagination, ModalCentroFormador, ModalEditCentro },
+  head(){
+    return{
+      title: `Centros formadores`
+    };
+  },
   data(){
     return{
       setTimeoutBuscador:'',

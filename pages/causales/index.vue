@@ -115,6 +115,11 @@ import ModalEditCausal from '../../components/mantenedores/causales/modal-edit-c
 export default {
   middleware: 'auth',
   components: { Pagination, ModalAddCausal, ModalEditCausal },
+  head(){
+    return{
+      title: `Causales`
+    };
+  },
   data(){
     return{
       fullscreenLoading:false,

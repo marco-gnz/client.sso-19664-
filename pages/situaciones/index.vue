@@ -91,6 +91,11 @@ import ModalEditSituacion from '../../components/mantenedores/situaciones/modal-
 export default {
   middleware: 'auth',
   components: { Pagination, ModalAddSituacion, ModalEditSituacion },
+  head(){
+    return{
+      title: `Situaciones actuales`
+    };
+  },
   data(){
     return{
       fullscreenLoading:false

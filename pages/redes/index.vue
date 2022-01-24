@@ -75,6 +75,11 @@ import ModalEditRed from '../../components/mantenedores/red/modal-edit-red.vue';
 export default {
   middleware: 'auth',
   components: { Pagination, ModalAddRed, ModalEditRed },
+  head(){
+    return{
+      title: `Redes hospitalarias`
+    };
+  },
   data(){
     return{
 

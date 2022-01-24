@@ -79,6 +79,11 @@ import ModalEditEstablecimiento from '../../components/mantenedores/establecimie
 export default {
   middleware: 'auth',
   components: { Pagination, ModalAddEstablecimiento, ModalEditEstablecimiento },
+  head(){
+    return{
+      title: `Establecimientos`
+    };
+  },
   data(){
     return{
 

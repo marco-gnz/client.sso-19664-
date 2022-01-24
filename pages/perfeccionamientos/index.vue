@@ -117,6 +117,11 @@ import ModalEditPerfeccionamiento from '../../components/mantenedores/perfeccion
 export default {
   middleware: 'auth',
   components: { Pagination, ModalAddPerfeccionamiento, ModalEditPerfeccionamiento },
+  head(){
+    return{
+      title: `Perfeccionamientos`
+    };
+  },
   data(){
     return{
       perfeccionamiento:{

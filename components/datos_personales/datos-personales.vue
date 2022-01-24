@@ -67,8 +67,9 @@
                     </div>
                     <div class="col-md-6">
                         <label>Situación actual</label>
-                        <select class="form-control">
-                            <option value="">-- Seleccione situación actual --</option>
+                        <select class="form-control" v-model="datosPersonalesEdit.situacion_actual">
+                            <option value="" selected disabled>-- Seleccione situación actual --</option>
+                            <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
                         </select>
                         <span class="text-danger" v-if="errors.situacion_actual_id">{{errors.situacion_actual_id[0]}}</span>
                     </div>
@@ -123,7 +124,8 @@ export default {
         plantas: 'mantenedores/plantas',
         calidades: 'mantenedores/calidades',
         generos: 'mantenedores/generos',
-        etapas: 'mantenedores/etapas'
+        etapas: 'mantenedores/etapas',
+        situacionesActual:'mantenedores/situacionesActual'
       }),
       datosPersonalesEdit(){
         return {...this.$store.state.profesionales.datosPersonalesEdit}
@@ -134,6 +136,7 @@ export default {
       this.getCalidades();
       this.getGeneros();
       this.getEtapas();
+      this.getSituacionesActual();
       this.getProfesional(this.$route.params.id);
     },
   methods:{
@@ -142,6 +145,7 @@ export default {
       getCalidades: 'mantenedores/getCalidades',
       getGeneros: 'mantenedores/getGeneros',
       getEtapas: 'mantenedores/getEtapas',
+      getSituacionesActual:'mantenedores/getSituacionesActual',
       getProfesional: 'profesionales/getProfesional',
       errorStatus401:'errors/redirectSessionExpired'
     }),
@@ -165,7 +169,8 @@ export default {
               etapas_id: this.datosPersonalesEdit.etapa,
               calidad_juridica_id: this.datosPersonalesEdit.calidad,
               planta_id: this.datosPersonalesEdit.planta,
-              genero_id:this.datosPersonalesEdit.genero
+              genero_id:this.datosPersonalesEdit.genero,
+              situacion_actual_id:this.datosPersonalesEdit.situacion_actual
             };
 
       await this.$axios.$put(url, data).then(response => {

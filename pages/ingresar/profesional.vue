@@ -108,6 +108,7 @@
                                         <label>Situación actual</label>
                                         <select class="form-control" v-model="profesional.situacion_actual">
                                             <option value="">-- Seleccione situación actual --</option>
+                                            <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
                                         </select>
                                         <span class="text-danger" v-if="errors.situacion_actual_id">{{errors.situacion_actual_id[0]}}</span>
                                     </div>
@@ -184,6 +185,7 @@ export default {
         calidades: 'mantenedores/calidades',
         generos: 'mantenedores/generos',
         etapas: 'mantenedores/etapas',
+        situacionesActual:'mantenedores/situacionesActual'
       })
     },
     mounted(){
@@ -191,6 +193,7 @@ export default {
       this.getCalidades();
       this.getGeneros();
       this.getEtapas();
+      this.getSituacionesActual();
     },
     methods:{
           ...mapActions({
@@ -198,6 +201,7 @@ export default {
             getCalidades: 'mantenedores/getCalidades',
             getGeneros: 'mantenedores/getGeneros',
             getEtapas: 'mantenedores/getEtapas',
+            getSituacionesActual:'mantenedores/getSituacionesActual'
           }),
          async existProfesional(){
            this.fullscreenLoading = true;
@@ -246,7 +250,8 @@ export default {
               etapas_id: this.profesional.etapa_actual,
               calidad_juridica_id: this.profesional.calidad_juridica,
               planta_id: this.profesional.planta,
-              genero_id:this.profesional.genero
+              genero_id:this.profesional.genero,
+              situacion_actual_id:this.profesional.situacion_actual
             };
 
             await this.$axios.$post(url, data).then(response => {

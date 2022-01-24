@@ -146,10 +146,10 @@ export default {
       this.pao_estimado.periodo[0]        = fecha_termino_especialidad.startOf('day').plus({days: 1}).toFormat('yyyy-LL-dd');
 
       let fecha_inici_format              = this.DateTime.fromISO(this.pao.periodo[0]);
-      this.pao.periodo[1]                 = (fecha_inici_format.plus({days: (dias.values.days + 1) * 2}).toFormat('yyyy-LL-dd'));
-      this.pao_estimado.periodo[1]        = (fecha_inici_format.plus({days: (dias.values.days + 1) * 2}).toFormat('yyyy-LL-dd'))
+      this.pao.periodo[1]                 = (fecha_inici_format.plus({days: (dias.values.days) * 2}).toFormat('yyyy-LL-dd'));
+      this.pao_estimado.periodo[1]        = (fecha_inici_format.plus({days: (dias.values.days) * 2}).toFormat('yyyy-LL-dd'))
 
-      let final                           = (fecha_inici_format.plus({days: (dias.values.days + 1) * 2}).toFormat('yyyy-LL-dd'));
+      let final                           = (fecha_inici_format.plus({days: (dias.values.days) * 2}).toFormat('yyyy-LL-dd'));
       let format_final                    = this.DateTime.fromISO(final);
 
 
@@ -168,7 +168,7 @@ export default {
         let dias = this.especialidad_select.periodo[1].diff(this.especialidad_select.periodo[0], 'days');
         let fecha_inici_format = this.DateTime.fromISO(this.pao.periodo[0]);
 
-        this.pao.periodo[1]  = (fecha_inici_format.plus({days: (dias.values.days + 1) * 2}).toFormat('yyyy-LL-dd'));
+        this.pao.periodo[1]  = (fecha_inici_format.plus({days: (dias.values.days) * 2}).toFormat('yyyy-LL-dd'));
 
         if(this.pao_estimado.periodo[0] != this.pao.periodo[0]){
             this.pao_estimado_modificado_text_area = true;

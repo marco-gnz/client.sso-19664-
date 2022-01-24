@@ -43,6 +43,7 @@
                           <th scope="col">Rut</th>
                           <th scope="col">Nombres</th>
                           <th scope="col">Etapa</th>
+                          <th scope="col">Situación actual</th>
                           <th scope="col">N° contacto</th>
                           <th scope="col">Estado</th>
                           <th>&nbsp;</th>
@@ -53,6 +54,7 @@
                             <td>{{profesional.rut_completo}}</td>
                             <td>{{profesional.apellidos}} {{profesional.nombres}}</td>
                             <td>{{profesional.etapa.nombre}}</td>
+                            <td>{{ (profesional.situacion_actual != null) ? profesional.situacion_actual.nombre : '--'}}</td>
                             <td>{{ (profesional.n_contacto != null) ? profesional.n_contacto : '--' }}</td>
                             <td>
                               <template v-if="$auth.user.permissions_roles.includes('estado-profesional') || $auth.user.permissions.includes('estado-profesional')">

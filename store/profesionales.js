@@ -14,7 +14,8 @@ export const state = () => ({
     email:'',
     planta:'',
     etapa:'',
-    calidad:''
+    calidad:'',
+    situacion_actual:''
   },
   pagination:{
     total:0,
@@ -81,6 +82,7 @@ export const mutations = {
     state.datosPersonalesEdit.planta     = profesional.planta_id;
     state.datosPersonalesEdit.etapa      = profesional.etapas_id;
     state.datosPersonalesEdit.calidad    = profesional.calidad_juridica_id;
+    state.datosPersonalesEdit.situacion_actual = (profesional.situacion_actual_id != null) ? profesional.situacion_actual_id : '';
   },
   UPDATE_STATUS_PROFESIONAL(state, object){
     const indice = state.profesionales.findIndex(p => p.id === object.response.id);

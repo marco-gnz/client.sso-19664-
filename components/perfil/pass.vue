@@ -55,7 +55,6 @@ export default {
         confirm_new_password:this.pass.confirm_nueva_contrasena
       };
       await this.$axios.$patch(url, data).then(response => {
-        console.log(response);
         this.fullscreenLoading = !this.fullscreenLoading;
         for(let key in this.pass){
           this.pass[key] = '';

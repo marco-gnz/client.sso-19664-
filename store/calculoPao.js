@@ -30,11 +30,9 @@ export const mutations = {
     state.paos.splice(indice, 1, pao);
   },
   REMOVE_PAO(state, pao){
-    console.log(pao);
     state.paos = state.paos.filter(p => p.uuid !== pao.uuid);
     const i = state.id_especialidades.map(id => id).indexOf(pao.especialidad.id);
     state.id_especialidades.splice(i, 1);
-    console.log(state.id_especialidades);
   },
   SET_FORMACIONES_PROFESIONAL(state, formaciones_profesional){
     state.formaciones_profesional = formaciones_profesional;
@@ -69,7 +67,6 @@ export const mutations = {
 
     const devolucion = state.paos[interrupcion.pao_index].devoluciones.find(d => d.id === interrupcion.devolucion_id);
     devolucion.interrupciones.push(interrupcion);
-    console.log(devolucion);
   },
   FRES_TO_DEVOLUCION(state, fresh_devolucion){
     const indice = state.paos[fresh_devolucion.pao_index].devoluciones.map(d => d.id).indexOf(fresh_devolucion.id);
@@ -152,7 +149,6 @@ export const actions = {
 
   async getEscrituras({ commit }, especialidad_id){
     const response = await this.$axios.$get('/api/profesionales/profesional/add-devolucion/get-escrituras', {params:{especialidad_id:especialidad_id}});
-    console.log(response);
     commit('SATE_ESCRITURAS', response);
   }
 };

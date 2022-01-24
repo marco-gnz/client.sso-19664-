@@ -233,7 +233,6 @@ export default {
 
       await this.$axios.$put(url).then(response => {
         this.fullscreenLoading = !this.fullscreenLoading;
-        console.log(response);
         if (response[0] === true) {
           this.changeStatusAction({ response: response[1], index: index });
           this.$notify.success({

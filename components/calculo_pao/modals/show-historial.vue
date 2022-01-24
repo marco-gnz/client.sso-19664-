@@ -75,7 +75,6 @@ export default {
     },
     orden:{
       get(){
-        console.log('get');
         return this.$store.getters['historial/ordenFechas']
       },
       set(){

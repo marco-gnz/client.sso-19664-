@@ -360,7 +360,6 @@ export default {
       };
 
       await this.$axios.$put(url, data).then(response => {
-        console.log(response);
         this.fullscreenLoading = !this.fullscreenLoading;
         if(response[0] === true){
           this.openEdit();

@@ -297,8 +297,6 @@ export default {
 
       let fecha = periodo_termino_ingresado.plus({days: total, months:total_meses, years:total_anos}).toFormat('dd LLLL yyyy');
 
-      console.log(object);
-
       if(object.days < 0 || object.months < 0 || object.years < 0 ){
         this.textAlert = true;
         this.message_total = `Con el periodo ingresado (${periodo_inicio_ingresado.toFormat('dd LLL yyyy')} / ${periodo_termino_ingresado.toFormat('dd LLL yyyy')}) y en ${this.devolucion.contrato.nombre} horas, el total a devolver ya estaría completo. Favor reducir el periodo de devolución ingresado. La fecha estimada para finalizar sería el ${fecha}.`;

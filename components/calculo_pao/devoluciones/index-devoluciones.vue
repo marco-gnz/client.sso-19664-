@@ -224,7 +224,6 @@ export default {
           };
 
           await this.$axios.$put(url, data).then(response => {
-              console.log(response);
               if(response[0] === true){
                 response[1]['index_devolucion'] = this.devolucionEdit.index;
                 this.updateDevolucionAction(response[1]);
@@ -278,7 +277,6 @@ export default {
           /* this.$root.$emit('bv::hide::modal', 'modal-edit-devolucion', '#btnShow'); */
         },
         clickDeleteDevolucion(devolucion, index) {
-          console.log(devolucion);
             this.$confirm("¿Eliminar devolución?", "Alerta", {
                 confirmButtonText: "Si, eliminar",
                 cancelButtonText: "Cancelar",

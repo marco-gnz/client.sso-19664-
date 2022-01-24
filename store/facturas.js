@@ -32,7 +32,6 @@ export const mutations = {
     state.facturas.splice(indice, 1, newFactura);
   },
   SHOW_FACTURA(state, factura){
-    console.log(factura);
     state.factura = factura;
   }
 };

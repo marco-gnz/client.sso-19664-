@@ -364,7 +364,6 @@ export default {
 
       await this.$axios.$put(url, data).then(response => {
         this.fullscreenLoading = !this.fullscreenLoading;
-        console.log(response);
         if(response[0] === true){
           this.$router.replace('/usuarios');
           this.addUserToArray();

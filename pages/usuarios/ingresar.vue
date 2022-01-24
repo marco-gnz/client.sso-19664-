@@ -324,7 +324,6 @@ export default {
         params:data
       }).then(response => {
         this.fullscreenLoading = !this.fullscreenLoading;
-        console.log(response);
         if(response[0] === true){
           this.usuario_exist = true; //existe
         }else{
@@ -364,7 +363,6 @@ export default {
 
       await this.$axios.$post(url, data).then(response => {
         this.fullscreenLoading = !this.fullscreenLoading;
-        console.log(response);
         if(response[0] === true){
           this.$router.replace('/usuarios');
           this.addUserToArray();

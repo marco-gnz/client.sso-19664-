@@ -65,8 +65,6 @@ export const mutations = {
     state.convenio.n_resolucion       = object.convenio.n_resolucion;
     state.convenio.fecha_resolucion   = object.convenio.fecha_resolucion;
     state.convenio.observacion        = object.convenio.observacion;
-    console.log(state.convenio);
-
   },
   OPEN_DRAWER(state){
     state.openDrawer = !state.openDrawer;
@@ -195,9 +193,7 @@ export const actions = {
     commit('SET_CONVENIOS', response);
   },
   async selectTiposFormacion({ commit }, data){
-    console.log(data);
     const response = await this.$axios.$get('/api/profesionales/profesional/get-formaciones-doc', {params:{uuid:data.uuid, tipo:data.tipo}});
-    console.log(response);
     commit('SET_FORMACIONES', response);
   },
   async selectAnios({ commit }, especialidad_id){
@@ -206,12 +202,10 @@ export const actions = {
   },
   async getEscrituras({ commit }, uuid){
     const response = await this.$axios.$get('/api/profesionales/profesional/documentos/get-escrituras', {params:{uuid:uuid}});
-    console.log(response);
     commit('SET_ESCRITURAS', response);
   },
   async getDocGenericos({ commit }, uuid){
     const response = await this.$axios.$get('/api/profesionales/profesional/documentos/generico/get-docs-generico', {params:{uuid:uuid}});
-    console.log(response);
     commit('SET_DOC_GENERICOS', response);
   },
   updateDrawer({ commit }){

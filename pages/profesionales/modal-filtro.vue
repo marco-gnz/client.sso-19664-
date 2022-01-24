@@ -201,7 +201,6 @@ export default {
     },
     searchProfesionales(){
       localStorage.setItem('filtro_avanzado', JSON.stringify(this.search));
-      console.log(this.search);
       let object = {search: this.search};
       this.getProfesionales(object);
       this.open();

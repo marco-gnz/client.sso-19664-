@@ -256,7 +256,6 @@ export default {
 
             await this.$axios.$post(url, data).then(response => {
               this.fullscreenLoading = false;
-              console.log(response);
               if(response[0] === true){
                   const h = this.$createElement;
                   this.$msgbox({

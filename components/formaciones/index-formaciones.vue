@@ -98,7 +98,6 @@ export default {
           const url = `/api/profesionales/profesional/remove-formacion/${id}`;
 
           await this.$axios.$delete(url).then(response => {
-            console.log(response);
             if(response === 'passing_escrituras'){
               this.$alert('No es posible eliminar formación. Existen escrituras asociadas a esta formación.', 'Error', {
                 type:'warning',

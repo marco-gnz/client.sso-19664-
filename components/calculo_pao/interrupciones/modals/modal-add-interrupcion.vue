@@ -189,7 +189,6 @@ export default {
       };
 
       await this.$axios.$post(url, data).then(response => {
-        console.log(response[1].devolucion);
         this.fullscreenLoading = !this.fullscreenLoading;
         if(response[0] == true){
           response[1]['pao_index'] = this.pao.index;

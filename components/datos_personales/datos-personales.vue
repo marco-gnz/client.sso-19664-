@@ -76,7 +76,7 @@
                 </div>
                 <div class="row pt-2">
                     <div class="col-md-6">
-                        <label>Etapa o Situación actual ?</label>
+                        <label>Etapa</label>
                         <select class="form-control" v-model="datosPersonalesEdit.etapa">
                             <option value="" selected disabled>-- Seleccione etapa --</option>
                             <option v-for="(etapa, index) in etapas" :key="index" :value="etapa.id">{{etapa.nombre}}</option>

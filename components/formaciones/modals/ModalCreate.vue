@@ -107,9 +107,9 @@ export default {
           centro_formador:'',
           tipo_perfeccionamiento:'',
           perfeccionamiento:'',
-          fecha_registro:'2009-12-20',
+          fecha_registro:'',
           origen:'',
-          periodo:['2010-04-01', '2013-03-31'],
+          periodo:[],
           observacion:''
       },
       perfeccionamientos:[],

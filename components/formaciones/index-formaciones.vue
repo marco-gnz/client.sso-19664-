@@ -82,7 +82,8 @@ export default {
           getFormacionesAction: 'formaciones/getFormaciones',
         }),
         ...mapMutations({
-          removeFormacionAction:'formaciones/REMOVE_FORMACION'
+          removeFormacionAction:'formaciones/REMOVE_FORMACION',
+          removeFormacionPaoAction:'calculoPao/REMOVE_FORMACION_PROFESIONAL'
         }),
         deleteEspecialidad(id){
           this.$confirm('¿Eliminar formación?. Se eliminará todo registro asociado a la formación (Devoluciones PAO, documentos, etc...)', 'Alerta', {
@@ -115,6 +116,7 @@ export default {
               });
             }else if (response === true){
               this.removeFormacionAction(id);
+              this.removeFormacionPaoAction(id);
               this.$message({
                 type: 'success',
                 message: 'Formación eliminada con éxito.'

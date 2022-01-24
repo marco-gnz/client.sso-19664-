@@ -11,7 +11,7 @@
     </div>
     <div class="row pt-lg-3">
       <div class="col-md-12">
-        <template>
+        <template v-if="facturas.length">
           <table class="table table-xs pt-2">
             <thead>
                 <tr>
@@ -58,6 +58,15 @@
               </tr>
             </tbody>
           </table>
+        </template>
+        <template v-else>
+          <el-alert
+            title="No existen facturas..."
+            type="warning"
+            show-icon
+            :closable="false"
+            >
+          </el-alert>
         </template>
       </div>
     </div>

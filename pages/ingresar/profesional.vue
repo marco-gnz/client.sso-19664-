@@ -160,7 +160,7 @@ export default {
            exist_rut:null,
           setTimeoutBuscador:'',
           profesional_identificacion:{
-            rut:'18904336',
+            rut:'',
             dv:'',
           },
           profesional:{

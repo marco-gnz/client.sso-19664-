@@ -29,9 +29,9 @@
                         Acción<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <template v-if="$auth.user.permissions_roles.includes('editar-devolucion-pao') || $auth.user.permissions.includes('editar-devolucion-pao')">
+                      <!-- <template v-if="$auth.user.permissions_roles.includes('editar-devolucion-pao') || $auth.user.permissions.includes('editar-devolucion-pao')">
                         <el-dropdown-item icon="el-icon-edit" @click.native="clickEditDevolucion(devolucion, index)">Editar</el-dropdown-item>
-                      </template>
+                      </template> -->
                       <template v-if="$auth.user.permissions_roles.includes('eliminar-devolucion-pao') || $auth.user.permissions.includes('eliminar-devolucion-pao')">
                         <el-dropdown-item icon="el-icon-delete" @click.native="clickDeleteDevolucion(devolucion, index)" v-loading.fullscreen.lock="fullscreenLoading">Eliminar</el-dropdown-item>
                       </template>

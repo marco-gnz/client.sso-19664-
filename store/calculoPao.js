@@ -39,6 +39,9 @@ export const mutations = {
   SET_FORMACIONES_PROFESIONAL(state, formaciones_profesional){
     state.formaciones_profesional = formaciones_profesional;
   },
+  REMOVE_FORMACION_PROFESIONAL(state, id){
+    state.formaciones_profesional = state.formaciones_profesional.filter(f => f.id !== id);
+  },
   ADD_CALCULO_PAO(state, pao){
     state.paos = [pao, ...state.paos];
     state.id_especialidades = [pao.especialidad.id, ...state.id_especialidades];

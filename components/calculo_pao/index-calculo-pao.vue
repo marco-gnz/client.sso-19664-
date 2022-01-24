@@ -241,7 +241,6 @@ export default {
 
         await this.$axios.$put(url).then(response => {
           this.fullscreenLoading = !this.fullscreenLoading;
-          console.log(response);
           if(response[0] === true){
             this.refreshPaoAction(response[1]);
             this.$message({

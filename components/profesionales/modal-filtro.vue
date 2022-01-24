@@ -5,7 +5,7 @@
         <div class="col-md-6">
           <div class="card-body">
             <div class="form-group">
-              <label>Etapa de profesional</label>
+              <label class="required">Etapa de profesional</label>
               <el-checkbox-group v-model="checkedEtapas">
                 <el-checkbox v-for="etapa in etapas" :label="etapa.id" :key="etapa.id">
                   <el-popover transition="el-fade-in-linear" placement="top-start" width="300" trigger="hover" :content="etapa.nombre"><span slot="reference">{{etapa.sigla}}</span></el-popover>
@@ -17,29 +17,45 @@
         <div class="col-md-6">
           <div class="card-body">
             <div class="form-group">
-              <label>Perfeccionamiento</label>
-              <el-select
-                size="mini"
-                style="width:300px;"
-                :disabled="!checkedEtapas.length"
-                v-model="perfeccion"
-                multiple
-                filterable
-                collapse-tags
-                placeholder="Seleccione">
-                <el-option
-                  v-for="perfeccionamiento in perfeccionamientos"
-                  :key="perfeccionamiento.id"
-                  :value="perfeccionamiento.id"
-                  :label="perfeccionamiento.nombre">
-                  <span style="float: left">{{ perfeccionamiento.nombre }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{ perfeccionamiento.tipo.nombre }}</span>
-                </el-option>
-              </el-select>
+              <label class="required">Estado de profesional</label>
+              <el-checkbox-group v-model="estadosSelect">
+                <el-checkbox v-for="estado in estados" :label="estado.value" :key="estado.value">
+                  <el-popover transition="el-fade-in-linear" placement="top-start" width="220" trigger="hover" :content="estado.descripcion"><span slot="reference">{{estado.nombre}}</span></el-popover>
+                </el-checkbox>
+              </el-checkbox-group>
             </div>
           </div>
         </div>
       </div>
+      <template>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Perfeccionamiento</label>
+                <el-select
+                  size="mini"
+                  style="width:300px;"
+                  :disabled="!checkedEtapas.length"
+                  v-model="perfeccion"
+                  multiple
+                  filterable
+                  collapse-tags
+                  placeholder="Seleccione">
+                  <el-option
+                    v-for="perfeccionamiento in perfeccionamientos"
+                    :key="perfeccionamiento.id"
+                    :value="perfeccionamiento.id"
+                    :label="perfeccionamiento.nombre">
+                    <span style="float: left">{{ perfeccionamiento.nombre }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ perfeccionamiento.tipo.nombre }}</span>
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
       <template v-if="checkedEtapas.includes(2)">
         <div class="row">
           <div class="col-md-6">
@@ -113,7 +129,7 @@
                     :key="establecimiento.id"
                     :label="establecimiento.nombre"
                     :value="establecimiento.id">
-                    <span style="float: left">{{ establecimiento.nombre }}</span>
+                    <span style="float: left; font-size: 12px;">{{ establecimiento.nombre }}</span>
                     <span style="float: right; color: #8492a6; font-size: 13px">{{ (establecimiento.grado_complejidad != null) ? `°${establecimiento.grado_complejidad.grado}` : '--' }}</span>
                   </el-option>
                 </el-select>
@@ -144,9 +160,11 @@
         </div>
       </template>
       <div class="row">
-        <div class="col-md-12">
-          <!-- <a  v-if="checkedEtapas.length === 1" class="float-right" :href="url">Descargar Excel</a> -->
-          <el-link v-if="checkedEtapas.length === 1" @click.prevent="excelReport" class="float-right" type="success" icon="el-icon-download">Descargar Excel</el-link>
+        <div class="col-md-10">
+          <span style="font-size: 11px;">Si requiere exportar (Excel) todos los profesionales, debe seleccionar todas las opciones en "Etapa de profesional".</span>
+        </div>
+        <div class="col-md-2">
+          <el-link v-if="checkedEtapas.length" @click.prevent="excelReport" class="float-right" type="success" icon="el-icon-download">Descargar Excel</el-link>
         </div>
       </div>
       <div class="row pt-lg-5">
@@ -154,7 +172,7 @@
           <button @click.prevent="refreshCampos" type="submit" class="btn btn-warning btn-user float-left">Refrescar campos</button>
         </div>
         <div class="col-md-6">
-          <button :disabled="searchAll.checkedEtapas.length === 0" @click.prevent="searchProfesionales" type="submit" class="btn btn-primary btn-user float-right" v-loading.fullscreen.lock="loading">Aplicar filtro</button>
+          <button :disabled="searchAll.checkedEtapas.length === 0 || searchAll.estados.length === 0" @click.prevent="searchProfesionales" type="submit" class="btn btn-primary btn-user float-right" v-loading.fullscreen.lock="loading">Aplicar filtro</button>
         </div>
       </div>
     </el-dialog>
@@ -168,7 +186,7 @@ export default {
     return{
       isIndeterminate: true,
       checkAll: false,
-      url:''
+      url:'',
     };
   },
   mounted(){
@@ -204,6 +222,14 @@ export default {
       },
       set(value) {
         this.$store.commit('profesionales/SET_ETAPAS', value);
+      }
+    },
+    estadosSelect:{
+      get() {
+        return this.$store.getters['profesionales/checkedEstados']
+      },
+      set(value) {
+        this.$store.commit('profesionales/SET_ESTADOS', value);
       }
     },
     perfeccion:{
@@ -267,6 +293,7 @@ export default {
       perfeccionamientos:'mantenedores/perfeccionamientos',
       redesHospitalariasUserAuth:'mantenedores/redesHospitalariasUserAuth',
       establecimientos:'mantenedores/establecimientos',
+      estados:'profesionales/estados',
     })
   },
   methods:{
@@ -314,9 +341,11 @@ export default {
         f_pao:this.searchAll.fechaPao,
         checkedEtapas:this.searchAll.checkedEtapas,
         establecimiento:this.searchAll.establecimiento,
+        estados:this.searchAll.estados
       }
 
       await this.$axios.$get(url, {params:data}).then(response => {
+        console.log(response);
         this.cargando();
         if(response[0] === true){
           //>0 resultados
@@ -338,5 +367,8 @@ export default {
 </script>
 
 <style>
-
+.required:after {
+    content:" *";
+    color: red;
+  }
 </style>

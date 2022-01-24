@@ -26,6 +26,7 @@ export const state = () => ({
   },
   search:{
     input:'',
+    estados:[],
     perfeccion:[],
     f_ed:[],
     f_ef:[],
@@ -37,7 +38,11 @@ export const state = () => ({
   },
   offset: 3,
   openModal:false,
-  fullscreenLoading:false
+  fullscreenLoading:false,
+  estados:[
+    {value:0, nombre:'Deshabilitado', descripcion:'Deshabilitado en sistema'},
+    {value:1, nombre:'Habilitado', descripcion:'Habilitado en sistema'},
+  ]
 });
 
 //para actualizar/sobrescribir lo que esta en state
@@ -91,6 +96,9 @@ export const mutations = {
   SET_ETAPAS(state, value){
     state.search.checkedEtapas = value;
   },
+  SET_ESTADOS(state, values){
+    state.search.estados = values;
+  },
   SET_PERFECCION(state, value){
     state.search.perfeccion = value;
   },
@@ -117,6 +125,7 @@ export const mutations = {
   },
   SET_PARAMS_FILTRO(state, filtroLocalStorage){
     state.search.input                    =  (filtroLocalStorage.input != null) ? filtroLocalStorage.input : '';
+    state.search.estados                  = filtroLocalStorage.estados;
     state.search.perfeccion               = filtroLocalStorage.perfeccion;
     state.search.f_ed                     = filtroLocalStorage.f_ed;
     state.search.f_ef                     = filtroLocalStorage.f_ef;
@@ -127,6 +136,7 @@ export const mutations = {
   },
   REFRESH_FILTRO(state){
     state.search.input                    = '';
+    state.search.estados                  = [];
     state.search.perfeccion               = [];
     state.search.f_ed                     = [];
     state.search.f_ef                     = [];
@@ -178,6 +188,12 @@ export const getters = {
   },
   activeFiltroAvanzado(state){
     return state.search.active_filtro_avanzado;
+  },
+  checkedEstados(state){
+    return state.search.estados;
+  },
+  estados(state){
+    return state.estados;
   }
 };
 
@@ -195,6 +211,7 @@ export const actions = {
         f_pao: state.search.f_pao,
         checkedEtapas:state.search.checkedEtapas,
         establecimiento:state.search.establecimiento,
+        estados:state.search.estados
       }
     }
      );

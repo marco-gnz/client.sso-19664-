@@ -145,6 +145,7 @@ export default {
         fecha_registro: this.formacion.fecha_registro,
         inicio_formacion:this.formacion.periodo[0],
         termino_formacion:this.formacion.periodo[1],
+        origen:'EDF',
         observacion:this.formacion.observacion,
         profesional_id:this.profesional.id,
         centro_formador_id:this.formacion.centro_formador,

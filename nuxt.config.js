@@ -29,6 +29,7 @@ export default {
     '@/plugins/element-ui',
     '~/plugins/fontawesome.js',
     '@/plugins/luxon',
+    '@/plugins/mayuscula',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -41,7 +42,8 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     'bootstrap-vue/nuxt',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    '@nuxtjs/dotenv'
   ],
 
   //authenticación
@@ -49,7 +51,7 @@ export default {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8000',
+        url: process.env.BASE_URL,
         endpoints: {
           login: { url: '/api/login', method: 'post'},
           logout: { url: '/api/logout', method: 'post' },
@@ -68,7 +70,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     credentials: true,
-    baseURL: 'http://localhost:8000'
+    baseURL: process.env.BASE_URL
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

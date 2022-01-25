@@ -36,9 +36,9 @@
                 <label>Periodo de devolución</label>
                 <el-popover
                   placement="bottom-end"
-                  width="500"
+                  width="700"
                   trigger="hover"
-                  content="Fechas deshabilitadas corresponden a devoluciones e interrupciones...">
+                  content="Fechas deshabilitadas corresponden a devoluciones, interrupciones o periodos no disponibles...">
                   <el-date-picker
                       slot="reference"
                       v-model="devolucion.periodo"
@@ -299,10 +299,10 @@ export default {
 
       if(object.days < 0 || object.months < 0 || object.years < 0 ){
         this.textAlert = true;
-        this.message_total = `Con el periodo ingresado (${periodo_inicio_ingresado.toFormat('dd LLL yyyy')} / ${periodo_termino_ingresado.toFormat('dd LLL yyyy')}) y en ${this.devolucion.contrato.nombre} horas, el total a devolver ya estaría completo. Favor reducir el periodo de devolución ingresado. La fecha estimada para finalizar sería el ${fecha}.`;
+        this.message_total = `Con el periodo ingresado (${periodo_inicio_ingresado.toFormat('dd LLL yyyy')} / ${periodo_termino_ingresado.toFormat('dd LLL yyyy')}) y en ${this.devolucion.contrato.nombre} horas, el total a devolver ya estaría completo. Favor reducir el periodo de devolución ingresado. La fecha estimada a finalizar sería el ${fecha}.`;
       }else{
         this.textAlert = false;
-        this.message_total  = `Con el periodo ingresado (${periodo_inicio_ingresado.toFormat('dd LLL yyyy')} / ${periodo_termino_ingresado.toFormat('dd LLL yyyy')}) y en ${this.devolucion.contrato.nombre} horas, quedaría un total de ${object.years > 1 ? `${object.years} años` : `${object.years} año`}, ${object.months > 1 ? `${object.months} meses` : `${object.months} mes`} y ${Math.round(object.days) > 1 ? `${Math.round(object.days)} días` : `${Math.round(object.days)} día`} por devolver. La fecha estimada para finalizar sería el ${fecha}.`;
+        this.message_total  = `Con el periodo ingresado (${periodo_inicio_ingresado.toFormat('dd LLL yyyy')} / ${periodo_termino_ingresado.toFormat('dd LLL yyyy')}) y en ${this.devolucion.contrato.nombre} horas, quedaría un total de ${object.years > 1 ? `${object.years} años` : `${object.years} año`}, ${object.months > 1 ? `${object.months} meses` : `${object.months} mes`} y ${Math.round(object.days) > 1 ? `${Math.round(object.days)} días` : `${Math.round(object.days)} día`} por devolver. La fecha estimada a finalizar sería el ${fecha}.`;
       }
       this.mesagge_saldo_active = true;
     },

@@ -32,7 +32,7 @@
                       </div>
                       <div class="col-md-3">
                         <label>DV</label>
-                        <input v-model="dv" type="text" class="form-control" placeholder="DV">
+                        <input v-model="dv" type="text" class="form-control" placeholder="DV" v-uppercase>
                         <span class="text-danger" v-if="errors.dv">{{errors.dv[0]}}</span>
                       </div>
                     </div>
@@ -41,21 +41,21 @@
                     <div class="row">
                       <div class="col-md-3">
                         <label>Primer nombre</label>
-                        <input v-model="primer_nombre" type="text" class="form-control" placeholder="Primer nombre">
+                        <input v-model="primer_nombre" type="text" class="form-control" placeholder="Primer nombre" v-uppercase>
                         <span class="text-danger" v-if="errors.primer_nombre">{{errors.primer_nombre[0]}}</span>
                       </div>
                       <div class="col-md-3">
                         <label>Segundo nombre</label>
-                        <input v-model="segundo_nombre" type="text" class="form-control" placeholder="Segundo nombre">
+                        <input v-model="segundo_nombre" type="text" class="form-control" placeholder="Segundo nombre" v-uppercase>
                       </div>
                       <div class="col-md-3">
                         <label>Apellido paterno</label>
-                        <input v-model="apellido_paterno" type="text" class="form-control" placeholder="A. paterno">
+                        <input v-model="apellido_paterno" type="text" class="form-control" placeholder="A. paterno" v-uppercase>
                         <span class="text-danger" v-if="errors.apellido_paterno">{{errors.apellido_paterno[0]}}</span>
                       </div>
                       <div class="col-md-3">
                         <label>Apellido materno</label>
-                        <input v-model="apellido_materno" type="text" class="form-control" placeholder="A. materno">
+                        <input v-model="apellido_materno" type="text" class="form-control" placeholder="A. materno" v-uppercase>
                         <span class="text-danger" v-if="errors.apellido_materno">{{errors.apellido_materno[0]}}</span>
                       </div>
                     </div>

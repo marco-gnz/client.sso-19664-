@@ -26,7 +26,7 @@
                           </div>
                           <div class="col-sm-1">
                               <label>DV</label>
-                              <b-form-input type="text" v-model="profesional_identificacion.dv" class="form-control form-control-user" placeholder="DV" @keyup="identificarProfesional" v-loading.fullscreen.lock="fullscreenLoading"></b-form-input>
+                              <b-form-input v-uppercase type="text" v-model="profesional_identificacion.dv" class="form-control form-control-user" placeholder="DV" @keyup="identificarProfesional" v-loading.fullscreen.lock="fullscreenLoading"></b-form-input>
                           </div>
 
                       </div>
@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <label>DV</label>
-                                        <input type="text" :value="profesional_identificacion.dv" disabled class="form-control" placeholder="DV">
+                                        <input type="text" :value="profesional_identificacion.dv" disabled class="form-control" placeholder="DV" v-uppercase>
                                         <span class="text-danger" v-if="errors.dv">{{errors.dv[0]}}</span>
                                     </div>
                                     <div class="col-md-4">
@@ -65,12 +65,12 @@
                                 <div class="row pt-2">
                                     <div class="col-md-6">
                                         <label>Nombres</label>
-                                        <input type="text" class="form-control" v-model="profesional.nombres" placeholder="Ingrese nombres">
+                                        <input type="text" class="form-control" v-model="profesional.nombres" placeholder="Ingrese nombres" v-uppercase>
                                         <span class="text-danger" v-if="errors.nombres">{{errors.nombres[0]}}</span>
                                     </div>
                                     <div class="col-md-6">
                                         <label>Apellidos</label>
-                                        <input type="text" class="form-control" v-model="profesional.apellidos" placeholder="Ingrese apellidos">
+                                        <input type="text" class="form-control" v-model="profesional.apellidos" placeholder="Ingrese apellidos" v-uppercase>
                                         <span class="text-danger" v-if="errors.apellidos">{{errors.apellidos[0]}}</span>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                                 <div class="row pt-2">
                                     <div class="col-md-6">
                                         <label>Ciudad</label>
-                                        <input type="text" v-model="profesional.ciudad"  class="form-control" placeholder="Ingrese ciudad">
+                                        <input type="text" v-model="profesional.ciudad"  class="form-control" placeholder="Ingrese ciudad" v-uppercase>
                                         <span class="text-danger" v-if="errors.ciudad">{{errors.ciudad[0]}}</span>
                                     </div>
                                 </div>

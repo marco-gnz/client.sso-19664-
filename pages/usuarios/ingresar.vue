@@ -35,7 +35,7 @@
                       </div>
                       <div class="col-sm-2">
                         <label>DV</label>
-                        <b-form-input v-model="usuario.dv" @keyup="identificarUsuario" type="text" class="form-control form-control-user" placeholder="DV" v-loading.fullscreen.lock="fullscreenLoading"></b-form-input>
+                        <b-form-input v-uppercase v-model="usuario.dv" @keyup="identificarUsuario" type="text" class="form-control form-control-user" placeholder="DV" v-loading.fullscreen.lock="fullscreenLoading"></b-form-input>
                       </div>
                     </div>
                     <template v-if="usuario_exist">
@@ -91,21 +91,21 @@
                     <div class="row">
                       <div class="col-md-3">
                         <label>Primer nombre</label>
-                        <input v-model="usuario.primer_nombre" type="text" class="form-control" placeholder="Primer nombre">
+                        <input v-model="usuario.primer_nombre" type="text" class="form-control" placeholder="Primer nombre" v-uppercase>
                         <span class="text-danger" v-if="errors.primer_nombre">{{errors.primer_nombre[0]}}</span>
                       </div>
                       <div class="col-md-3">
                         <label>Segundo nombre</label>
-                        <input v-model="usuario.segundo_nombre" type="text" class="form-control" placeholder="Segundo nombre">
+                        <input v-model="usuario.segundo_nombre" type="text" class="form-control" placeholder="Segundo nombre" v-uppercase>
                       </div>
                       <div class="col-md-3">
                         <label>Apellido paterno</label>
-                        <input v-model="usuario.apellido_paterno" type="text" class="form-control" placeholder="A. paterno">
+                        <input v-model="usuario.apellido_paterno" type="text" class="form-control" placeholder="A. paterno" v-uppercase>
                         <span class="text-danger" v-if="errors.apellido_paterno">{{errors.apellido_paterno[0]}}</span>
                       </div>
                       <div class="col-md-3">
                         <label>Apellido materno</label>
-                        <input v-model="usuario.apellido_materno" type="text" class="form-control" placeholder="A. materno">
+                        <input v-model="usuario.apellido_materno" type="text" class="form-control" placeholder="A. materno" v-uppercase>
                         <span class="text-danger" v-if="errors.apellido_materno">{{errors.apellido_materno[0]}}</span>
                       </div>
                     </div>

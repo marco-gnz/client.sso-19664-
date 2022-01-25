@@ -26,12 +26,12 @@
                 <div class="row pt-2">
                     <div class="col-md-6">
                         <label>Nombres</label>
-                        <input type="text" v-model="datosPersonalesEdit.nombres" class="form-control" placeholder="Ingrese nombres">
+                        <input type="text" v-model="datosPersonalesEdit.nombres" class="form-control" placeholder="Ingrese nombres" v-uppercase>
                         <span class="text-danger" v-if="errors.nombres">{{errors.nombres[0]}}</span>
                     </div>
                     <div class="col-md-6">
                         <label>Apellidos</label>
-                        <input type="text" v-model="datosPersonalesEdit.apellidos" class="form-control" placeholder="Ingrese apellidos">
+                        <input type="text" v-model="datosPersonalesEdit.apellidos" class="form-control" placeholder="Ingrese apellidos" v-uppercase>
                         <span class="text-danger" v-if="errors.apellidos">{{errors.apellidos[0]}}</span>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                 <div class="row pt-2">
                     <div class="col-md-6">
                         <label>Ciudad</label>
-                        <input type="text" v-model="datosPersonalesEdit.ciudad"  class="form-control" placeholder="Ingrese ciudad">
+                        <input type="text" v-model="datosPersonalesEdit.ciudad"  class="form-control" placeholder="Ingrese ciudad" v-uppercase>
                         <span class="text-danger" v-if="errors.ciudad">{{errors.ciudad[0]}}</span>
                     </div>
                 </div>

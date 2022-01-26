@@ -24,6 +24,7 @@
                         v-model="form.email"
                         class="form-control form-control-user"
                         placeholder="Ingrese su correo institucional"
+                        size="medium"
                         :state="!errors.email && null"
                       ></b-form-input>
                       <b-form-invalid-feedback v-if="errors.email">{{
@@ -36,6 +37,7 @@
                         v-model="form.password"
                         class="form-control form-control-user"
                         placeholder="Ingrese su contraseña"
+                        size="medium"
                         :state="!errors.password && null"
                       ></b-form-input>
                       <b-form-invalid-feedback v-if="errors.password">{{

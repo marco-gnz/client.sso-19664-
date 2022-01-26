@@ -160,10 +160,10 @@
         </div>
       </template>
       <div class="row">
-        <div class="col-md-10">
-          <span style="font-size: 11px;">Si requiere exportar (Excel) todos los profesionales, debe seleccionar todas las opciones en "Etapa de profesional".</span>
+        <div class="col-md-8">
+          <span style="font-size: 11px; text-align: center;" class="text-center">Si requiere exportar (Excel) todos los profesionales, debe seleccionar todas las opciones en "Etapa de profesional".</span>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
           <el-link v-if="checkedEtapas.length" @click.prevent="excelReport" class="float-right" type="success" icon="el-icon-download">Descargar Excel</el-link>
         </div>
       </div>
@@ -349,7 +349,7 @@ export default {
         this.cargando();
         if(response[0] === true){
           //>0 resultados
-          var url = `http://localhost:8000/api/profesionales/excel-report/${response[1]}/${response[2]}`
+          var url = `${process.env.BASE_URL}/api/profesionales/excel-report/${response[1]}/${response[2]}`
           window.open(url, '_blank');
         }else{
           //0 resultados

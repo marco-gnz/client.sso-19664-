@@ -1,6 +1,5 @@
 <template>
   <div>
-    <body>
       <div class="container mt-5 todo">
         <div class="row d-flex justify-content-center">
           <div class="col-xl-12 col-lg-12 col-md-9">
@@ -59,7 +58,6 @@
           </div>
         </div>
       </div>
-    </body>
   </div>
   <!-- <div class="container mt-5 todo">
     <div class="row d-flex justify-content-center pt-lg-5">

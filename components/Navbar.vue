@@ -4,7 +4,7 @@
       <b-navbar toggleable="lg" type="light" variant="faded" class="is-transparent is-fixed-top">
         <b-navbar-brand to="/">
         <img src="~/assets/img/logo-sso.png" style="width:35px; height:35px;" class="d-inline-block align-top" alt="SSO">
-        Ley Médica
+        <span class="h3 text-gray-900">S19</span>
         </b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -25,9 +25,9 @@
                 <b-dropdown-item to="/mi-perfil">Mi perfil</b-dropdown-item>
                 <b-dropdown-item href="#" @click.prevent="logout" v-loading.fullscreen.lock="fullscreenLoading">Cerrar sesión</b-dropdown-item>
               </b-nav-item-dropdown>
-              <template v-if="!$auth.loggedIn">
+              <!-- <template v-if="!$auth.loggedIn">
                 <b-nav-item to="/login">Iniciar sesión</b-nav-item>
-              </template>
+              </template> -->
             </b-navbar-nav>
           </client-only>
         </b-collapse>

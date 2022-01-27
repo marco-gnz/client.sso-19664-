@@ -16,8 +16,8 @@ export default {
 
 <style>
   html{
-      font-size: 11px;
-      min-height: 100%;
+      font-size: 12px;
+      height: 100%;
       position: relative;
   }
   body {

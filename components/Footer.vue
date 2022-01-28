@@ -1,6 +1,6 @@
 <template>
   <div>
-    <footer class="sticky-footer bg-white depto efect">
+    <footer class="sticky-footer bg-white efect">
         <div class="container my-auto">
             <div class="copyright text-center my-auto">
                 <span class="text-footer">Sistema 19664  | <strong>Depto. Gestión de las Personas - SSO 2021</strong></span>
@@ -18,12 +18,12 @@ export default {
 
 <style>
 
-.depto{
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 2.5rem;
+.sticky-footer{
+  position: absolute !important;
+  bottom: auto !important;
+  width: 100% !important;
 }
+
 .efect{
   background: transparent !important;
 }

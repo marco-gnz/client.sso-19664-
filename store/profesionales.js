@@ -48,8 +48,11 @@ export const state = () => ({
 
 //para actualizar/sobrescribir lo que esta en state
 export const mutations = {
-  SET_LOADING(state){
-    state.fullscreenLoading = !state.fullscreenLoading;
+  SET_LOADING_SEARCH(state){
+    state.fullscreenLoading = true;
+  },
+  SET_LOADING_NOT_SEARCH(state){
+    state.fullscreenLoading = false;
   },
   OPEN_MODAL(state){
     state.openModal = !state.openModal;
@@ -75,13 +78,13 @@ export const mutations = {
     state.datosPersonalesEdit.dv         = profesional.dv;
     state.datosPersonalesEdit.nombres    = profesional.nombres;
     state.datosPersonalesEdit.apellidos  = profesional.apellidos;
-    state.datosPersonalesEdit.n_contacto = profesional.n_contacto;
-    state.datosPersonalesEdit.ciudad     = profesional.ciudad;
-    state.datosPersonalesEdit.genero     = profesional.genero_id;
-    state.datosPersonalesEdit.email      = profesional.email;
-    state.datosPersonalesEdit.planta     = profesional.planta_id;
-    state.datosPersonalesEdit.etapa      = profesional.etapas_id;
-    state.datosPersonalesEdit.calidad    = profesional.calidad_juridica_id;
+    state.datosPersonalesEdit.n_contacto = (profesional.n_contacto != null) ? profesional.n_contacto : '';
+    state.datosPersonalesEdit.ciudad     = (profesional.ciudad != null) ? profesional.ciudad : '';
+    state.datosPersonalesEdit.genero     = (profesional.genero_id != null) ? profesional.genero_id : '';
+    state.datosPersonalesEdit.email      = (profesional.email != null) ? profesional.email : '';
+    state.datosPersonalesEdit.planta     = (profesional.planta_id != null) ? profesional.planta_id : '';
+    state.datosPersonalesEdit.etapa      = (profesional.etapas_id != null) ? profesional.etapas_id : '';
+    state.datosPersonalesEdit.calidad    = (profesional.calidad_juridica_id != null) ? profesional.calidad_juridica_id : '';
     state.datosPersonalesEdit.situacion_actual = (profesional.situacion_actual_id != null) ? profesional.situacion_actual_id : '';
   },
   UPDATE_STATUS_PROFESIONAL(state, object){
@@ -202,7 +205,7 @@ export const getters = {
 //metodos para interactuar con la api
 export const actions = {
   async getProfesionales({ commit, state }){
-    commit('SET_LOADING');
+    commit('SET_LOADING_SEARCH');
     const response  = await this.$axios.$get(`/api/profesionales/profesional/get-profesionales?page=${state.pagination.current_page}`,
      {params:
       {
@@ -219,7 +222,7 @@ export const actions = {
      );
 
     if(response){
-      commit('SET_LOADING');
+      commit('SET_LOADING_NOT_SEARCH');
     }
 
     commit('SET_PROFESIONALES', response.profesionales.data);

@@ -8,7 +8,6 @@
           <div class="row">
             <div class="col-md-12">
                 <label>1. Seleccione tipo de documento</label>
-                {{!$auth.user.permissions_roles.includes('ingresar-convenio')}}
                 <select v-model="newDocument.tipo_documento" class="form-control" @change="selectTipoDoc">
                     <option v-if="$auth.user.permissions_roles.includes('ingresar-convenio') || $auth.user.permissions.includes('ingresar-convenio')" :value="0">Convenio</option>
                     <option v-if="$auth.user.permissions_roles.includes('ingresar-escritura') || $auth.user.permissions.includes('ingresar-escritura')" :value="1">Escritura pública</option>

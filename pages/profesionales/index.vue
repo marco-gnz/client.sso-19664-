@@ -37,7 +37,7 @@
                 <template v-if="profesionales.length">
                   <div class="col-md-12">
                     <el-tag size="mini" type="success">{{`${pagination.total} ${pagination.total > 1 ? `resultados` : `resultado`}`}}</el-tag>
-                    <table class="table pt-lg-2">
+                    <table class="table pt-lg-2" v-loading="loading" element-loading-text="Cargando...">
                       <thead>
                         <tr>
                           <th scope="col">Rut</th>
@@ -53,9 +53,9 @@
                           <tr v-for="(profesional, index) in profesionales" :key="index" class="click">
                             <td>{{profesional.rut_completo}}</td>
                             <td>{{profesional.apellidos}} {{profesional.nombres}}</td>
-                            <td>{{profesional.etapa.nombre}}</td>
+                            <td>{{ (profesional.etapa != null) ? profesional.etapa.nombre : '--' }}</td>
                             <td>{{ (profesional.situacion_actual != null) ? profesional.situacion_actual.nombre : '--'}}</td>
-                            <td>{{ (profesional.n_contacto != null) ? profesional.n_contacto : '--' }}</td>
+                            <td>{{ (profesional.n_contacto != null && profesional.n_contacto != '') ? profesional.n_contacto : '--' }}</td>
                             <td>
                               <template v-if="$auth.user.permissions_roles.includes('estado-profesional') || $auth.user.permissions.includes('estado-profesional')">
                                 <el-tooltip :content="`Estado: ${profesional.estado == 1 ? `Habilitado` : `Deshabilitado`}`" placement="top">
@@ -140,7 +140,7 @@ export default {
             isBusy: false,
             value: 1,
             fullscreenLoading: false,
-            setTimeoutBuscador: ""
+            setTimeoutBuscador: "",
         };
     },
     mounted() {
@@ -161,6 +161,9 @@ export default {
           set(value) {
             this.$store.commit('profesionales/SET_INPUT_SEARCH', value);
           }
+        },
+        loading: function () {
+            return this.$store.state.profesionales.fullscreenLoading;
         },
         searchAll(){
           return {...this.$store.state.profesionales.search}

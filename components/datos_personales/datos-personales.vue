@@ -5,17 +5,17 @@
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>RUT</label>
+                        <label class="required">RUT</label>
                         <input type="text" v-model="datosPersonalesEdit.rut" class="form-control" placeholder="Ingrese rut">
                         <span class="text-danger" v-if="errors.rut">{{errors.rut[0]}}</span>
                     </div>
                     <div class="col-md-2">
-                        <label>DV</label>
+                        <label class="required">DV</label>
                         <input type="text" v-model="datosPersonalesEdit.dv"  class="form-control" placeholder="DV">
                         <span class="text-danger" v-if="errors.dv">{{errors.dv[0]}}</span>
                     </div>
                     <div class="col-md-4">
-                        <label>Género</label>
+                        <label class="required">Género</label>
                         <select class="form-control" v-model="datosPersonalesEdit.genero">
                             <option value="" selected disabled>-- Seleccione género --</option>
                             <option v-for="(genero, index) in generos" :key="index" :value="genero.id">{{genero.nombre}}</option>
@@ -25,12 +25,12 @@
                 </div>
                 <div class="row pt-2">
                     <div class="col-md-6">
-                        <label>Nombres</label>
+                        <label class="required">Nombres</label>
                         <input type="text" v-model="datosPersonalesEdit.nombres" class="form-control" placeholder="Ingrese nombres" v-uppercase>
                         <span class="text-danger" v-if="errors.nombres">{{errors.nombres[0]}}</span>
                     </div>
                     <div class="col-md-6">
-                        <label>Apellidos</label>
+                        <label class="required">Apellidos</label>
                         <input type="text" v-model="datosPersonalesEdit.apellidos" class="form-control" placeholder="Ingrese apellidos" v-uppercase>
                         <span class="text-danger" v-if="errors.apellidos">{{errors.apellidos[0]}}</span>
                     </div>
@@ -58,7 +58,7 @@
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Planta</label>
+                        <label class="required">Planta</label>
                         <select class="form-control" v-model="datosPersonalesEdit.planta">
                             <option value="" selected disabled>-- Seleccione planta --</option>
                             <option v-for="(planta, index) in plantas" :key="index" :value="planta.id">{{planta.nombre}}</option>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="row pt-2">
                     <div class="col-md-6">
-                        <label>Etapa</label>
+                        <label class="required">Etapa</label>
                         <select class="form-control" v-model="datosPersonalesEdit.etapa">
                             <option value="" selected disabled>-- Seleccione etapa --</option>
                             <option v-for="(etapa, index) in etapas" :key="index" :value="etapa.id">{{etapa.nombre}}</option>
@@ -84,7 +84,7 @@
                         <span class="text-danger" v-if="errors.etapas_id">{{errors.etapas_id[0]}}</span>
                     </div>
                     <div class="col-md-6">
-                        <label>Calidad jurídica</label>
+                        <label class="required">Calidad jurídica</label>
                         <select class="form-control" v-model="datosPersonalesEdit.calidad">
                             <option value="" selected disabled>-- Seleccione calidad jurídica --</option>
                             <option v-for="(calidad, index) in calidades" :key="index" :value="calidad.id">{{calidad.nombre}}</option>
@@ -96,7 +96,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <span class="float-right">¿PAO?</span><input class="float-right mr-2" type="checkbox">
+            <!-- <span class="float-right">¿PAO?</span><input class="float-right mr-2" type="checkbox"> -->
           </div>
         </div>
         <div class="row pt-4">
@@ -188,7 +188,7 @@ export default {
         }
       }).catch(error => {
         this.fullscreenLoading = !this.fullscreenLoading;
-        this.errorStatus401(error.response.status);
+        /* this.errorStatus401(error.response.status); */
         this.errors = error.response.data.errors;
       });
     }

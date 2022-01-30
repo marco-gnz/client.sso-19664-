@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="modal-edit-establecimiento" size="xl" title="Ingresar nuevo establecimiento" ok-only>
+    <b-modal id="modal-edit-establecimiento" size="xl" title="Editar establecimiento" ok-only>
       <div class="row">
         <div class="col-md-1">
           <label>Código SIRH</label>

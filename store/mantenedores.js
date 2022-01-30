@@ -18,6 +18,7 @@ export const state = () => ({
   tipoDocumentos:[],
   perfeccionamientos:[],
   situacionesActual:[],
+  tipoConvenios:[],
 
   pagination:{
     total:0,
@@ -65,6 +66,9 @@ export const state = () => ({
 });
 
 export const mutations = {
+  SET_TIPO_CONVENIOS(state, tipos){
+    state.tipoConvenios = tipos;
+  },
   SET_PAGINATION(state, pagination){
     state.pagination = pagination;
   },
@@ -303,6 +307,9 @@ export const getters = {
   },
   situacionesActual(state){
     return state.situacionesActual;
+  },
+  tipoConvenios(state){
+    return state.tipoConvenios;
   }
 };
 
@@ -407,6 +414,10 @@ export const actions = {
     async getSituacionesActual({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/situaciones-actual');
       commit('SET_SITUACIONES_ACTUALES', response);
+    },
+    async getTipoConvenio({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/tipo-convenios');
+      commit('SET_TIPO_CONVENIOS', response);
     },
 };
 

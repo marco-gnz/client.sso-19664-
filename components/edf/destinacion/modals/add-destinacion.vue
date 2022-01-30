@@ -11,30 +11,46 @@
           </div>
       </div>
       <section v-if="destinacion_pasos === 0">
-        <div class="row pt-4 d-flex justify-content-center">
+        <div class="row pt-4">
           <div class="col-md-3">
+            <div class="form-group">
               <label>Red hospitalaria</label>
               <select class="form-control" v-model="destinacion.red" @change="getEstablecimientosChange">
                   <option value="" selected disabled>-- Seleccione red --</option>
                   <option v-for="(red, index) in redesHospitalarias" :key="index" :value="red.id">{{red.nombre}}</option>
               </select>
+            </div>
           </div>
           <div class="col-md-3">
-              <label>Campo clínico</label> <i>(Establecimiento)</i>
+            <div class="form-group">
+              <label>Establecimiento en destinación</label>
               <select :disabled="destinacion.red === '' || establecimientos.length === 0" class="form-control" v-model="destinacion.campo_clinico">
-                  <option value="" selected disabled>-- Seleccione campo --</option>
-                  <option v-for="(campo, index) in establecimientos" :key="index" :value="campo">{{campo.nombre}} {{ (campo.grado_complejidad != null) ? `- °${campo.grado_complejidad.grado}` : '' }}</option>
+                  <option value="" selected disabled>-- Seleccione establecimiento --</option>
+                  <option v-for="(campo, index) in establecimientos" :key="index" :value="campo">{{campo.nombre}}</option>
               </select>
               <span class="pt-2" v-if="destinacion.red != '' && establecimientos.length == 0"><i>No existen establecimientos con ° de complejidad</i></span>
               <span class="text-danger" v-if="errors.establecimiento_id">{{errors.establecimiento_id[0]}}</span>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>° Complejidad</label>
+              <select :disabled="destinacion.campo_clinico === '' || establecimientos.length === 0" class="form-control" v-model="destinacion.grado">
+                  <option value="" selected disabled>Seleccione</option>
+                  <option v-for="(grado, index) in gradosComplejidad" :key="index" :value="grado.id">{{grado.grado}}</option>
+              </select>
+              <span class="text-danger" v-if="errors.establecimiento_id">{{errors.establecimiento_id[0]}}</span>
+            </div>
           </div>
           <div class="col-md-3">
-              <label>Unidad</label>
+            <div class="form-group">
+              <label>Unidad en destinación</label>
               <select :disabled="unidades.length === 0" class="form-control" v-model="destinacion.unidad">
                   <option value="" selected disabled>-- Seleccione unidad --</option>
                   <option v-for="(unidad, index) in unidades" :key="index" :value="unidad.id">{{unidad.nombre}}</option>
               </select>
               <span class="text-danger" v-if="errors.unidad_id">{{errors.unidad_id[0]}}</span>
+            </div>
           </div>
         </div>
       </section>
@@ -85,6 +101,7 @@ export default {
       destinacion:{
         red:'',
         campo_clinico:'',
+        grado:'',
         unidad:'',
         periodo:[],
         observacion:''
@@ -95,12 +112,14 @@ export default {
   mounted(){
     this.getRedesHospitalarias();
     this.getUnidades();
+    this.getGradoComplejidad();
   },
   computed:{
     ...mapGetters({
       redesHospitalarias:'mantenedores/redesHospitalarias',
       establecimientos:'mantenedores/establecimientosGradoComplejidad',
       unidades:'mantenedores/unidades',
+      gradosComplejidad:'mantenedores/gradosComplejidad'
     })
   },
   methods:{
@@ -108,6 +127,7 @@ export default {
       getRedesHospitalarias:'mantenedores/getRedesHospitalarias',
       getEstablecimientosAction: 'mantenedores/getEstablecimientosGradoComplejidad',
       getUnidades: 'mantenedores/getUnidades',
+      getGradoComplejidad:'mantenedores/getGradoComplejidad'
     }),
     ...mapMutations({
       storeDestinacionAction: 'edf/STORE_DESTINACION'
@@ -124,7 +144,7 @@ export default {
         observacion: this.destinacion.observacion,
         profesional_id: this.profesional.id,
         establecimiento_id: (this.destinacion.campo_clinico != '') ? this.destinacion.campo_clinico.id : '',
-        grado_complejidad_establecimiento_id:(this.destinacion.campo_clinico != '') ? this.destinacion.campo_clinico.grado_complejidad.id : '',
+        grado_complejidad_establecimiento_id: this.destinacion.grado,
         unidad_id:this.destinacion.unidad
       };
 

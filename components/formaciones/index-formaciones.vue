@@ -28,7 +28,7 @@
                       <td>{{especialidad.centro_formador.nombre}}</td>
                       <td>{{especialidad.perfeccionamiento.tipo.nombre}}</td>
                       <td>{{especialidad.perfeccionamiento.nombre}}</td>
-                      <td>{{DateTime.fromISO(especialidad.fecha_registro).toFormat('dd-LL-yyyy')}}</td>
+                      <td>{{ (especialidad.fecha_registro != null) ? DateTime.fromISO(especialidad.fecha_registro).toFormat('dd-LL-yyyy') : '--'}}</td>
                       <td>{{DateTime.fromISO(especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</td>
                       <td>{{especialidad.origen}}</td>
                       <td @click.stop="">

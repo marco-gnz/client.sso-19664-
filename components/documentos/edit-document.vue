@@ -18,7 +18,7 @@
       <section v-if="documentEdit.tipo_documento != 2">
         <div class="row pt-lg-3">
           <div class="col-md-6">
-            <label>2. Seleccione que tipo de formación</label>
+            <label>2. Tipo de formación</label>
             <select v-model="documentEdit.tipo_formacion" class="form-control" @change="changeTipoFormacion">
                   <option value="" selected disabled>-- Seleccione tipo --</option>
                   <option v-for="(tipo_perfeccionamiento, index) in tipoPerfeccionamientos" :key="index" :value="tipo_perfeccionamiento.id">{{tipo_perfeccionamiento.nombre}}</option>
@@ -39,8 +39,18 @@
         <div class="row pt-lg-3">
           <div class="col-md-12">
             <div class="row">
+              <div class="col-md-12">
+                <label>4. Seleccione tipo de convenio</label>
+                <select v-model="tipoConvenio" class="form-control">
+                  <option value="" selected disabled>-- Seleccione tipo de convenio --</option>
+                  <option v-for="(tipo, index) in tipoConvenios" :key="index" :value="tipo.id">{{tipo.nombre}}</option>
+                </select>
+                <span class="text-danger" v-if="errors.tipo_convenio_id">{{errors.tipo_convenio_id[0]}}</span>
+              </div>
+            </div>
+            <div class="row pt-lg-3">
               <div class="col-md-6">
-                <label>4. Seleccione año de arancel</label>
+                <label>5. Seleccione año de arancel</label>
                 <el-select
                 :disabled="documentEdit.formacion === '' || anios.length === 0"
                   v-model="aniosArancel"
@@ -58,19 +68,19 @@
                 <span class="text-danger" v-if="errors.anios_arancel">{{errors.anios_arancel[0]}}</span>
               </div>
               <div class="col-md-6">
-                  <label>5. Arancel en pesos <i>(Sin puntos)</i></label>
+                  <label>6. Arancel en pesos <i>(Sin puntos)</i></label>
                   <input v-model="convenioEdit.valor_arancel" type="number" class="form-control" placeholder="Ingrese arancel">
                   <span class="text-danger" v-if="errors.valor_arancel">{{errors.valor_arancel[0]}}</span>
               </div>
             </div>
             <div class="row pt-lg-3">
                 <div class="col-md-6">
-                    <label>6. N° de resolución</label>
+                    <label>7. N° de resolución</label>
                     <input v-model="convenioEdit.n_resolucion" type="number" class="form-control" placeholder="Ingrese n° de resolución">
                     <span class="text-danger" v-if="errors.n_resolucion">{{errors.n_resolucion[0]}}</span>
                 </div>
                 <div class="col-md-6">
-                    <label>7. Fecha de resolución</label>
+                    <label>8. Fecha de resolución</label>
                     <el-date-picker
                         v-model="fechaResolucionConvenio"
                         format="dd-MM-yyyy"
@@ -83,14 +93,14 @@
             </div>
             <div class="row pt-lg-3">
                 <div class="col-md-12">
-                    <label>8. Ingrese observación <i>(Opcional)</i></label>
+                    <label>9. Ingrese observación <i>(Opcional)</i></label>
                     <textarea cols="10" rows="5" class="form-control" placeholder="Ingrese observación..." v-model="convenioEdit.observacion"></textarea>
                 </div>
             </div>
             <div class="row pt-lg-3">
                 <div class="col-md-12">
                     <el-button
-                        :disabled="!$auth.user.permissions_roles.includes('editar-convenio') || !$auth.user.permissions.includes('editar-convenio')"
+                        v-if="$auth.user.permissions_roles.includes('editar-convenio') || $auth.user.permissions.includes('editar-convenio')"
                         size="mini"
                         type="primary"
                         class="mt-3 btn btn-primary float-lg-right"
@@ -145,7 +155,7 @@
             <div class="row pt-lg-3">
                 <div class="col-md-12">
                     <el-button
-                        :disabled="!$auth.user.permissions_roles.includes('editar-escritura') || !$auth.user.permissions.includes('editar-escritura')"
+                        v-if="$auth.user.permissions_roles.includes('editar-escritura') || $auth.user.permissions.includes('editar-escritura')"
                         size="mini"
                         type="primary"
                         class="mt-3 btn btn-primary float-lg-right"
@@ -200,7 +210,7 @@
                 <div class="row pt-lg-3">
                     <div class="col-md-12">
                         <el-button
-                            :disabled="!$auth.user.permissions_roles.includes('editar-documento') || !$auth.user.permissions.includes('editar-documento')"
+                            v-if="$auth.user.permissions_roles.includes('editar-documento') || $auth.user.permissions.includes('editar-documento')"
                             size="mini"
                             type="primary"
                             class="mt-3 btn btn-primary float-lg-right"
@@ -232,13 +242,15 @@ export default {
   mounted(){
     this.getTipoPerfeccionamientos();
     this.getTipoDocumentos();
+    this.selectTipoDoc();
   },
   computed:{
     ...mapGetters({
       tipoPerfeccionamientos:'mantenedores/tipoPerfeccionamientos',
       perfeccionamientos:'documentos/formaciones',
       anios:'documentos/anios',
-      tipoDocumentos:'mantenedores/tipoDocumentos'
+      tipoDocumentos:'mantenedores/tipoDocumentos',
+      tipoConvenios:'mantenedores/tipoConvenios'
     }),
     documentValueEdit:{
       get() {
@@ -263,6 +275,14 @@ export default {
       },
       set (newValue){
         this.$store.commit('documentos/ANIOS_ARANCEL', newValue);
+      }
+    },
+    tipoConvenio:{
+      get (){
+        return this.$store.state.documentos.convenio.tipo;
+      },
+      set (newValue){
+        this.$store.commit('documentos/TIPO_CONVENIO', newValue);
       }
     },
     fechaResolucionConvenio:{
@@ -335,7 +355,8 @@ export default {
       changeSelectAnios:'documentos/selectAnios',
       openEdit: "documentos/updateDrawerEdit",
       openEditEscritura:'documentos/updateEscrituraFirmada',
-      getTipoDocumentos:'mantenedores/getTipoDocumentos'
+      getTipoDocumentos:'mantenedores/getTipoDocumentos',
+      getTipoConvenio:'mantenedores/getTipoConvenio'
     }),
     changeTipoFormacion(){
       let data = {
@@ -356,7 +377,8 @@ export default {
         n_resolucion:this.convenioEdit.n_resolucion,
         fecha_resolucion:this.convenioEdit.fecha_resolucion,
         observacion:this.convenioEdit.observacion,
-        especialidad_id:this.documentEdit.formacion
+        especialidad_id:this.documentEdit.formacion,
+        tipo_convenio_id:this.tipoConvenio
       };
 
       await this.$axios.$put(url, data).then(response => {
@@ -434,6 +456,11 @@ export default {
         this.fullscreenLoading = !this.fullscreenLoading;
         this.errors = error.response.data.errors;
       });
+    },
+    selectTipoDoc(){
+       if(this.documentEdit.tipo_documento === 0){
+          this.getTipoConvenio();
+        }
     }
   }
 }

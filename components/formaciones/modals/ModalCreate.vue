@@ -48,7 +48,7 @@
           <div class="row pt-4">
             <div class="col-md-6">
               <div class="form-group">
-                <label>Fecha de registro</label>
+                <label>Fecha de registro Superintendencia</label>
                 <input type="date" class="form-control" v-model="especialidad.fecha_registro">
                 <span class="text-danger" v-if="errors.fecha_registro">{{errors.fecha_registro[0]}}</span>
               </div>

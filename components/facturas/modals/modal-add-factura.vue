@@ -16,7 +16,7 @@
              <label>Seleccione convenio</label>
              <select class="form-control" v-model="factura.convenio">
                   <option value="">-- Seleccione convenio --</option>
-                  <option v-for="(convenio, index) in convenios" :key="index" :value="convenio">{{convenio.n_resolucion}}/{{ DateTime.fromISO(convenio.fecha_resolucion).toFormat('dd-LL-yyyy')}} - {{convenio.especialidad.centro_formador.nombre}}</option>
+                  <option v-for="(convenio, index) in convenios" :key="index" :value="convenio">{{convenio.n_resolucion}}/{{ DateTime.fromISO(convenio.fecha_resolucion).toFormat('dd-LL-yyyy')}} - {{ (convenio.especialidad != null) ? convenio.especialidad.centro_formador.nombre : '' }}</option>
               </select>
               <span class="text-danger" v-if="errors.convenio_id">{{errors.convenio_id[0]}}</span>
           </div>

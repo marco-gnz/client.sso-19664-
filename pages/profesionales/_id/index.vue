@@ -7,7 +7,7 @@
               <div class="card shadow">
                 <b-card no-body>
                   <b-tabs pills card vertical nav-wrapper-class="w-20">
-                    <b-tab disabled :title="`${profesional.nombres} ${profesional.apellidos}`"></b-tab>
+                    <b-tab class="font-weight-bold" disabled :title="`${profesional.nombres} ${profesional.apellidos}`"></b-tab>
                     <b-tab title="Datos personales">
                       <DatosPersonales :profesional="profesional"/>
                     </b-tab>
@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <IndexDocuemtos />
+      <IndexDocuemtos :profesional="profesional"/>
     </div>
 </template>
 

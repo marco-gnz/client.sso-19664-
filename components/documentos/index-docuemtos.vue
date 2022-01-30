@@ -25,8 +25,8 @@
       </div>
       <div class="row pt-lg-2">
         <div class="col-md-12">
-          <AddNewDocument />
-          <EditDocument />
+          <AddNewDocument :profesional="profesional"/>
+          <EditDocument :profesional="profesional" />
         </div>
       </div>
       <div class="row pt-lg-1">
@@ -39,7 +39,8 @@
                   <div class="card-header color-header">
                     <div class="row">
                       <div class="col-md-10">
-                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{convenio.especialidad.perfeccionamiento.tipo.nombre}} <i>({{convenio.especialidad.perfeccionamiento.nombre}})</i></div>
+                          <!-- <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{convenio.especialidad.perfeccionamiento.tipo.nombre}} <i>({{convenio.especialidad.perfeccionamiento.nombre}})</i></div> -->
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{ (convenio.especialidad != null) ?  convenio.especialidad.perfeccionamiento.tipo.nombre : ''}} <i>({{(convenio.especialidad != null) ? convenio.especialidad.perfeccionamiento.nombre : 'no existe formación'}})</i></div>
                       </div>
                       <div class="col-md-2">
                           <el-dropdown class="float-right">
@@ -71,9 +72,11 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="h6 mb-0 pt-lg-2 text-gray-800">N° {{convenio.n_resolucion}}/{{DateTime.fromISO(convenio.fecha_resolucion).toFormat('dd-LL-yyyy')}}</div>
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800">{{convenio.tipo.nombre}}</div>
                         <div class="h5 mb-0 pt-lg-4 font-weight-bold text-gray-800">${{Intl.NumberFormat('de-DE').format(convenio.valor_arancel)}}</div>
-                        <div class="h6 mb-0 pt-lg-3 text-gray-800">{{convenio.especialidad.centro_formador.nombre}}</div>
-                        <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>Arancel año </i> {{convenio.anios_arancel.map(a => a).join(' - ')}}</div>
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800">{{ (convenio.especialidad != null ? convenio.especialidad.centro_formador.nombre : '') }}</div>
+                        <!-- <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>Arancel año </i> {{ (convenio.anios_arancel) ? convenio.anios_arancel.map(a => a).join(' - ') : '--' }}</div> -->
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>{{ (convenio.anios_arancel.length) ? `Arancel año ${convenio.anios_arancel.map(a => a).join(' - ')}` : '' }}</i> </div>
                         <div class="mb-0 pt-lg-3 text-gray-800" v-if="convenio.observacion">
                           <el-popover
                             placement="top-start"
@@ -98,8 +101,8 @@
                               placement="top-start"
                               width="400"
                               trigger="hover"
-                              :content="`Última actualización: ${DateTime.fromSQL(convenio.fecha_update).toFormat('ff')} - MG`">
-                              <span slot="reference" :class="convenio.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(convenio.fecha_add).toFormat('ff') }} - MG</i></span>
+                              :content="`Última actualización: ${DateTime.fromSQL(convenio.fecha_update).toFormat('ff')} - ${convenio.user_update != null ? `${convenio.user_update.sigla}` : `--`}`">
+                              <span slot="reference" :class="convenio.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(convenio.fecha_add).toFormat('ff') }} - {{convenio.user_add.sigla}}</i></span>
                             </el-popover>
                           </div>
                       </div>
@@ -190,8 +193,8 @@
                                   placement="top-start"
                                   width="400"
                                   trigger="hover"
-                                  :content="`Última actualización: ${DateTime.fromSQL(escritura.fecha_update).toFormat('ff')} - MG`">
-                                  <span slot="reference" :class="escritura.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(escritura.fecha_add).toFormat('ff') }} - MG</i></span>
+                                  :content="`Última actualización: ${DateTime.fromSQL(escritura.fecha_update).toFormat('ff')} - ${escritura.user_update != null ? `${escritura.user_update.sigla}` : `--` }`">
+                                  <span slot="reference" :class="escritura.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(escritura.fecha_add).toFormat('ff') }} - {{escritura.user_add.sigla}}</i></span>
                                 </el-popover>
                               </div>
                           </div>
@@ -273,8 +276,8 @@
                             placement="top-start"
                             width="400"
                             trigger="hover"
-                            :content="`Última actualización: ${DateTime.fromSQL(factura.fecha_update).toFormat('ff')} - MG`">
-                            <span slot="reference" :class="factura.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(factura.fecha_add).toFormat('ff') }} - MG</i></span>
+                            :content="`Última actualización: ${DateTime.fromSQL(factura.fecha_update).toFormat('ff')} - ${factura.user_update != null ? `${factura.user_update.sigla}` : `--`}`">
+                            <span slot="reference" :class="factura.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(factura.fecha_add).toFormat('ff') }} - {{factura.user_add.sigla}}</i></span>
                           </el-popover>
                         </div>
                     </div>
@@ -358,8 +361,8 @@
                               placement="top-start"
                               width="400"
                               trigger="hover"
-                              :content="`Última actualización: ${DateTime.fromSQL(generico.fecha_update).toFormat('ff')} - MG`">
-                              <span slot="reference" :class="generico.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(generico.fecha_add).toFormat('ff') }} - MG</i></span>
+                              :content="`Última actualización: ${DateTime.fromSQL(generico.fecha_update).toFormat('ff')} - ${generico.user_update != null ? `${generico.user_update.sigla}` : `--`}`">
+                              <span slot="reference" :class="generico.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(generico.fecha_add).toFormat('ff') }} - {{generico.user_add.sigla}}</i></span>
                             </el-popover>
                           </div>
                       </div>
@@ -390,6 +393,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
 import AddNewDocument from './add-new-document.vue';
 import EditDocument from './edit-document.vue';
 export default {
+  props:['profesional'],
     data() {
         return {
           fullscreenLoading:false,
@@ -450,10 +454,10 @@ export default {
           this.openEdit();
           let data = {
               uuid: this.$route.params.id,
-              tipo: convenio.especialidad.perfeccionamiento.tipo_perfeccionamiento_id
+              tipo: (convenio.especialidad != null) ? convenio.especialidad.perfeccionamiento.tipo_perfeccionamiento_id : ''
             };
           this.selectTiposFormacionAction(data);
-          this.changeSelectAnios(convenio.especialidad.id);
+          this.changeSelectAnios( (convenio.especialidad != null) ? convenio.especialidad.id : '' );
         },
         async deleteConvenio(uuid){
           this.fullscreenLoading = !this.fullscreenLoading;

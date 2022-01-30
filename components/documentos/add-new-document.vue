@@ -18,7 +18,7 @@
           <section v-if="newDocument.tipo_documento != 2">
             <div class="row pt-lg-3">
               <div class="col-md-6">
-                <label>2. Seleccione que tipo de formación</label>
+                <label>2. Tipo de formación</label>
                 <select v-model="newDocument.tipo_formacion" class="form-control" @change="selectTiposFormacion">
                       <option value="" selected disabled>-- Seleccione tipo --</option>
                       <option v-for="(tipo_perfeccionamiento, index) in tipoPerfeccionamientos" :key="index" :value="tipo_perfeccionamiento.id">{{tipo_perfeccionamiento.nombre}}</option>
@@ -39,8 +39,18 @@
             <div class="row pt-lg-3">
               <div class="col-md-12">
                 <div class="row">
+                  <div class="col-md-12">
+                    <label>4. Seleccione tipo de convenio</label>
+                    <select v-model="convenio.tipo" class="form-control">
+                      <option value="" selected disabled>-- Seleccione tipo de convenio --</option>
+                      <option v-for="(tipo, index) in tipoConvenios" :key="index" :value="tipo.id">{{tipo.nombre}}</option>
+                    </select>
+                    <span class="text-danger" v-if="errors.tipo_convenio_id">{{errors.tipo_convenio_id[0]}}</span>
+                  </div>
+                </div>
+                <div class="row pt-lg-3">
                   <div class="col-md-6">
-                    <label>4. Seleccione año de arancel</label>
+                    <label>5. Seleccione año de arancel</label>
                     <el-select
                     :disabled="newDocument.formacion === '' || anios.length === 0"
                     v-model="convenio.anio_arancel"
@@ -58,19 +68,19 @@
                     <span class="text-danger" v-if="errors.anio_arancel">{{errors.anio_arancel[0]}}</span>
                   </div>
                   <div class="col-md-6">
-                      <label>5. Arancel en pesos <i>(Sin puntos)</i></label>
+                      <label>6. Arancel en pesos <i>(Sin puntos)</i></label>
                       <input v-model="convenio.valor_arancel" type="number" class="form-control" placeholder="Ingrese arancel">
                       <span class="text-danger" v-if="errors.valor_arancel">{{errors.valor_arancel[0]}}</span>
                   </div>
                 </div>
                 <div class="row pt-lg-3">
                     <div class="col-md-6">
-                        <label>6. N° de resolución</label>
+                        <label>7. N° de resolución</label>
                         <input v-model="convenio.n_resolucion" type="number" class="form-control" placeholder="Ingrese n° de resolución">
                         <span class="text-danger" v-if="errors.n_resolucion">{{errors.n_resolucion[0]}}</span>
                     </div>
                     <div class="col-md-6">
-                        <label>7. Fecha de resolución</label>
+                        <label>8. Fecha de resolución</label>
                         <el-date-picker
                             v-model="convenio.fecha_resolucion"
                             format="dd-MM-yyyy"
@@ -83,7 +93,7 @@
                 </div>
                 <div class="row pt-lg-3">
                     <div class="col-md-12">
-                        <label>8. Ingrese observación <i>(Opcional)</i></label>
+                        <label>9. Ingrese observación <i>(Opcional)</i></label>
                         <textarea cols="10" rows="5" class="form-control" placeholder="Ingrese observación..." v-model="convenio.observacion"></textarea>
                     </div>
                 </div>
@@ -94,7 +104,7 @@
                             size="mini"
                             type="primary"
                             class="mt-3 btn btn-primary float-lg-right"
-                            @click="addConvenio"
+                            @click="validateEdfProfesionalConvenio"
                             v-loading.fullscreen.lock="fullscreenLoading">
                             Añadir convenio
                         </el-button>
@@ -220,6 +230,7 @@
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 export default {
+  props:['profesional'],
 data(){
   return{
     fullscreenLoading:false,
@@ -230,6 +241,7 @@ data(){
     },
     convenio:{
       anio_arancel:'',
+      tipo:'',
       valor_arancel:'',
       n_resolucion:'',
       fecha_resolucion:'',
@@ -256,6 +268,7 @@ data(){
 mounted(){
   this.getTipoPerfeccionamientos();
   this.getTipoDocumentos();
+  this.selectTipoDoc();
 },
 computed:{
     documentValue:{
@@ -268,7 +281,8 @@ computed:{
     },
     ...mapGetters({
       tipoPerfeccionamientos:'mantenedores/tipoPerfeccionamientos',
-      tipoDocumentos:'mantenedores/tipoDocumentos'
+      tipoDocumentos:'mantenedores/tipoDocumentos',
+      tipoConvenios:'mantenedores/tipoConvenios'
     })
   },
   methods:{
@@ -280,7 +294,8 @@ computed:{
     ...mapActions({
       getTipoPerfeccionamientos:'mantenedores/getTipoPerfeccionamientos',
       open: "documentos/updateDrawer",
-      getTipoDocumentos:'mantenedores/getTipoDocumentos'
+      getTipoDocumentos:'mantenedores/getTipoDocumentos',
+      getTipoConvenio:'mantenedores/getTipoConvenio'
     }),
     async selectTiposFormacion(){
       const url = '/api/profesionales/profesional/get-formaciones-doc';
@@ -315,19 +330,30 @@ computed:{
           console.log(error);
         });
     },
+    validateEdfProfesionalConvenio(){
+      if(this.profesional.etapas_id != 2 && this.newDocument.formacion === ''){
+        this.errors = { especialidad_id: [] }
+        this.errors.especialidad_id[0] = `La formación es obligatoria para profesional ${this.profesional.etapa.sigla}`;
+      }else{
+        this.addConvenio();
+      }
+    },
     async addConvenio(){
       this.fullscreenLoading = !this.fullscreenLoading;
       const url = '/api/profesionales/profesional/documentos/add-convenio';
       const data = {
+        profesional_id: this.profesional.id,
         anios_arancel: this.convenio.anio_arancel,
         valor_arancel:parseInt(this.convenio.valor_arancel),
         n_resolucion:this.convenio.n_resolucion,
         fecha_resolucion:this.convenio.fecha_resolucion,
         observacion:this.convenio.observacion,
-        especialidad_id:this.newDocument.formacion
+        especialidad_id:this.newDocument.formacion,
+        tipo_convenio_id:this.convenio.tipo
       };
 
       await this.$axios.$post(url, data).then(response => {
+        console.log(response);
         this.fullscreenLoading = !this.fullscreenLoading;
         if(response[0] === true){
           this.addNewConvenio(response[1]);
@@ -420,7 +446,9 @@ computed:{
       this.errors = {};
     },
     selectTipoDoc(){
-
+       if(this.newDocument.tipo_documento === 0){
+          this.getTipoConvenio();
+        }
     }
   }
 }

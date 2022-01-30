@@ -44,17 +44,17 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label>RUT</label>
+                                        <label class="required font-weight-bold">RUT</label>
                                         <input type="text" :value="profesional_identificacion.rut" disabled class="form-control" placeholder="Ingrese rut">
                                         <span class="text-danger" v-if="errors.rut">{{errors.rut[0]}}</span>
                                     </div>
                                     <div class="col-md-2">
-                                        <label>DV</label>
+                                        <label class="required font-weight-bold">DV</label>
                                         <input type="text" :value="profesional_identificacion.dv" disabled class="form-control" placeholder="DV" v-uppercase>
                                         <span class="text-danger" v-if="errors.dv">{{errors.dv[0]}}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="required">Género</label>
+                                        <label class="required font-weight-bold">Género</label>
                                         <select class="form-control required" v-model="profesional.genero">
                                             <option value="" selected disabled>-- Seleccione género --</option>
                                             <option v-for="(genero, index) in generos" :key="index" :value="genero.id">{{genero.nombre}}</option>
@@ -62,33 +62,33 @@
                                         <span class="text-danger" v-if="errors.genero_id">{{errors.genero_id[0]}}</span>
                                     </div>
                                 </div>
-                                <div class="row pt-2">
+                                <div class="row pt-lg-4">
                                     <div class="col-md-6">
-                                        <label class="required">Nombres</label>
+                                        <label class="required font-weight-bold">Nombres</label>
                                         <input type="text" class="form-control" v-model="profesional.nombres" placeholder="Ingrese nombres" v-uppercase>
                                         <span class="text-danger" v-if="errors.nombres">{{errors.nombres[0]}}</span>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="required">Apellidos</label>
+                                        <label class="required font-weight-bold">Apellidos</label>
                                         <input type="text" class="form-control" v-model="profesional.apellidos" placeholder="Ingrese apellidos" v-uppercase>
                                         <span class="text-danger" v-if="errors.apellidos">{{errors.apellidos[0]}}</span>
                                     </div>
                                 </div>
-                                <div class="row pt-2">
+                                <div class="row pt-lg-4">
                                     <div class="col-md-6">
-                                        <label>Nº de contacto</label>
+                                        <label class="font-weight-bold">Nº de contacto</label>
                                         <input type="text" class="form-control" v-model="profesional.n_contacto" placeholder="Ingrese nº de contacto">
                                         <span class="text-danger" v-if="errors.n_contacto">{{errors.n_contacto[0]}}</span>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Correo electrónico</label>
+                                        <label class="font-weight-bold">Correo electrónico</label>
                                         <input type="text" class="form-control" v-model="profesional.email" placeholder="Ingrese correo electrónico">
                                         <span class="text-danger" v-if="errors.email">{{errors.email[0]}}</span>
                                     </div>
                                 </div>
-                                <div class="row pt-2">
+                                <div class="row pt-lg-4">
                                     <div class="col-md-6">
-                                        <label>Ciudad</label>
+                                        <label class="font-weight-bold">Ciudad</label>
                                         <input type="text" v-model="profesional.ciudad"  class="form-control" placeholder="Ingrese ciudad" v-uppercase>
                                         <span class="text-danger" v-if="errors.ciudad">{{errors.ciudad[0]}}</span>
                                     </div>
@@ -97,7 +97,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="required">Planta</label>
+                                        <label class="required font-weight-bold">Planta</label>
                                         <select class="form-control required" v-model="profesional.planta">
                                             <option value="" selected disabled>-- Seleccione planta --</option>
                                             <option v-for="(planta, index) in plantas" :key="index" :value="planta.id">{{planta.nombre}}</option>
@@ -105,7 +105,7 @@
                                         <span class="text-danger" v-if="errors.planta_id">{{errors.planta_id[0]}}</span>
                                     </div>
                                     <div class="col-md-6">
-                                        <label>Situación actual</label>
+                                        <label class="font-weight-bold">Situación actual</label>
                                         <select class="form-control" v-model="profesional.situacion_actual">
                                             <option value="">-- Seleccione situación actual --</option>
                                             <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
@@ -113,9 +113,9 @@
                                         <span class="text-danger" v-if="errors.situacion_actual_id">{{errors.situacion_actual_id[0]}}</span>
                                     </div>
                                 </div>
-                                <div class="row pt-2">
+                                <div class="row pt-lg-4">
                                     <div class="col-md-6">
-                                        <label class="required">Etapa</label>
+                                        <label class="required font-weight-bold">Etapa</label>
                                         <select class="form-control" v-model="profesional.etapa_actual">
                                             <option value="" selected disabled>-- Seleccione etapa --</option>
                                             <option v-for="(etapa, index) in etapas" :key="index" :value="etapa.id">{{etapa.nombre}}</option>
@@ -123,7 +123,7 @@
                                         <span class="text-danger" v-if="errors.etapas_id">{{errors.etapas_id[0]}}</span>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="required">Calidad jurídica</label>
+                                        <label class="required font-weight-bold">Calidad jurídica</label>
                                         <select class="form-control" v-model="profesional.calidad_juridica">
                                             <option value="" selected disabled>-- Seleccione calidad jurídica --</option>
                                             <option v-for="(calidad, index) in calidades" :key="index" :value="calidad.id">{{calidad.nombre}}</option>

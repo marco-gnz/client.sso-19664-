@@ -15,6 +15,7 @@ export const state = () => ({
     especialidad_id:'',
     anios_arancel:'',
     valor_arancel:'',
+    tipo:'',
     n_resolucion:'',
     fecha_resolucion:'',
     observacion:''
@@ -54,13 +55,14 @@ export const mutations = {
     state.convenios.splice(indice, 1, convenioNew);
   },
   PASSING_CONVENIO(state, object){
-    state.newDocument.tipo_formacion  = object.convenio.especialidad.perfeccionamiento.tipo_perfeccionamiento_id;
-    state.newDocument.formacion       = object.convenio.especialidad.id;
+    state.newDocument.tipo_formacion  = (object.convenio.especialidad != null) ? object.convenio.especialidad.perfeccionamiento.tipo_perfeccionamiento_id : '';
+    state.newDocument.formacion       = (object.convenio.especialidad != null) ? object.convenio.especialidad.id : '';
     state.newDocument.tipo_documento  = object.tipo_documento;
 
     state.convenio.id                 = object.convenio.id;
-    state.convenio.especialidad_id    = object.convenio.especialidad.id;
+    state.convenio.especialidad_id    = (object.convenio.especialidad != null) ? object.convenio.especialidad.id : '';
     state.convenio.anios_arancel      = object.convenio.anios_arancel;
+    state.convenio.tipo               = object.convenio.tipo_convenio_id;
     state.convenio.valor_arancel      = object.convenio.valor_arancel;
     state.convenio.n_resolucion       = object.convenio.n_resolucion;
     state.convenio.fecha_resolucion   = object.convenio.fecha_resolucion;
@@ -145,6 +147,9 @@ export const mutations = {
   },
   ANIOS_ARANCEL(state, newAnios){
     state.convenio.anios_arancel  = newAnios;
+  },
+  TIPO_CONVENIO(state, newTipo){
+    state.convenio.tipo = newTipo;
   },
   FECHA_RESOLUCION_CONVENIO(state, newValue){
     state.convenio.fecha_resolucion = newValue;

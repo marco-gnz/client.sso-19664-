@@ -129,13 +129,33 @@
                 </div>
             </div>
             <div class="row pt-lg-3">
+              <div class="col-md-6">
+                <label>6. N° de repertorio</label>
+                <input v-model="n_repertorio" type="number" class="form-control" placeholder="Ingrese n° de repertorio">
+                <span class="text-danger" v-if="errors.n_repertorio">{{errors.n_repertorio[0]}}</span>
+              </div>
+              <div class="col-md-6">
+                <label>6. Año de repertorio</label>
+                {{anio_repertorio}}
+                <el-date-picker
+                    type="year"
+                    v-model="anio_repertorio"
+                    format="yyyy"
+                    value-format="yyyy"
+                    size="mini"
+                    placeholder="Seleccione año">
+                </el-date-picker>
+                <span class="text-danger" v-if="errors.anio_repertorio">{{errors.anio_repertorio[0]}}</span>
+              </div>
+            </div>
+            <div class="row pt-lg-3">
                 <div class="col-md-6">
-                    <label>6. N° de resolución</label>
+                    <label>7. N° de resolución</label>
                     <input v-model="escrituraEdit.n_resolucion" type="number" class="form-control" placeholder="Ingrese n° de resolución">
                     <span class="text-danger" v-if="errors.n_resolucion">{{errors.n_resolucion[0]}}</span>
                 </div>
                 <div class="col-md-6">
-                    <label>7. Año de resolución</label>
+                    <label>8. Fecha de resolución</label>
                     <el-date-picker
                         v-model="fechaResolucion"
                         format="dd-MM-yyyy"
@@ -148,7 +168,7 @@
             </div>
             <div class="row pt-lg-3">
                 <div class="col-md-12">
-                    <label>8. Ingrese observación <i>(Opcional)</i></label>
+                    <label>9. Ingrese observación <i>(Opcional)</i></label>
                     <textarea cols="10" rows="5" class="form-control" placeholder="Ingrese observación..." v-model="escrituraEdit.observacion"></textarea>
                 </div>
             </div>
@@ -312,6 +332,22 @@ export default {
         this.$store.dispatch('documentos/updateEscrituraFirmada')
       }
     },
+    n_repertorio:{
+      get() {
+        return this.$store.state.documentos.escritura.n_repertorio;
+      },
+      set(value) {
+        this.$store.commit('documentos/ESCRITURA_N_REPERTORIO', value);
+      }
+    },
+    anio_repertorio:{
+      get() {
+        return this.$store.state.documentos.escritura.anio_repertorio;
+      },
+      set(value) {
+        this.$store.commit('documentos/ESCRITURA_ANIO_REPERTORIO', value);
+      }
+    },
 
     //doc genérico
     tipoDocumentoGenerico:{
@@ -408,7 +444,9 @@ export default {
         valor_garantia: parseInt(this.escrituraEdit.monto_garantia),
         n_resolucion: parseInt(this.escrituraEdit.n_resolucion),
         fecha_resolucion: this.escrituraEdit.fecha_resolucion,
-        observacion: this.escrituraEdit.observacion
+        observacion: this.escrituraEdit.observacion,
+        n_repertorio:this.escrituraEdit.n_repertorio,
+        anio_repertorio:this.escrituraEdit.anio_repertorio
       };
 
       await this.$axios.$put(url, data).then(response => {

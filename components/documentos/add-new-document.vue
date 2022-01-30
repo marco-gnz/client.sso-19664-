@@ -129,13 +129,32 @@
                     </div>
                 </div>
                 <div class="row pt-lg-3">
+                  <div class="col-md-6">
+                    <label>6. N° de repertorio</label>
+                    <input v-model="escritura.n_repertorio" type="number" class="form-control" placeholder="Ingrese n° de repertorio">
+                    <span class="text-danger" v-if="errors.n_repertorio">{{errors.n_repertorio[0]}}</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>6. Año de repertorio</label>
+                    <el-date-picker
+                        v-model="escritura.anio_repertorio"
+                        type="year"
+                        format="yyyy"
+                        value-format="yyyy"
+                        size="mini"
+                        placeholder="Seleccione año">
+                    </el-date-picker>
+                    <span class="text-danger" v-if="errors.anio_repertorio">{{errors.anio_repertorio[0]}}</span>
+                  </div>
+                </div>
+                <div class="row pt-lg-3">
                     <div class="col-md-6">
-                        <label>6. N° de resolución</label>
+                        <label>7. N° de resolución</label>
                         <input v-model="escritura.n_resolucion" type="number" class="form-control" placeholder="Ingrese n° de resolución">
                         <span class="text-danger" v-if="errors.n_resolucion">{{errors.n_resolucion[0]}}</span>
                     </div>
                     <div class="col-md-6">
-                        <label>7. Año de resolución</label>
+                        <label>8. Año de resolución</label>
                         <el-date-picker
                             v-model="escritura.fecha_resolucion"
                             format="dd-MM-yyyy"
@@ -148,7 +167,7 @@
                 </div>
                 <div class="row pt-lg-3">
                     <div class="col-md-12">
-                        <label>8. Ingrese observación <i>(Opcional)</i></label>
+                        <label>9. Ingrese observación <i>(Opcional)</i></label>
                         <textarea cols="10" rows="5" class="form-control" placeholder="Ingrese observación..." v-model="escritura.observacion"></textarea>
                     </div>
                 </div>
@@ -252,7 +271,9 @@ data(){
       monto_garantia:'',
       n_resolucion:'',
       fecha_resolucion:'',
-      observacion:''
+      observacion:'',
+      n_repertorio:'',
+      anio_repertorio:''
     },
     otroDoc:{
       tipo:'',
@@ -381,7 +402,9 @@ computed:{
         valor_garantia: parseInt(this.escritura.monto_garantia),
         n_resolucion: parseInt(this.escritura.n_resolucion),
         fecha_resolucion: this.escritura.fecha_resolucion,
-        observacion: this.escritura.observacion
+        observacion: this.escritura.observacion,
+        n_repertorio: this.escritura.n_repertorio,
+        anio_repertorio:this.escritura.anio_repertorio
       };
       await this.$axios.$post(url, data).then(response => {
         this.fullscreenLoading = !this.fullscreenLoading;
@@ -446,6 +469,7 @@ computed:{
       this.errors = {};
     },
     selectTipoDoc(){
+       this.errors = {};
        if(this.newDocument.tipo_documento === 0){
           this.getTipoConvenio();
         }

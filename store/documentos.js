@@ -27,7 +27,9 @@ export const state = () => ({
     monto_garantia:'',
     n_resolucion:'',
     fecha_resolucion:'',
-    observacion:''
+    observacion:'',
+    n_repertorio:'',
+    anio_repertorio:''
   },
   generico:{
     id:'',
@@ -108,6 +110,8 @@ export const mutations = {
     state.escritura.monto_garantia    = object.escritura.valor_garantia;
     state.escritura.n_resolucion      = object.escritura.n_resolucion;
     state.escritura.fecha_resolucion  = object.escritura.fecha_resolucion;
+    state.escritura.n_repertorio      = object.escritura.n_repertorio;
+    state.escritura.anio_repertorio   = object.escritura.anio_repertorio.toString();
     state.escritura.observacion       = object.escritura.observacion;
   },
   PASSING_DOC_GENERICO(state, object){
@@ -144,6 +148,12 @@ export const mutations = {
   },
   FECHA_RESOLUCION(state, newValue){
     state.escritura.fecha_resolucion = newValue;
+  },
+  ESCRITURA_N_REPERTORIO(state, newValue){
+    state.escritura.n_repertorio = newValue;
+  },
+  ESCRITURA_ANIO_REPERTORIO(state, newValue){
+    state.escritura.anio_repertorio = newValue;
   },
   ANIOS_ARANCEL(state, newAnios){
     state.convenio.anios_arancel  = newAnios;

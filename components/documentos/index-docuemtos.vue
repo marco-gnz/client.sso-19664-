@@ -164,7 +164,9 @@
                           <div class="row no-gutters align-items-center">
                               <div class="col mr-2">
                                   <!-- n° de resolución - año de resolución -->
-                                  <div class="h6 mb-0 pt-lg-2 text-gray-800">N° {{escritura.n_resolucion}}/{{DateTime.fromISO(escritura.fecha_resolucion).toFormat('dd-LL-yyyy')}}</div>
+                                  <div class="h6 mb-0 pt-lg-2 text-gray-800"><i>N° res. {{escritura.n_resolucion}}/{{DateTime.fromISO(escritura.fecha_resolucion).toFormat('dd-LL-yyyy')}}</i></div>
+
+                                  <div class="h6 mb-0 pt-lg-3 text-gray-700">N° rep. {{escritura.n_repertorio}}/{{DateTime.fromISO(escritura.anio_repertorio).toFormat('yyyy')}}</div>
                                   <!-- monto de garantía -->
                                   <div class="h5 mb-0 pt-lg-4 font-weight-bold text-gray-800">{{Intl.NumberFormat('de-DE').format(escritura.valor_garantia)}} UF</div>
                                   <!-- firma: Si / No -->

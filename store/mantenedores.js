@@ -63,6 +63,12 @@ export const state = () => ({
     cod_sirh:'',
     nombre:''
   },
+  etapa:{
+    id:'',
+    cod_sirh:'',
+    sigla:'',
+    nombre:''
+  },
 });
 
 export const mutations = {
@@ -248,6 +254,28 @@ export const mutations = {
   SITUACION_NOMBRE(state, nombre){
     state.situacion.nombre = nombre;
   },
+  ADD_ETAPA(state, etapa){
+    state.etapas.unshift(etapa);
+  },
+  PASSING_ETAPA(state, etapa){
+    state.etapa.id        = etapa.id;
+    state.etapa.cod_sirh  = etapa.cod_sirh;
+    state.etapa.sigla     = etapa.sigla;
+    state.etapa.nombre    = etapa.nombre;
+  },
+  ETAPA_COD_SIRH(state, newValue){
+    state.etapa.cod_sirh = newValue;
+  },
+  ETAPA_SIGLA(state, newValue){
+    state.etapa.sigla = newValue;
+  },
+  ETAPA_NOMBRE(state, newValue){
+    state.etapa.nombre = newValue;
+  },
+  UPDATE_ETAPA(state, etapa){
+    const indice = state.etapas.findIndex(e => e.id === etapa.id);
+    state.etapas.splice(indice, 1, etapa);
+  }
 };
 
 export const getters = {

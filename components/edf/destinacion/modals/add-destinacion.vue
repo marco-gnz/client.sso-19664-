@@ -162,7 +162,7 @@ export default {
             let fecha = this.Duration.fromObject({ years: 0, months: 0,  days: Math.round(response[1])}).normalize().toObject();
             let message = `${fecha.years} ${fecha.years > 1 ? `años` : `años`}, ${fecha.months} ${fecha.months > 1 ? `meses` : `mes`} y ${fecha.days} ${fecha.days > 1 ? `días` : `día`}`;
             const messages = h('div', [
-                            h('div', "Has pasado el límite total de EDF (9 años)."),
+                            h('div', "Has pasado el límite total de EDF (10 años)."),
                             h('div', `Con el periodo ingresado, se contabilizó un total de ${message} de EDF.`)
                             ])
             this.$alert(messages, 'No se ingresó la destinación', {
@@ -177,7 +177,7 @@ export default {
             let fecha = this.Duration.fromObject({ years: 0, months: 0,  days: Math.round(response[1])}).normalize().toObject();
             let message = `${fecha.years} ${fecha.years > 1 ? `años` : `años`}, ${fecha.months} ${fecha.months > 1 ? `meses` : `mes`} y ${fecha.days} ${fecha.days > 1 ? `días` : `día`}`;
             const messages = h('div', [
-                            h('div', "Has pasado el límite total de ED (5 años)."),
+                            h('div', "Has pasado el límite total de ED (6 años)."),
                             h('div', `Con el periodo ingresado, se contabilizó un total de ${message} de ED.`)
                             ])
             this.$alert(messages, 'No se ingresó la destinación', {

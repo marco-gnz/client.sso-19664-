@@ -1,7 +1,6 @@
 export const state = () => ({
   paos:[],
   formaciones_profesional: [],
-  devolucionEdit:{},
   interrupcionEditModal:{
     index:'',
     id:'',
@@ -13,12 +12,25 @@ export const state = () => ({
     observacion:'',
     devoluciones:[]
   },
+  devolucionEdit:{
+    id:'',
+    periodo:[],
+    red_id:'',
+    observacion:'',
+    tipo_contrato:'',
+    establecimiento_id:'',
+    escritura_id:''
+  },
   modalInterrupcion:false,
   id_especialidades:[],
-  escrituras:[]
+  escrituras:[],
+  pao:{}
 });
 
 export const mutations = {
+  SET_PAO(state, pao){
+    state.pao = pao;
+  },
   SET_PAOS(state, paos){
     state.paos = paos;
     state.paos.forEach(pao => {
@@ -50,9 +62,39 @@ export const mutations = {
   ADD_DEVOLUCION_PAO(state, devolucion){
     state.paos[devolucion.pao_index].devoluciones.push(devolucion);
   },
+  PASSING_DEVOLUCION(state, devolucion){
+    state.devolucionEdit.id                 = devolucion.id;
+    state.devolucionEdit.periodo[0]         = devolucion.inicio_devolucion;
+    state.devolucionEdit.periodo[1]         = devolucion.termino_devolucion;
+    state.devolucionEdit.observacion        = devolucion.observacion;
+    state.devolucionEdit.tipo_contrato      = devolucion.tipo_contrato;
+    state.devolucionEdit.red_id             = devolucion.establecimiento.red_hospitalaria_id;
+    state.devolucionEdit.establecimiento_id = devolucion.establecimiento_id;
+    state.devolucionEdit.escritura_id       = (devolucion.escritura_id != null) ? devolucion.escritura_id : '';
+  },
+  RED_DEVOLUCION(state, newValue){
+    state.devolucionEdit.red_id = newValue;
+  },
+  HOSPITAL_DEVOLUCION(state, newValue){
+    state.devolucionEdit.establecimiento_id = newValue;
+  },
+  DEVOLUCION_ESCRITURA(state, newValue){
+    state.devolucionEdit.escritura_id = newValue;
+  },
+  DEVOLUCION_OBSERVACION(state, newValue){
+    state.devolucionEdit.observacion = newValue;
+  },
+  PERIODO_DEVOLUCION(state, periodo){
+    state.devolucionEdit.periodo[0] = periodo[0];
+    state.devolucionEdit.periodo[1] = periodo[1];
+  },
+  TIPO_CONTRATO(state, contrato){
+    state.devolucionEdit.tipo_contrato = contrato;
+  },
   UPDATE_DEVOLUCION_PAO(state, devolucion){
     const pao = state.paos.map(pao => pao.id).indexOf(devolucion.pao_id);
-    state.paos[pao].devoluciones.splice(devolucion.index_devolucion, 1, devolucion);
+    const devolucionIndex = state.paos[pao].devoluciones.findIndex(d => d.id === devolucion.id);
+    state.paos[pao].devoluciones.splice(devolucionIndex, 1, devolucion);
   },
   REMOVE_DEVOLUCION_PAO(state, devolucion){
     const pao = state.paos.map(pao => pao.id).indexOf(devolucion.pao_id);

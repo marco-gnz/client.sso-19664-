@@ -258,44 +258,38 @@ export default {
     },
     calculoSaldoTotal(){
       let days                  = 0;
-      let meses                 = 0;
-      let anos                  = 0;
 
       let inicio_pao            = this.DateTime.fromISO(this.pao.periodo_inicio);
       let termino_pao           = this.DateTime.fromISO(this.pao.periodo_termino);
-      let diferencia_days_pao   = termino_pao.diff(inicio_pao, ['days', 'months', 'years']);
+      let diferencia_days_pao   = termino_pao.diff(inicio_pao, 'days');
 
       //refactorizar código en api.backend, para tener una mayor exactitud y datos reales
       this.pao.devoluciones.forEach(devolucion => {
           let inicio_devolucion       = this.DateTime.fromISO(devolucion.inicio_devolucion);
           let termino_devolucion      = this.DateTime.fromISO(devolucion.termino_devolucion);
-          let diff_days_devolucin     = termino_devolucion.diff(inicio_devolucion, ['days', 'months', 'years']);
+          let diff_days_devolucin     = termino_devolucion.diff(inicio_devolucion, 'days');
           let hora                    = devolucion.tipo_contrato.horas;
           let hora_real               = hora/44;
           let total_diff              = diff_days_devolucin.values.days * hora_real;
 
           days += total_diff;
-          meses += diff_days_devolucin.values.months;
-          anos += diff_days_devolucin.values.years;
       });
 
       //refactorizar código en api.backend, para tener una mayor exactitud y datos reales//
 
       let periodo_inicio_ingresado        = this.DateTime.fromISO(this.devolucion.periodo[0]);
       let periodo_termino_ingresado       = this.DateTime.fromISO(this.devolucion.periodo[1]);
-      let diff_ingresado                  = periodo_termino_ingresado.diff(periodo_inicio_ingresado, ['days', 'months', 'years']);
+      let diff_ingresado                  = periodo_termino_ingresado.diff(periodo_inicio_ingresado, 'days');
       let n_horas_select                  = this.devolucion.contrato.horas;
       let calculo_n_horas                 = n_horas_select/44;
       let days_calculo                    = diff_ingresado.values.days*calculo_n_horas;
 
 
       let total           = diferencia_days_pao.values.days - days - days_calculo;
-      let total_meses     = diferencia_days_pao.values.months - meses - diff_ingresado.values.months;
-      let total_anos     = diferencia_days_pao.values.years - anos - diff_ingresado.values.years;
 
-      let object          = this.Duration.fromObject({days: total, months:total_meses, years:total_anos}).normalize().toObject();
+      let object          = this.Duration.fromObject({days: total, months:0, years:0}).normalize().toObject();
 
-      let fecha = periodo_termino_ingresado.plus({days: total, months:total_meses, years:total_anos}).toFormat('dd LLLL yyyy');
+      let fecha = periodo_termino_ingresado.plus({days: total, months:0, years:0}).toFormat('dd LLLL yyyy');
 
       if(object.days < 0 || object.months < 0 || object.years < 0 ){
         this.textAlert = true;
@@ -317,8 +311,7 @@ export default {
         tipo_contrato: this.devolucion.contrato.id,
         pao_id: this.pao.id,
         establecimiento_id: this.devolucion.campo_clinico,
-        escritura_id: this.devolucion.escritura,
-        profesional_id: this.pao.especialidad.profesional_id
+        escritura_id: this.devolucion.escritura
       };
 
       await this.$axios.$post(url, data).then(response => {

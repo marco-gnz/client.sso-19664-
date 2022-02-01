@@ -14,11 +14,11 @@
         <tbody>
 
             <tr v-for="(interrupcion, index) in interrupciones" :key="index" class="click">
-                <el-tooltip :content="`Interrupción pertenece a devolución #${interrupcion.devolucion.uuid.substring(0, 5)} de ${interrupcion.devolucion.tipo_contrato.horas} hrs. en ${interrupcion.devolucion.establecimiento.sigla}`" placement="bottom">
-                  <td :style="{backgroundColor:interrupcion.devolucion.color}">{{DateTime.fromISO(interrupcion.inicio_interrupcion).toFormat('dd LLL yyyy')}} a {{DateTime.fromISO(interrupcion.termino_interrupcion).toFormat('dd LLL yyyy')}}</td>
+                <el-tooltip :content="`Interrupción pertenece a devolución con código #${interrupcion.devolucion.uuid.substring(0, 5)}`" placement="bottom">
+                  <td :style="{backgroundColor:interrupcion.devolucion.color}">{{DateTime.fromISO(interrupcion.inicio_interrupcion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(interrupcion.termino_interrupcion).toFormat('dd-LL-yyyy')}}</td>
                 </el-tooltip>
                 <td :style="{backgroundColor:interrupcion.devolucion.color}">{{interrupcion.causal.nombre}}</td>
-                <td :style="{backgroundColor:interrupcion.devolucion.color}">{{ (interrupcion.observacion != null) ? `${interrupcion.observacion.substring(0, 14)}...` : `Sin observación...` }}</td>
+                <td :style="{backgroundColor:interrupcion.devolucion.color}">{{ (interrupcion.observacion != null) ? `${interrupcion.observacion.substring(0, 14)}...` : `--` }}</td>
               <td @click.stop="">
                   <el-dropdown>
                       <span class="el-dropdown-link">

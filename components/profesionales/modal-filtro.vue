@@ -299,7 +299,7 @@ export default {
   methods:{
     ...mapActions({
       getEtapas:'mantenedores/getEtapas',
-      getPerfeccionamientosAll:'mantenedores/getPerfeccionamientosAll',
+      getPerfeccionamientosAll:'mantenedores/getPerfeccionamientosAllFiltro',
       getProfesionales: "profesionales/getProfesionales",
       getRedesHospitalariasUserAuth:'mantenedores/getRedesHospitalariasUserAuth',
       getEstablecimientosAction: 'mantenedores/getEstablecimientos',

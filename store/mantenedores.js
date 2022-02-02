@@ -439,6 +439,10 @@ export const actions = {
       commit('SET_PERFECCIONAMIENTOS', response.perfeccionamientos.data);
       commit('SET_PAGINATION', response.pagination);
     },
+    async getPerfeccionamientosAllFiltro({commit}){
+      const response = await this.$axios.$get('/api/mantenedores/perfeccionamiento-all/filter');
+      commit('SET_PERFECCIONAMIENTOS', response);
+    },
     async getGradoComplejidad({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/grado-complejidad');
       commit('SET_GRADO_COMPLEJIDAD', response);

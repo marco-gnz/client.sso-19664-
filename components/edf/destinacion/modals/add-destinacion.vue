@@ -117,7 +117,7 @@ export default {
   computed:{
     ...mapGetters({
       redesHospitalarias:'mantenedores/redesHospitalarias',
-      establecimientos:'mantenedores/establecimientosGradoComplejidad',
+      establecimientos:'mantenedores/establecimientos',
       unidades:'mantenedores/unidades',
       gradosComplejidad:'mantenedores/gradosComplejidad'
     })

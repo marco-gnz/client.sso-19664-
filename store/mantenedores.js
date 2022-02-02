@@ -411,6 +411,10 @@ export const actions = {
       commit('SET_UNIDADES', response.unidades.data);
       commit('SET_PAGINATION', response.pagination);
     },
+    async getAllUnidades({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/all-unidades');
+      commit('SET_UNIDADES', response);
+    },
     async getSituacionesFactura({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/situaciones-factura');
       commit('SET_SITUACIONES_FACTURA', response);

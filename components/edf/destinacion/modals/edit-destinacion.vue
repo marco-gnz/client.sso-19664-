@@ -1,8 +1,8 @@
 <template>
   <div>
-    <b-modal id="modal-add-destinacion" size="lg" title="Ingresar nueva destinación" ok-only>
+    <b-modal id="modal-edit-destinacion" size="lg" title="Editar destinación" ok-only>
       <div class="row d-flex justify-content-center">
-          <div class="col-md-12">
+        <div class="col-md-12">
               <el-steps :active="destinacion_pasos" finish-status="success">
                   <el-step title="Establecimiento" icon="el-icon-school"></el-step>
                   <el-step title="Periodo" icon="el-icon-date"></el-step>
@@ -15,7 +15,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label>Red hospitalaria</label>
-              <select class="form-control" v-model="destinacion.red" @change="getEstablecimientosChange">
+              <select class="form-control" v-model="red" @change="getEstablecimientosChange">
                   <option value="" selected disabled>-- Seleccione red --</option>
                   <option v-for="(red, index) in redesHospitalarias" :key="index" :value="red.id">{{red.nombre}}</option>
               </select>
@@ -24,18 +24,18 @@
           <div class="col-md-3">
             <div class="form-group">
               <label>Establecimiento en destinación</label>
-              <select :disabled="destinacion.red === '' || establecimientos.length === 0" class="form-control" v-model="destinacion.campo_clinico">
+              <select :disabled="red === '' || establecimientos.length === 0" class="form-control" v-model="campo_clinico">
                   <option value="" selected disabled>-- Seleccione establecimiento --</option>
-                  <option v-for="(campo, index) in establecimientos" :key="index" :value="campo">{{campo.nombre}}</option>
+                  <option v-for="(campo, index) in establecimientos" :key="index" :value="campo.id">{{campo.nombre}}</option>
               </select>
-              <span class="pt-2" v-if="destinacion.red != '' && establecimientos.length == 0"><i>No existen establecimientos con ° de complejidad</i></span>
+              <span class="pt-2" v-if="red != '' && establecimientos.length == 0"><i>No existen establecimientos con ° de complejidad</i></span>
               <span class="text-danger" v-if="errors.establecimiento_id">{{errors.establecimiento_id[0]}}</span>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label>° Complejidad</label>
-              <select :disabled="destinacion.campo_clinico === '' || establecimientos.length === 0" class="form-control" v-model="destinacion.grado">
+              <select :disabled="campo_clinico === '' || establecimientos.length === 0" class="form-control" v-model="grado">
                   <option value="" selected disabled>Seleccione</option>
                   <option v-for="(grado, index) in gradosComplejidad" :key="index" :value="grado.id">{{grado.grado}}</option>
               </select>
@@ -45,7 +45,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label>Unidad en destinación</label>
-              <select :disabled="unidades.length === 0" class="form-control" v-model="destinacion.unidad">
+              <select :disabled="unidades.length === 0" class="form-control" v-model="unidad">
                   <option value="" selected disabled>-- Seleccione unidad --</option>
                   <option v-for="(unidad, index) in unidades" :key="index" :value="unidad.id">{{unidad.nombre}}</option>
               </select>
@@ -59,9 +59,9 @@
           <div class="col-md-6">
               <label>Periodo en destinación</label>
               <el-date-picker
-                  v-model="destinacion.periodo"
+                  v-model="periodo"
                   type="daterange"
-                  range-separator=">"
+                  range-separator="a"
                   start-placeholder="Inicio"
                   end-placeholder="Término"
                   format="dd-MM-yyyy"
@@ -75,7 +75,7 @@
           <div class="row pt-4 d-flex justify-content-center">
               <div class="col-md-10">
                   <label>Observación</label>
-                  <textarea v-model="destinacion.observacion" class="form-control" cols="10" rows="5" placeholder="Ingrese observación..."></textarea>
+                  <textarea v-model="observacion" class="form-control" cols="10" rows="5" placeholder="Ingrese observación..."></textarea>
               </div>
           </div>
       </section>
@@ -83,7 +83,7 @@
           <div class="w-100">
               <button :disabled="destinacion_pasos == 0"  @click.prevent="paso_destinacion_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
               <button v-show="destinacion_pasos != 2"     @click.prevent="paso_destinacion_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
-              <button v-show="destinacion_pasos == 2"     @click.prevent="addDestinacion" v-loading.fullscreen.lock="fullscreenLoading" class="mt-3 btn btn-success float-right">Añadir destinación <i class="fas fa-plus"></i></button>
+              <button v-show="destinacion_pasos == 2"     @click.prevent="editDestinacion" v-loading.fullscreen.lock="fullscreenLoading" class="mt-3 btn btn-success float-right">Editar destinación <i class="fas fa-plus"></i></button>
           </div>
       </template>
     </b-modal>
@@ -93,68 +93,108 @@
 <script>
 import {mapMutations, mapGetters, mapActions} from 'vuex';
 export default {
-  props:['profesional'],
   data(){
     return{
-      fullscreenLoading:false,
       destinacion_pasos:0,
-      destinacion:{
-        red:'',
-        campo_clinico:'',
-        grado:'',
-        unidad:'',
-        periodo:[],
-        observacion:''
-      },
+      fullscreenLoading:false,
       errors:{}
     };
   },
   mounted(){
-    this.getRedesHospitalarias();
-    this.getUnidades();
     this.getGradoComplejidad();
+    this.getUnidades();
   },
   computed:{
     ...mapGetters({
       redesHospitalarias:'mantenedores/redesHospitalarias',
-      establecimientos:'mantenedores/establecimientosGradoComplejidad',
+      establecimientos:'mantenedores/establecimientos',
       unidades:'mantenedores/unidades',
       gradosComplejidad:'mantenedores/gradosComplejidad'
-    })
+    }),
+    red:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.red;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_RED', newValue);
+      }
+    },
+    campo_clinico:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.campo_clinico;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_CAMPO_CLINICO', newValue);
+      }
+    },
+    grado:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.grado;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_GRADO', newValue);
+      }
+    },
+    unidad:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.unidad;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_UNIDAD', newValue);
+      }
+    },
+    periodo:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.periodo;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_PERIODO', newValue);
+      }
+    },
+    destinacion(){
+      return {...this.$store.state.edf.destinacionEdit}
+    },
+    observacion:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.observacion;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_OBSERVACION', newValue);
+      }
+    },
   },
   methods:{
-    ...mapActions({
-      getRedesHospitalarias:'mantenedores/getRedesHospitalarias',
-      getEstablecimientosAction: 'mantenedores/getEstablecimientos',
-      getUnidades: 'mantenedores/getAllUnidades',
-      getGradoComplejidad:'mantenedores/getGradoComplejidad'
-    }),
     ...mapMutations({
-      storeDestinacionAction: 'edf/STORE_DESTINACION'
+      updateDestinacionAction:'edf/UPDATE_DESTINACION'
+    }),
+    ...mapActions({
+      getGradoComplejidad:'mantenedores/getGradoComplejidad',
+      getUnidades: 'mantenedores/getAllUnidades',
+      getEstablecimientosAction: 'mantenedores/getEstablecimientos',
     }),
     getEstablecimientosChange(){
-      this.getEstablecimientosAction(this.destinacion.red);
+      this.campo_clinico = '';
+      this.getEstablecimientosAction(this.red);
     },
-    async addDestinacion(){
+    async editDestinacion(){
       this.fullscreenLoading = !this.fullscreenLoading;
-      const url = '/api/profesionales/profesional/edf/add-destinacion';
+      const url = `/api/profesionales/profesional/edf/edit-destinacion/${this.destinacion.id}`;
       const data = {
-        inicio_periodo: this.destinacion.periodo[0],
-        termino_periodo: this.destinacion.periodo[1],
-        observacion: this.destinacion.observacion,
-        profesional_id: this.profesional.id,
-        establecimiento_id: (this.destinacion.campo_clinico != '') ? this.destinacion.campo_clinico.id : '',
-        grado_complejidad_establecimiento_id: this.destinacion.grado,
-        unidad_id:this.destinacion.unidad
+        inicio_periodo: this.periodo[0],
+        termino_periodo: this.periodo[1],
+        observacion: this.observacion,
+        establecimiento_id: this.campo_clinico,
+        grado_complejidad_establecimiento_id: this.grado,
+        unidad_id:this.unidad
       };
 
-      await this.$axios.$post(url, data).then(response => {
+      await this.$axios.$put(url, data).then(response => {
         this.fullscreenLoading = !this.fullscreenLoading;
         if(response[0] === true){
           this.clearAllModal();
-          this.storeDestinacionAction(response[1]);
+          this.updateDestinacionAction(response[1]);
           this.$message({
-              message: 'Destinación ingresada con éxito.',
+              message: 'Destinación editada con éxito.',
               type: 'success'
           });
         }else if(response[0] === 'max-days'){
@@ -188,7 +228,7 @@ export default {
             this.errors = {inicio_periodo: []};
             this.errors.inicio_periodo[0] = 'Modifique el periodo en destinación.';
         }else if(response === 'fechas-entrelazadas-formacion'){
-          this.$alert('No se ingresó la destinación, ya que el profesional tiene un registro en formaciones en el mismo periodo ingresado...', 'Error', {
+          this.$alert('No se editó la destinación, ya que el profesional tiene un registro en formaciones en el mismo periodo ingresado...', 'Error', {
             type:'warning',
             confirmButtonText: 'OK'
           });
@@ -196,7 +236,7 @@ export default {
           this.errors = {inicio_periodo: []};
           this.errors.inicio_periodo[0] = 'Modifique el periodo en destinación.';
         }else if(response === 'fechas-entrelazadas-destinacion'){
-          this.$alert('No se ingresó la destinación, ya que el profesional tiene un registro en destinaciones en el mismo periodo ingresado...', 'Error', {
+          this.$alert('No se editó la destinación, ya que el profesional tiene un registro en destinaciones en el mismo periodo ingresado...', 'Error', {
             type:'warning',
             confirmButtonText: 'OK'
           });
@@ -204,7 +244,7 @@ export default {
           this.errors = {inicio_periodo: []};
           this.errors.inicio_periodo[0] = 'Modifique el periodo en destinación.';
         }else{
-          this.$message.error('No se ingresó la destinación. Error de servidor');
+          this.$message.error('No se editó la destinación. Error de servidor');
           this.clearAllModal();
         }
       }).catch(error => {
@@ -220,12 +260,8 @@ export default {
       });
     },
     clearAllModal(){
-      for(let key in this.destinacion){
-        this.destinacion[key] = '';
-      }
-      this.destinacion.periodo = [];
       this.destinacion_pasos = 0;
-      this.$root.$emit('bv::hide::modal', 'modal-add-destinacion', '#btnShow');
+      this.$root.$emit('bv::hide::modal', 'modal-edit-destinacion', '#btnShow');
       this.errors = {};
     },
     paso_destinacion_volver(){
@@ -234,7 +270,7 @@ export default {
     paso_destinacion_siguiente(){
       this.destinacion_pasos++;
     }
-  },
+  }
 }
 </script>
 

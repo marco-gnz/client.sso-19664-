@@ -13,7 +13,7 @@
         </thead>
         <tbody>
 
-            <tr v-for="(interrupcion, index) in interrupciones" :key="index" class="click">
+            <tr v-for="(interrupcion, index) in interrupciones" :key="index" class="click" @click.prevent="show(interrupcion)" v-b-modal.modal-view-interrupcion>
                 <el-tooltip :content="`Interrupción pertenece a devolución con código #${interrupcion.devolucion.uuid.substring(0, 5)}`" placement="bottom">
                   <td :style="{backgroundColor:interrupcion.devolucion.color}">{{DateTime.fromISO(interrupcion.inicio_interrupcion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(interrupcion.termino_interrupcion).toFormat('dd-LL-yyyy')}}</td>
                 </el-tooltip>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import {mapMutations, mapActions} from 'vuex';
+import {mapMutations} from 'vuex';
 export default {
   props:['interrupciones'],
   data(){
@@ -71,11 +71,20 @@ export default {
   methods:{
     ...mapMutations({
       removeInterrupcionAction:'calculoPao/REMOVE_INTERRUPCION_PAO',
-      passingInterrupcionModal: 'calculoPao/QUERY_INTERRUPCION'
+      passingInterrupcionModal: 'calculoPao/QUERY_INTERRUPCION',
+      passingShowInterrupcion:'calculoPao/SHOW_INTERRUPCION'
     }),
     clickEditInterrupcion(interrupcion, index){
       interrupcion['index'] = index;
       this.passingInterrupcionModal(interrupcion);
+    },
+    show(interrupcion){
+      let fecha_inicio      = this.DateTime.fromISO(interrupcion.inicio_interrupcion);
+      let fecha_termino     = this.DateTime.fromISO(interrupcion.termino_interrupcion);
+      let diferencia        = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
+
+      interrupcion['diferencia'] = diferencia.values;
+      this.passingShowInterrupcion(interrupcion);
     },
     async deleteInterrupcion(interrupcion, index){
       this.fullscreenLoading = !this.fullscreenLoading;

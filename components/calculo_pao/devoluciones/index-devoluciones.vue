@@ -50,7 +50,7 @@
           >
         </el-alert>
     </template>
-    <ModalViewDevolucion :devolucion="devolucionSelect"/>
+    <!-- <ModalViewDevolucion :devolucion="devolucionSelect"/> -->
   </div>
 </template>
 
@@ -78,19 +78,20 @@ export default {
             removeDevolucionAction: "calculoPao/REMOVE_DEVOLUCION_PAO",
             passingDevolucion:'calculoPao/PASSING_DEVOLUCION',
             updateDevolucionAction: 'calculoPao/UPDATE_DEVOLUCION_PAO',
-            passingPao: 'calculoPao/SET_PAO'
+            passingPao: 'calculoPao/SET_PAO',
+            passingShowDevolucion:'calculoPao/SHOW_DEVOLUCION'
         }),
         ...mapActions({
           getEstablecimientosAction: 'mantenedores/getEstablecimientos',
           getEscrituras:'calculoPao/getEscrituras'
         }),
         show(devolucion){
-          this.devolucionSelect = devolucion;
-          let fecha_inicio      = this.DateTime.fromISO(this.devolucionSelect.inicio_devolucion);
-          let fecha_termino     = this.DateTime.fromISO(this.devolucionSelect.termino_devolucion);
-          let diferencia        = fecha_termino.diff(fecha_inicio, 'days');
+          let fecha_inicio      = this.DateTime.fromISO(devolucion.inicio_devolucion);
+          let fecha_termino     = this.DateTime.fromISO(devolucion.termino_devolucion);
+          let diferencia        = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
 
-          this.devolucionSelect['diferencia'] = diferencia.values.days;
+          devolucion['diferencia'] = diferencia.values;
+          this.passingShowDevolucion(devolucion);
         },
         clickEditDevolucion(devolucion) {
           this.passingPao(devolucion.pao);

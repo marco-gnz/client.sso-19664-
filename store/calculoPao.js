@@ -21,6 +21,8 @@ export const state = () => ({
     establecimiento_id:'',
     escritura_id:''
   },
+  showDevolucion:{},
+  showInterrupcion:{},
   modalInterrupcion:false,
   id_especialidades:[],
   escrituras:[],
@@ -72,6 +74,12 @@ export const mutations = {
     state.devolucionEdit.establecimiento_id = devolucion.establecimiento_id;
     state.devolucionEdit.escritura_id       = (devolucion.escritura_id != null) ? devolucion.escritura_id : '';
   },
+  SHOW_DEVOLUCION(state, devolucion){
+    state.showDevolucion = devolucion;
+  },
+  SHOW_INTERRUPCION(state, interrupcion){
+    state.showInterrupcion = interrupcion;
+  },
   RED_DEVOLUCION(state, newValue){
     state.devolucionEdit.red_id = newValue;
   },
@@ -98,7 +106,7 @@ export const mutations = {
   },
   REMOVE_DEVOLUCION_PAO(state, devolucion){
     const pao = state.paos.map(pao => pao.id).indexOf(devolucion.pao_id);
-    state.paos[pao].devoluciones.splice(devolucion.index_devolucion);
+    state.paos[pao].devoluciones.splice(devolucion.index_devolucion, 1);
 
     if(state.paos[pao].interrupciones.length){
       state.paos[pao].interrupciones.filter(i => i.devolucion_id === devolucion.id).forEach(i => state.paos[pao].interrupciones.splice(state.paos[pao].interrupciones.indexOf(i), 1));

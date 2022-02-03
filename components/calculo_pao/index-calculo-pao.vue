@@ -8,6 +8,8 @@
           <button v-if="$auth.user.permissions_roles.includes('ingresar-calculo-pao') || $auth.user.permissions.includes('ingresar-calculo-pao')" v-b-modal.modal-add-calculo class="btn btn-success float-right">Ingresar cálculo PAO</button>
           <AddCalculo />
           <ModalEditDevolucion />
+          <ModalViewDevolucion />
+          <ModalShowInterrupcion />
         </div>
       </div>
       <div class="row pt-lg-3">
@@ -123,8 +125,10 @@ import CalculoFechas from './calculo-fechas.vue';
 import ModalEditInterrupcion from './interrupciones/modals/modal-edit-interrupcion.vue';
 import ShowHistorial from './modals/show-historial.vue';
 import ModalEditDevolucion from './devoluciones/modals/modal-edit-devolucion.vue';
+import ModalViewDevolucion from './devoluciones/modals/modal-view-devolucion.vue';
+import ModalShowInterrupcion from './interrupciones/modals/modal-show-interrupcion.vue';
 export default {
-    components: { AddCalculo, IndexDevoluciones, ModalAddDevolucion, ModalAddInterrupcion, IndexInterrupciones, CalculoFechas, ModalEditInterrupcion, ShowHistorial, ModalEditDevolucion },
+    components: { AddCalculo, IndexDevoluciones, ModalAddDevolucion, ModalAddInterrupcion, IndexInterrupciones, CalculoFechas, ModalEditInterrupcion, ShowHistorial, ModalEditDevolucion, ModalViewDevolucion, ModalShowInterrupcion },
     data(){
       return{
         fullscreenLoading:false,

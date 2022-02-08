@@ -30,6 +30,7 @@ export const state = () => ({
     input:'',
     estados:[],
     perfeccion:[],
+    situacion:[],
     f_ed:[],
     f_ef:[],
     f_pao:[],
@@ -106,6 +107,9 @@ export const mutations = {
   SET_ESTADOS(state, values){
     state.search.estados = values;
   },
+  SET_SITUACION_ACTUAL(state, value){
+    state.search.situacion = value;
+  },
   SET_PERFECCION(state, value){
     state.search.perfeccion = value;
   },
@@ -140,6 +144,7 @@ export const mutations = {
     state.search.checkedEtapas            = filtroLocalStorage.checkedEtapas;
     state.search.establecimiento          = filtroLocalStorage.establecimiento;
     state.search.active_filtro_avanzado   = filtroLocalStorage.active_filtro_avanzado;
+    state.search.situacion                = filtroLocalStorage.situacion;
   },
   REFRESH_FILTRO(state){
     state.search.input                    = '';
@@ -152,6 +157,7 @@ export const mutations = {
     state.search.red                      = '';
     state.search.establecimiento          = [];
     state.search.active_filtro_avanzado   = false;
+    state.search.situacion                = [];
   }
 };
 
@@ -180,6 +186,9 @@ export const getters = {
   },
   fechaEtapaDestinacion(state){
     return state.search.f_ed;
+  },
+  situacion(state){
+    return state.search.situacion;
   },
   fechaEtapaFormacion(state){
     return state.search.f_ef;
@@ -218,7 +227,8 @@ export const actions = {
         f_pao: state.search.f_pao,
         checkedEtapas:state.search.checkedEtapas,
         establecimiento:state.search.establecimiento,
-        estados:state.search.estados
+        estados:state.search.estados,
+        situaciones:state.search.situacion
       }
     }
      );

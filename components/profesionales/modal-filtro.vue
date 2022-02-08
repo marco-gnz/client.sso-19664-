@@ -32,6 +32,29 @@
           <div class="col-md-6">
             <div class="card-body">
               <div class="form-group">
+                <label>Situación actual</label>
+                <el-select
+                  :disabled="checkedEtapas.length === 0"
+                  size="mini"
+                  style="width:300px;"
+                  v-model="situacion"
+                  multiple
+                  filterable
+                  collapse-tags
+                  placeholder="Seleccione">
+                  <el-option
+                    v-for="situacionActual in situacionesActual"
+                    :key="situacionActual.id"
+                    :value="situacionActual.id"
+                    :label="situacionActual.nombre">
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card-body">
+              <div class="form-group">
                 <label>Perfeccionamiento</label>
                 <el-select
                   size="mini"
@@ -130,7 +153,7 @@
                     :label="establecimiento.nombre"
                     :value="establecimiento.id">
                     <span style="float: left; font-size: 12px;">{{ establecimiento.nombre }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ (establecimiento.grado_complejidad != null) ? `°${establecimiento.grado_complejidad.grado}` : '--' }}</span>
+                    <!-- <span style="float: right; color: #8492a6; font-size: 13px">{{ (establecimiento.grado_complejidad != null) ? `°${establecimiento.grado_complejidad.grado}` : '--' }}</span> -->
                   </el-option>
                 </el-select>
               </div>
@@ -193,6 +216,7 @@ export default {
     this.getEtapas();
     this.getPerfeccionamientosAll();
     this.getRedesHospitalariasUserAuth();
+    this.getSituacionesActual();
   },
   computed:{
     searchAll(){
@@ -280,6 +304,14 @@ export default {
         this.$store.commit('profesionales/SET_ESTABLECIMIENTO', value);
       }
     },
+    situacion:{
+      get() {
+        return this.$store.getters['profesionales/situacion']
+      },
+      set(value) {
+        this.$store.commit('profesionales/SET_SITUACION_ACTUAL', value);
+      }
+    },
     activeFiltroAvanzado:{
       get() {
         return this.$store.getters['profesionales/establecimiento']
@@ -294,6 +326,7 @@ export default {
       redesHospitalariasUserAuth:'mantenedores/redesHospitalariasUserAuth',
       establecimientos:'mantenedores/establecimientos',
       estados:'profesionales/estados',
+      situacionesActual:'mantenedores/situacionesActual'
     })
   },
   methods:{
@@ -305,7 +338,8 @@ export default {
       getEstablecimientosAction: 'mantenedores/getEstablecimientos',
       open: "profesionales/updateModal",
       refresEstablecimientoAction:'profesionales/refreshEstablecimiento',
-      cargando: 'profesionales/loadingApi'
+      cargando: 'profesionales/loadingApi',
+      getSituacionesActual:'mantenedores/getSituacionesActual'
     }),
     ...mapMutations({
       currentPageAction: "profesionales/SET_CURRENT_PAGE",
@@ -341,7 +375,8 @@ export default {
         f_pao:this.searchAll.fechaPao,
         checkedEtapas:this.searchAll.checkedEtapas,
         establecimiento:this.searchAll.establecimiento,
-        estados:this.searchAll.estados
+        estados:this.searchAll.estados,
+        situaciones:this.searchAll.situacion
       }
 
       await this.$axios.$get(url, {params:data}).then(response => {

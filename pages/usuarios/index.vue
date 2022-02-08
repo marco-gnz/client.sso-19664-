@@ -39,6 +39,7 @@
                       <tr>
                         <th scope="col">Rut</th>
                         <th scope="col">Nombres</th>
+                        <th scope="col">Siglas</th>
                         <th scope="col">Correo</th>
                         <th scope="col">Perfil</th>
                         <th scope="col">Red hospitalaria</th>
@@ -50,6 +51,7 @@
                       <tr v-for="(usuario, index) in usuarios" :key="index">
                         <td>{{usuario.rut_completo}}</td>
                         <td>{{usuario.nombre_completo}}</td>
+                        <td>{{usuario.sigla}}</td>
                         <td>{{usuario.email}}</td>
                         <td>{{ (usuario.roles.length > 0) ? usuario.roles.map(r => r.name).join(' - ') : '--' }}</td>
                         <td>{{ (usuario.redes_hospitalarias.length) ? usuario.redes_hospitalarias.map(r => r.nombre).join(', ') : '--' }}</td>

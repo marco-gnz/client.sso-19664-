@@ -18,6 +18,12 @@
                       <option :class="(idEspecialidades.includes(especialidad.id)) ? 'text-tachado': ''" v-for="(especialidad, index) in formacionesProfesional" :key="index" :value="especialidad" :disabled="idEspecialidades.includes(especialidad.id)">{{especialidad.perfeccionamiento.tipo.nombre}} ({{especialidad.perfeccionamiento.nombre}})</option>
                   </select>
                   <span class="text-danger" v-if="errors.especialidad_id">{{errors.especialidad_id[0]}}</span>
+                  <el-alert
+                    v-if="especialidad_sin_fecha != '' "
+                    :title="especialidad_sin_fecha"
+                    type="warning"
+                    :closable="false">
+                  </el-alert>
               </div>
           </div>
         </section>
@@ -78,7 +84,7 @@
         <template #modal-footer>
             <div class="w-100">
                 <button :disabled="pao_pasos == 0" @click.prevent="calculo_pasos_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
-                <button :disabled="pao.especialidad === '' " v-show="pao_pasos != 2" @click.prevent="calculo_pasos_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
+                <button :disabled="pao.especialidad === '' || especialidad_sin_fecha != '' " v-show="pao_pasos != 2" @click.prevent="calculo_pasos_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
                 <button v-show="pao_pasos == 2" class="mt-3 btn btn-success float-right" @click.prevent="storePao" v-loading.fullscreen.lock="fullscreenLoading">Añadir cálculo PAO<i class="fas fa-plus"></i></button>
             </div>
         </template>
@@ -111,7 +117,8 @@ export default {
       pao_estimado_modificado_text_area:false,
       errors:{},
       messagge:'',
-      diff_anos_especialidad:''
+      diff_anos_especialidad:'',
+      especialidad_sin_fecha:''
     };
   },
   mounted(){
@@ -132,7 +139,9 @@ export default {
             getFormacionesProfesional: 'calculoPao/getFormacionesProfesional'
         }),
     calculoPao(especialidad){
-      let fecha_inicio_especialidad       = this.DateTime.fromISO(especialidad.inicio_formacion);
+      console.log(especialidad);
+      if(especialidad.inicio_formacion != null || especialidad.termino_formacion != null){
+        let fecha_inicio_especialidad       = this.DateTime.fromISO(especialidad.inicio_formacion);
       let fecha_termino_especialidad      = this.DateTime.fromISO(especialidad.termino_formacion);
 
       this.diff_anos_especialidad = fecha_termino_especialidad.diff(fecha_inicio_especialidad, 'years');
@@ -163,6 +172,10 @@ export default {
       let object                          = this.Duration.fromObject({days: calculo_message.values.days, months:calculo_message.values.months, years:calculo_message.values.years}).normalize().toObject();
 
       this.messagge = `${object.years > 1 ? `${object.years} años` : `${object.years} año`}, ${object.months > 1 ? `${object.months} meses` : `${object.months} mes`} y ${Math.round(object.days) > 1 ? `${Math.round(object.days)} días` : `${Math.round(object.days)} día`}`;
+
+      }else{
+        this.especialidad_sin_fecha = 'No es posible calcular el PAO. La especialidad no tiene registro de periodo de formación, por lo que no es posible realizar el calculo de PAO.';
+      }
     },
     verifyDate(){
         let dias = this.especialidad_select.periodo[1].diff(this.especialidad_select.periodo[0], 'days');

@@ -10,6 +10,7 @@ export const state = () => ({
     apellidos:'',
     n_contacto:'',
     ciudad:'',
+    direccion_residencia:'',
     genero:'',
     email:'',
     planta:'',
@@ -73,19 +74,20 @@ export const mutations = {
     state.profesional = profesional;
   },
   SET_PROFESIONAL_EDIT(state, profesional){
-    state.datosPersonalesEdit.id         = profesional.id;
-    state.datosPersonalesEdit.rut        = profesional.rut;
-    state.datosPersonalesEdit.dv         = profesional.dv;
-    state.datosPersonalesEdit.nombres    = profesional.nombres;
-    state.datosPersonalesEdit.apellidos  = profesional.apellidos;
-    state.datosPersonalesEdit.n_contacto = (profesional.n_contacto != null) ? profesional.n_contacto : '';
-    state.datosPersonalesEdit.ciudad     = (profesional.ciudad != null) ? profesional.ciudad : '';
-    state.datosPersonalesEdit.genero     = (profesional.genero_id != null) ? profesional.genero_id : '';
-    state.datosPersonalesEdit.email      = (profesional.email != null) ? profesional.email : '';
-    state.datosPersonalesEdit.planta     = (profesional.planta_id != null) ? profesional.planta_id : '';
-    state.datosPersonalesEdit.etapa      = (profesional.etapas_id != null) ? profesional.etapas_id : '';
-    state.datosPersonalesEdit.calidad    = (profesional.calidad_juridica_id != null) ? profesional.calidad_juridica_id : '';
-    state.datosPersonalesEdit.situacion_actual = (profesional.situacion_actual_id != null) ? profesional.situacion_actual_id : '';
+    state.datosPersonalesEdit.id                        = profesional.id;
+    state.datosPersonalesEdit.rut                       = profesional.rut;
+    state.datosPersonalesEdit.dv                        = profesional.dv;
+    state.datosPersonalesEdit.nombres                   = profesional.nombres;
+    state.datosPersonalesEdit.apellidos                 = profesional.apellidos;
+    state.datosPersonalesEdit.n_contacto                = (profesional.n_contacto != null) ? profesional.n_contacto : '';
+    state.datosPersonalesEdit.ciudad                    = (profesional.ciudad != null) ? profesional.ciudad : '';
+    state.datosPersonalesEdit.direccion_residencia      = (profesional.direccion_residencia != null) ? profesional.direccion_residencia : '';
+    state.datosPersonalesEdit.genero                    = (profesional.genero_id != null) ? profesional.genero_id : '';
+    state.datosPersonalesEdit.email                     = (profesional.email != null) ? profesional.email : '';
+    state.datosPersonalesEdit.planta                    = (profesional.planta_id != null) ? profesional.planta_id : '';
+    state.datosPersonalesEdit.etapa                     = (profesional.etapas_id != null) ? profesional.etapas_id : '';
+    state.datosPersonalesEdit.calidad                   = (profesional.calidad_juridica_id != null) ? profesional.calidad_juridica_id : '';
+    state.datosPersonalesEdit.situacion_actual          = (profesional.situacion_actual_id != null) ? profesional.situacion_actual_id : '';
   },
   UPDATE_STATUS_PROFESIONAL(state, object){
     const indice = state.profesionales.findIndex(p => p.id === object.response.id);

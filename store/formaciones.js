@@ -11,7 +11,11 @@ export const mutations = {
   },
   REMOVE_FORMACION(state, id){
     state.formaciones = state.formaciones.filter(f => f.id !== id);
-  }
+  },
+  UPDATE_FORMACION(state, formacion){
+    const indice = state.formaciones.findIndex(f => f.id === formacion.id);
+    state.formaciones.splice(indice, 1, formacion);
+  },
 };
 
 export const getters = {

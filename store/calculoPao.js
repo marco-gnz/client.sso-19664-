@@ -1,6 +1,6 @@
 export const state = () => ({
   paos:[],
-  formaciones_profesional: [],
+  formaciones_profesional:[],
   interrupcionEditModal:{
     index:'',
     id:'',
@@ -60,6 +60,10 @@ export const mutations = {
   },
   ADD_FORMACION_TO_PROFESIONAL(state, formacion){
     state.formaciones_profesional = [formacion, ...state.formaciones_profesional];
+  },
+  UPDATE_FORMACION_TO_PROFESIONAL(state, formacion){
+    const indice = state.formaciones_profesional.findIndex(f => f.id === formacion.id);
+    state.formaciones_profesional.splice(indice, 1, formacion);
   },
   ADD_DEVOLUCION_PAO(state, devolucion){
     state.paos[devolucion.pao_index].devoluciones.push(devolucion);

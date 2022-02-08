@@ -69,6 +69,14 @@
               </el-date-picker>
               <span class="text-danger" v-if="errors.inicio_periodo || errors.termino_periodo">{{errors.inicio_periodo[0]}}</span>
           </div>
+          <div class="col-md-6">
+            <label>Situación actual de profesional</label>
+            <select class="form-control" v-model="destinacion.situacion_profesional_id">
+                <option value="">-- Seleccione situación actual --</option>
+                <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
+            </select>
+            <span class="text-danger" v-if="errors.situacion_profesional_id">{{errors.situacion_profesional_id[0]}}</span>
+          </div>
         </div>
       </section>
       <section v-if="destinacion_pasos === 2">
@@ -104,6 +112,7 @@ export default {
         grado:'',
         unidad:'',
         periodo:[],
+        situacion_profesional_id:'',
         observacion:''
       },
       errors:{}
@@ -113,13 +122,15 @@ export default {
     this.getRedesHospitalarias();
     this.getUnidades();
     this.getGradoComplejidad();
+    this.getSituacionesActual();
   },
   computed:{
     ...mapGetters({
       redesHospitalarias:'mantenedores/redesHospitalarias',
       establecimientos:'mantenedores/establecimientos',
       unidades:'mantenedores/unidades',
-      gradosComplejidad:'mantenedores/gradosComplejidad'
+      gradosComplejidad:'mantenedores/gradosComplejidad',
+      situacionesActual:'mantenedores/situacionesActual'
     })
   },
   methods:{
@@ -127,7 +138,8 @@ export default {
       getRedesHospitalarias:'mantenedores/getRedesHospitalarias',
       getEstablecimientosAction: 'mantenedores/getEstablecimientos',
       getUnidades: 'mantenedores/getAllUnidades',
-      getGradoComplejidad:'mantenedores/getGradoComplejidad'
+      getGradoComplejidad:'mantenedores/getGradoComplejidad',
+      getSituacionesActual:'mantenedores/getSituacionesActual'
     }),
     ...mapMutations({
       storeDestinacionAction: 'edf/STORE_DESTINACION'
@@ -141,6 +153,7 @@ export default {
       const data = {
         inicio_periodo: this.destinacion.periodo[0],
         termino_periodo: this.destinacion.periodo[1],
+        situacion_profesional_id:this.destinacion.situacion_profesional_id,
         observacion: this.destinacion.observacion,
         profesional_id: this.profesional.id,
         establecimiento_id: (this.destinacion.campo_clinico != '') ? this.destinacion.campo_clinico.id : '',

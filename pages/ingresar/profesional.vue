@@ -88,9 +88,14 @@
                                 </div>
                                 <div class="row pt-lg-4">
                                     <div class="col-md-6">
-                                        <label class="font-weight-bold">Ciudad</label>
+                                        <label class="font-weight-bold">Ciudad de residencia</label>
                                         <input type="text" v-model="profesional.ciudad"  class="form-control" placeholder="Ingrese ciudad" v-uppercase>
                                         <span class="text-danger" v-if="errors.ciudad">{{errors.ciudad[0]}}</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="font-weight-bold">Dirección de residencia</label>
+                                        <input type="text" v-model="profesional.direccion_residencia"  class="form-control" placeholder="Ingrese dirección" v-uppercase>
+                                        <span class="text-danger" v-if="errors.direccion_residencia">{{errors.direccion_residencia[0]}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -170,6 +175,7 @@ export default {
             n_contacto:'',
             email:'',
             ciudad:'',
+            direccion_residencia:'',
             planta:'',
             situacion_actual:'',
             etapa_actual:'',
@@ -247,6 +253,7 @@ export default {
               email: this.profesional.email,
               n_contacto: this.profesional.n_contacto,
               ciudad: this.profesional.ciudad,
+              direccion_residencia:this.profesional.direccion_residencia,
               etapas_id: this.profesional.etapa_actual,
               calidad_juridica_id: this.profesional.calidad_juridica,
               planta_id: this.profesional.planta,

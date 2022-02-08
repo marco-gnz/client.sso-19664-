@@ -69,6 +69,14 @@
               </el-date-picker>
               <span class="text-danger" v-if="errors.inicio_periodo || errors.termino_periodo">{{errors.inicio_periodo[0]}}</span>
           </div>
+          <div class="col-md-6">
+            <label>Situación actual de profesional</label>
+            <select class="form-control" v-model="situacion_profesional">
+                <option value="">-- Seleccione situación actual --</option>
+                <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
+            </select>
+            <span class="text-danger" v-if="errors.situacion_profesional_id">{{errors.situacion_profesional_id[0]}}</span>
+          </div>
         </div>
       </section>
       <section v-if="destinacion_pasos === 2">
@@ -103,13 +111,15 @@ export default {
   mounted(){
     this.getGradoComplejidad();
     this.getUnidades();
+    this.getSituacionesActual();
   },
   computed:{
     ...mapGetters({
       redesHospitalarias:'mantenedores/redesHospitalarias',
       establecimientos:'mantenedores/establecimientos',
       unidades:'mantenedores/unidades',
-      gradosComplejidad:'mantenedores/gradosComplejidad'
+      gradosComplejidad:'mantenedores/gradosComplejidad',
+      situacionesActual:'mantenedores/situacionesActual'
     }),
     red:{
       get(){
@@ -151,6 +161,14 @@ export default {
         this.$store.commit('edf/DESTINACION_PERIODO', newValue);
       }
     },
+    situacion_profesional:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.situacion_profesional;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_SITUACION_PROFESIONAL', newValue);
+      }
+    },
     destinacion(){
       return {...this.$store.state.edf.destinacionEdit}
     },
@@ -171,6 +189,7 @@ export default {
       getGradoComplejidad:'mantenedores/getGradoComplejidad',
       getUnidades: 'mantenedores/getAllUnidades',
       getEstablecimientosAction: 'mantenedores/getEstablecimientos',
+      getSituacionesActual:'mantenedores/getSituacionesActual'
     }),
     getEstablecimientosChange(){
       this.campo_clinico = '';
@@ -182,6 +201,7 @@ export default {
       const data = {
         inicio_periodo: this.periodo[0],
         termino_periodo: this.periodo[1],
+        situacion_profesional_id:this.situacion_profesional,
         observacion: this.observacion,
         establecimiento_id: this.campo_clinico,
         grado_complejidad_establecimiento_id: this.grado,

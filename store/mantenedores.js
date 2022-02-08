@@ -388,6 +388,11 @@ export const actions = {
 
       commit('SET_TIPO_PERFECCIONAMIENTOS', response);
     },
+    async getPerfeccionamientoDynamic({ commit }, tipo_perfeccionamiento_id){
+      const response = await this.$axios.$get('/api/mantenedores/tipo-perfeccionamientos/perfeccionamientos', {params:{tipo_perfeccionamiento_id: tipo_perfeccionamiento_id}});
+
+      commit('SET_PERFECCIONAMIENTOS', response);
+    },
     async getRedesHospitalarias({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/redes-hospitalarias');
       commit('SET_REDES_HOSPITALARIAS', response);

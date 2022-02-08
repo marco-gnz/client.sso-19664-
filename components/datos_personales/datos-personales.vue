@@ -49,9 +49,14 @@
                 </div>
                 <div class="row pt-lg-4">
                     <div class="col-md-6">
-                        <label class="font-weight-bold">Ciudad</label>
+                        <label class="font-weight-bold">Ciudad de residencia</label>
                         <input type="text" v-model="datosPersonalesEdit.ciudad"  class="form-control" placeholder="Ingrese ciudad" v-uppercase>
                         <span class="text-danger" v-if="errors.ciudad">{{errors.ciudad[0]}}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="font-weight-bold">Dirección de residencia</label>
+                        <input type="text" v-model="datosPersonalesEdit.direccion_residencia"  class="form-control" placeholder="Ingrese dirección" v-uppercase>
+                        <span class="text-danger" v-if="errors.direccion_residencia">{{errors.direccion_residencia[0]}}</span>
                     </div>
                 </div>
             </div>
@@ -166,6 +171,7 @@ export default {
               email: this.datosPersonalesEdit.email,
               n_contacto: this.datosPersonalesEdit.n_contacto,
               ciudad: this.datosPersonalesEdit.ciudad,
+              direccion_residencia:this.datosPersonalesEdit.direccion_residencia,
               etapas_id: this.datosPersonalesEdit.etapa,
               calidad_juridica_id: this.datosPersonalesEdit.calidad,
               planta_id: this.datosPersonalesEdit.planta,

@@ -2,6 +2,7 @@
   <div class="row">
     <p><i class="el-icon-circle-plus text-success"></i> <b>Sección destinaciones</b></p>
     <EditDestinacion />
+    <ShowDestinacion />
     <div class="col-md-12">
       <table class="table table-xs">
       <thead>
@@ -10,15 +11,17 @@
               <th>Establecimiento</th>
               <th>° Complejidad</th>
               <th>Periodo</th>
+              <th>Situación profesional</th>
               <th>&nbsp;</th>
           </tr>
       </thead>
       <tbody>
-        <tr v-for="(destinacion, index) in destinaciones" :key="index">
+        <tr v-for="(destinacion, index) in destinaciones" :key="index" @click.prevent="show(destinacion)" v-b-modal.modal-show-destinacion class="click">
           <td>{{destinacion.uuid.substring(0, 5)}}</td>
           <td>{{destinacion.establecimiento.sigla}} - {{destinacion.unidad.nombre}}</td>
           <td><strong>{{ (destinacion.grado_complejidad_establecimiento) ? destinacion.grado_complejidad_establecimiento.grado : '---' }}</strong></td>
           <td>{{DateTime.fromISO(destinacion.inicio_periodo).toFormat('dd LLL yyyy')}} a {{DateTime.fromISO(destinacion.termino_periodo).toFormat('dd LLL yyyy')}}</td>
+          <td>{{ (destinacion.situacion_profesional != null) ? destinacion.situacion_profesional.nombre : '--' }}</td>
           <td @click.stop="">
             <el-dropdown>
                 <span class="el-dropdown-link">
@@ -49,6 +52,7 @@
 <script>
 import {mapMutations, mapActions} from 'vuex';
 import EditDestinacion from './modals/edit-destinacion.vue';
+import ShowDestinacion from './modals/show-destinacion.vue';
 export default {
     props: ["destinaciones"],
     data() {
@@ -81,8 +85,17 @@ export default {
         }),
         ...mapMutations({
             deleteAction: "edf/REMOVE_DESTINACION",
-            passingDestinacion:'edf/PASSING_DESTINACION'
+            passingDestinacion:'edf/PASSING_DESTINACION',
+            passingShowDestinacion:'edf/SHOW_DESTINACION'
         }),
+        show(destinacion){
+          let fecha_inicio      = this.DateTime.fromISO(destinacion.inicio_periodo);
+          let fecha_termino     = this.DateTime.fromISO(destinacion.termino_periodo);
+          let diferencia        = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
+
+          destinacion['diferencia'] = diferencia.values;
+          this.passingShowDestinacion(destinacion);
+        },
         clickEditDestinacion(destinacion){
           this.getEstablecimientosAction(destinacion.establecimiento.red_hospitalaria_id);
           this.passingDestinacion(destinacion);
@@ -116,7 +129,7 @@ export default {
             });
         }
     },
-    components: { EditDestinacion }
+    components: { EditDestinacion, ShowDestinacion }
 }
 </script>
 

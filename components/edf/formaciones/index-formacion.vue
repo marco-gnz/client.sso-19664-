@@ -2,6 +2,7 @@
   <div class="row">
     <p><i class="el-icon-circle-plus text-primary"></i> <b>Sección formaciones</b></p>
     <EditFormacion />
+    <ShowFormacion />
     <div class="col-md-12">
       <table class="table table-xs">
         <thead>
@@ -11,16 +12,18 @@
                 <th>Fecha registro super I.</th>
                 <th>Formación</th>
                 <th>Periodo</th>
+                <th>Situación profesional</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
-          <tr v-for="(formacion, index) in formaciones" :key="index">
+          <tr v-for="(formacion, index) in formaciones" :key="index" @click.prevent="show(formacion)" v-b-modal.modal-show-formacion class="click">
             <td>{{formacion.uuid.substring(0,5)}}</td>
             <td>{{formacion.centro_formador.nombre}}</td>
             <td>{{ (formacion.fecha_registro != null) ? DateTime.fromISO(formacion.fecha_registro).toFormat('dd-LL-yyyy') : '--'}}</td>
             <td>{{formacion.perfeccionamiento.nombre}} <i>({{formacion.perfeccionamiento.tipo.nombre}})</i></td>
             <td>{{DateTime.fromISO(formacion.inicio_formacion).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(formacion.termino_formacion).toFormat('dd-LL-yyyy')}}</td>
+            <td>{{ (formacion.situacion_profesional != null) ? formacion.situacion_profesional.nombre : '--'}}</td>
             <td @click.stop="">
               <el-dropdown>
                   <span class="el-dropdown-link">
@@ -51,6 +54,7 @@
 <script>
 import {mapMutations, mapActions} from 'vuex';
 import EditFormacion from './modals/edit-formacion.vue';
+import ShowFormacion from './modals/show-formacion.vue';
 export default {
     props: ["formaciones"],
     data() {
@@ -84,6 +88,7 @@ export default {
         ...mapMutations({
             deleteAction: "edf/REMOVE_FORMACION",
             passingFormacion:'edf/PASSING_FORMACION',
+            passingShowFormacion:'edf/SHOW_FORMACION'
         }),
         deleteFormacion(formacion) {
             this.$confirm(`¿Eliminar formacion #${formacion.uuid.substring(0, 5)}?`, "Alerta", {
@@ -99,6 +104,14 @@ export default {
         clickEditFormacion(formacion){
           this.getTipoPerfeccionamientos();
           this.passingFormacion(formacion);
+        },
+        show(formacion){
+          let fecha_inicio      = this.DateTime.fromISO(formacion.inicio_formacion);
+          let fecha_termino     = this.DateTime.fromISO(formacion.termino_formacion);
+          let diferencia        = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
+
+          formacion['diferencia'] = diferencia.values;
+          this.passingShowFormacion(formacion);
         },
         async delete(formacion) {
             this.fullscreenLoading = !this.fullscreenLoading;
@@ -121,7 +134,7 @@ export default {
             });
         }
     },
-    components: { EditFormacion }
+    components: { EditFormacion, ShowFormacion }
 }
 </script>
 

@@ -40,16 +40,21 @@
         </div>
       </section>
       <section v-if="formacion_pasos === 1">
-          <div class="row pt-4 d-flex justify-content-center">
-              <el-date-picker
-                    v-model="fecha_registro"
-                    type="date"
-                    placeholder="Fecha de registro"
-                    format="dd-MM-yyyy"
-                    value-format="yyyy-MM-dd">
-                </el-date-picker>
-                <span class="text-danger" v-if="errors.fecha_registro">{{errors.fecha_registro[0]}}</span>
-          </div>
+        <div class="row pt-4 d-flex justify-content-center">
+            <div class="col-md-6">
+              <label>Fecha de registro superintendencia</label>
+              <input type="date" class="form-control" v-model="fecha_registro">
+              <span class="text-danger" v-if="errors.fecha_registro">{{errors.fecha_registro[0]}}</span>
+            </div>
+            <div class="col-md-6">
+              <label>Situación actual de profesional</label>
+              <select class="form-control" v-model="situacion_profesional">
+                  <option value="">-- Seleccione situación actual --</option>
+                  <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
+              </select>
+              <span class="text-danger" v-if="errors.situacion_profesional_id">{{errors.situacion_profesional_id[0]}}</span>
+            </div>
+        </div>
       </section>
       <section v-if="formacion_pasos === 2">
           <div class="row pt-4 d-flex justify-content-center">
@@ -81,7 +86,7 @@
           <div class="w-100">
               <button :disabled="formacion_pasos == 0" @click.prevent="paso_formacion_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
               <button v-show="formacion_pasos != 3" @click.prevent="paso_formacion_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
-              <button v-show="formacion_pasos == 3" @click.prevent="editEtapaFormacion" class="mt-3 btn btn-success float-right">Editar formación <i class="fas fa-plus"></i></button>
+              <button v-show="formacion_pasos == 3" @click.prevent="editEtapaFormacion" class="mt-3 btn btn-success float-right" v-loading.fullscreen.lock="fullscreenLoading">Editar formación <i class="fas fa-plus"></i></button>
           </div>
       </template>
     </b-modal>
@@ -106,7 +111,8 @@ export default {
   computed:{
     ...mapGetters({
         centrosFormadores:'mantenedores/centrosFormadores',
-        tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos'
+        tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos',
+        situacionesActual:'mantenedores/situacionesActual'
     }),
     formacion(){
       return {...this.$store.state.edf.formacionEdit}
@@ -151,6 +157,14 @@ export default {
         this.$store.commit('edf/FORMACION_PERIODO', newValue);
       }
     },
+    situacion_profesional:{
+      get(){
+        return this.$store.state.edf.formacionEdit.situacion_profesional;
+      },
+      set (newValue){
+        this.$store.commit('edf/FORMACION_SITUACION_PROFESIONAL', newValue);
+      }
+    },
     observacion:{
       get(){
         return this.$store.state.edf.formacionEdit.observacion;
@@ -192,7 +206,8 @@ export default {
         termino_formacion:this.periodo[1],
         observacion:this.observacion,
         centro_formador_id:this.centro_formador,
-        perfeccionamiento_id:this.perfeccionamiento
+        perfeccionamiento_id:this.perfeccionamiento,
+        situacion_profesional_id:this.situacion_profesional
       };
 
       await this.$axios.$put(url, data).then(response => {

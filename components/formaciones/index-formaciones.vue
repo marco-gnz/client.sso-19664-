@@ -9,6 +9,7 @@
         </div>
       </div>
       <div class="row pt-lg-3">
+        <EditFormacion />
         <div class="col-md-12">
           <template v-if="formaciones.length">
               <table class="table table-xs pt-2">
@@ -29,7 +30,7 @@
                       <td>{{especialidad.perfeccionamiento.tipo.nombre}}</td>
                       <td>{{especialidad.perfeccionamiento.nombre}}</td>
                       <td>{{ (especialidad.fecha_registro != null) ? DateTime.fromISO(especialidad.fecha_registro).toFormat('dd-LL-yyyy') : '--'}}</td>
-                      <td>{{DateTime.fromISO(especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</td>
+                      <td>{{ (especialidad.inicio_formacion != null) ? DateTime.fromISO(especialidad.inicio_formacion).toFormat('dd-LL-yyyy') : '--' }} a {{ (especialidad.termino_formacion != null) ? DateTime.fromISO(especialidad.termino_formacion).toFormat('dd-LL-yyyy') : '--'}}</td>
                       <td>{{especialidad.origen}}</td>
                       <td @click.stop="">
                           <el-dropdown>
@@ -37,9 +38,12 @@
                                   Acción<i class="el-icon-arrow-down el-icon--right"></i>
                               </span>
                               <el-dropdown-menu slot="dropdown">
-                                  <template v-if="$auth.user.permissions_roles.includes('eliminar-formacion') || $auth.user.permissions.includes('eliminar-formacion')">
-                                    <el-dropdown-item icon="el-icon-delete" @click.native="deleteEspecialidad(especialidad.id)">Eliminar</el-dropdown-item>
-                                  </template>
+                                <template v-if="$auth.user.permissions_roles.includes('editar-formacion') || $auth.user.permissions.includes('editar-formacion')">
+                                  <el-dropdown-item icon="el-icon-edit" @click.native="clickEditFormacion(especialidad)" v-b-modal.modal-edit-formacion>Editar</el-dropdown-item>
+                                </template>
+                                <template v-if="$auth.user.permissions_roles.includes('eliminar-formacion') || $auth.user.permissions.includes('eliminar-formacion')">
+                                  <el-dropdown-item icon="el-icon-delete" @click.native="deleteEspecialidad(especialidad.id)">Eliminar</el-dropdown-item>
+                                </template>
                               </el-dropdown-menu>
                           </el-dropdown>
                       </td>
@@ -65,6 +69,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations} from 'vuex';
 import ModalCreate from "./modals/ModalCreate.vue";
+import EditFormacion from './modals/edit-formacion.vue';
 export default {
     props: ['profesional'],
     data() {
@@ -80,10 +85,13 @@ export default {
     methods:{
         ...mapActions({
           getFormacionesAction: 'formaciones/getFormaciones',
+          getCentrosFormadres:'mantenedores/getCentrosFormadres',
+          getPerfeccionamiento:'mantenedores/getPerfeccionamientoDynamic'
         }),
         ...mapMutations({
           removeFormacionAction:'formaciones/REMOVE_FORMACION',
-          removeFormacionPaoAction:'calculoPao/REMOVE_FORMACION_PROFESIONAL'
+          removeFormacionPaoAction:'calculoPao/REMOVE_FORMACION_PROFESIONAL',
+          passingFormacion:'edf/PASSING_FORMACION',
         }),
         deleteEspecialidad(id){
           this.$confirm('¿Eliminar formación?. Se eliminará todo registro asociado a la formación (Devoluciones PAO, documentos, etc...)', 'Alerta', {
@@ -93,6 +101,11 @@ export default {
         }).then(() => {
           this.removeFormacion(id);
         })
+        },
+        clickEditFormacion(especialidad){
+          this.getCentrosFormadres();
+          this.getPerfeccionamiento(especialidad.perfeccionamiento.tipo.id);
+          this.passingFormacion(especialidad);
         },
         async removeFormacion(id){
           const url = `/api/profesionales/profesional/remove-formacion/${id}`;
@@ -131,7 +144,7 @@ export default {
     mounted(){
       this.getFormacionesAction(this.$route.params.id);
     },
-    components: { ModalCreate }
+    components: { ModalCreate, EditFormacion }
 }
 </script>
 

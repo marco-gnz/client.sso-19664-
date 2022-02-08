@@ -11,13 +11,13 @@
                     <b-tab title="Datos personales">
                       <DatosPersonales :profesional="profesional"/>
                     </b-tab>
-                    <b-tab :disabled="profesional.etapas_id != 1" title="Formaciones">
+                    <b-tab :disabled="!grupoFormaciones.includes(profesional.situacion_actual_id) && profesional.especialidades_count <= 0" title="Formaciones">
                       <IndexFormaciones :profesional="profesional"/>
                     </b-tab>
-                    <b-tab :disabled="profesional.etapas_id != 1" title="Registro PAO">
+                    <b-tab :disabled="!grupoCalculoPao.includes(profesional.situacion_actual_id) && profesional.paos_count <= 0" title="Registro PAO">
                       <IndexCalculoPao />
                     </b-tab>
-                    <b-tab :disabled="profesional.etapas_id != 2" title="Registro EDF">
+                    <b-tab :disabled="!grupoCalculoEdf.includes(profesional.situacion_actual_id) && profesional.destinaciones_count <= 0" title="Registro EDF">
                       <IndexEdf :profesional="profesional"/>
                     </b-tab>
                     <b-tab title="Otros">
@@ -52,6 +52,9 @@ export default {
     },
     data(){
       return{
+          grupoFormaciones:[1, 2, 3,4,6,7,8,9, 11, 12, 13], //formaciones,
+          grupoCalculoPao:[4, 6, 7, 8, 9, 10, 11, 12, 13],
+          grupoCalculoEdf:[1, 2, 3, 4, 5, 8, 13],
           datosPersonalesEdit:{
             id:'',
             rut:'',

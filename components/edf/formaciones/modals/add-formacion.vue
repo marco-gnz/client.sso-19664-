@@ -41,14 +41,19 @@
       </section>
       <section v-if="formacion_pasos === 1">
           <div class="row pt-4 d-flex justify-content-center">
-              <el-date-picker
-                    v-model="formacion.fecha_registro"
-                    type="date"
-                    placeholder="Fecha de registro"
-                    format="dd-MM-yyyy"
-                    value-format="yyyy-MM-dd">
-                </el-date-picker>
+              <div class="col-md-6">
+                <label>Fecha de registro superintendencia</label>
+                <input type="date" class="form-control" v-model="formacion.fecha_registro">
                 <span class="text-danger" v-if="errors.fecha_registro">{{errors.fecha_registro[0]}}</span>
+              </div>
+              <div class="col-md-6">
+                <label>Situación actual de profesional</label>
+                <select class="form-control" v-model="formacion.situacion_profesional">
+                    <option value="">-- Seleccione situación actual --</option>
+                    <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
+                </select>
+                <span class="text-danger" v-if="errors.situacion_profesional_id">{{errors.situacion_profesional_id[0]}}</span>
+              </div>
           </div>
       </section>
       <section v-if="formacion_pasos === 2">
@@ -102,6 +107,7 @@ export default {
           perfeccionamiento:'',
           fecha_registro:'',
           periodo:[],
+          situacion_profesional:'',
           observacion:''
       },
       perfeccionamientos:[],
@@ -114,7 +120,8 @@ export default {
   computed:{
     ...mapGetters({
         centrosFormadores:'mantenedores/centrosFormadores',
-        tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos'
+        tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos',
+        situacionesActual:'mantenedores/situacionesActual'
     })
   },
   methods:{
@@ -149,7 +156,8 @@ export default {
         observacion:this.formacion.observacion,
         profesional_id:this.profesional.id,
         centro_formador_id:this.formacion.centro_formador,
-        perfeccionamiento_id:this.formacion.perfeccionamiento
+        perfeccionamiento_id:this.formacion.perfeccionamiento,
+        situacion_profesional_id:this.formacion.situacion_profesional
       };
 
       await this.$axios.$post(url, data).then(response => {

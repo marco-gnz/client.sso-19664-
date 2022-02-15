@@ -41,6 +41,7 @@
                   content="Fechas deshabilitadas corresponden a devoluciones, interrupciones o periodos no disponibles...">
                   <el-date-picker
                       slot="reference"
+                      :clearable="false"
                       v-model="devolucion.periodo"
                       :picker-options="removeDates"
                       type="daterange"
@@ -287,9 +288,10 @@ export default {
 
       let total           = diferencia_days_pao.values.days - days - days_calculo;
 
-      let object          = this.Duration.fromObject({days: total, months:0, years:0}).normalize().toObject();
+      /* let object          = this.Duration.fromObject({days: total, months:0, years:0}).normalize().toObject(); */
+      let object = this.Duration.fromObject({days:total-1}).shiftTo('days', 'months', 'years');
 
-      let fecha = periodo_termino_ingresado.plus({days: total, months:0, years:0}).toFormat('dd LLLL yyyy');
+      let fecha = periodo_termino_ingresado.plus({days: total -1, months:0, years:0}).toFormat('dd LLLL yyyy');
 
       if(object.days < 0 || object.months < 0 || object.years < 0 ){
         this.textAlert = true;
@@ -326,21 +328,22 @@ export default {
           });
         }else if(response === 'existe-devolucion'){
           this.clearAllModal();
-          this.fullscreenLoading = !this.fullscreenLoading;
           this.$alert('No se ingresó la devolución, ya que el profesional tiene una devolución en el mismo periodo de devolución ingresado.', 'Error', {
               type:'warning',
               confirmButtonText: 'OK'
             });
         }else if(response === 'existe-interrupcion'){
           this.clearAllModal();
-          this.fullscreenLoading = !this.fullscreenLoading;
           this.$alert('No se ingresó la devolución, ya que el profesional tiene una interrupción en el mismo periodo de devolución ingresado.', 'Error', {
               type:'warning',
               confirmButtonText: 'OK'
             });
-        }else{
-          this.fullscreenLoading = !this.fullscreenLoading;
-          //no se ingresó
+        }else if(response === 'existe-formacion'){
+          this.clearAllModal();
+          this.$alert('No se ingresó la devolución, ya que el profesional tiene una formación en el mismo periodo de devolución ingresado.', 'Error', {
+              type:'warning',
+              confirmButtonText: 'OK'
+            });
         }
       }).catch(error => {
         console.log(error);

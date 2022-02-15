@@ -30,7 +30,7 @@
         <section v-if="pao_pasos == 1">
           <div class="row pt-2">
               <div class="col-md-12">
-                  <p class="text-center">{{pao.especialidad.perfeccionamiento.tipo.nombre}} <i>({{pao.especialidad.perfeccionamiento.nombre}})</i> seleccionada, tiene un periodo de formación del <b>{{DateTime.fromISO(pao.especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}}</b> a <b>{{DateTime.fromISO(pao.especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</b>. ({{Math.round(diff_anos_especialidad.values.years)}} años)</p>
+                  <p class="text-center">{{pao.especialidad.perfeccionamiento.tipo.nombre}} <i>({{pao.especialidad.perfeccionamiento.nombre}})</i> seleccionada, tiene un periodo de formación del <b>{{DateTime.fromISO(pao.especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}}</b> a <b>{{DateTime.fromISO(pao.especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</b>. ({{diff_anos_especialidad}})</p>
                   <p class="text-center">Por lo tanto, el periodo estimado de PAO sería de <b>{{messagge}}</b> por devolver.</p>
               </div>
           </div>
@@ -139,12 +139,13 @@ export default {
             getFormacionesProfesional: 'calculoPao/getFormacionesProfesional'
         }),
     calculoPao(especialidad){
-      console.log(especialidad);
       if(especialidad.inicio_formacion != null || especialidad.termino_formacion != null){
         let fecha_inicio_especialidad       = this.DateTime.fromISO(especialidad.inicio_formacion);
       let fecha_termino_especialidad      = this.DateTime.fromISO(especialidad.termino_formacion);
 
-      this.diff_anos_especialidad = fecha_termino_especialidad.diff(fecha_inicio_especialidad, 'years');
+      let diff_formacion = fecha_termino_especialidad.diff(fecha_inicio_especialidad, ['days', 'months', 'years']);
+
+      this.diff_anos_especialidad = `${diff_formacion.values.years > 1 ? `${diff_formacion.values.years} años` : `${diff_formacion.values.years} año`}, ${diff_formacion.values.months > 1 ? `${diff_formacion.values.months} meses` : `${diff_formacion.values.months} mes`} y ${Math.round(diff_formacion.values.days) > 1 ? `${Math.round(diff_formacion.values.days)} días` : `${Math.round(diff_formacion.values.days)} día`}`;
 
       let dias = fecha_termino_especialidad.diff(fecha_inicio_especialidad, 'days');
 
@@ -155,10 +156,10 @@ export default {
       this.pao_estimado.periodo[0]        = fecha_termino_especialidad.startOf('day').plus({days: 1}).toFormat('yyyy-LL-dd');
 
       let fecha_inici_format              = this.DateTime.fromISO(this.pao.periodo[0]);
-      this.pao.periodo[1]                 = (fecha_inici_format.plus({days: (dias.values.days) * 2}).toFormat('yyyy-LL-dd'));
-      this.pao_estimado.periodo[1]        = (fecha_inici_format.plus({days: (dias.values.days) * 2}).toFormat('yyyy-LL-dd'))
+      this.pao.periodo[1]                 = (fecha_inici_format.plus({days: (dias.values.days * 2)}).toFormat('yyyy-LL-dd'));
+      this.pao_estimado.periodo[1]        = (fecha_inici_format.plus({days: (dias.values.days * 2)}).toFormat('yyyy-LL-dd'))
 
-      let final                           = (fecha_inici_format.plus({days: (dias.values.days) * 2}).toFormat('yyyy-LL-dd'));
+      let final                           = (fecha_inici_format.plus({days: (dias.values.days * 2)}).toFormat('yyyy-LL-dd'));
       let format_final                    = this.DateTime.fromISO(final);
 
 
@@ -203,7 +204,6 @@ export default {
 
         await this.$axios.$post(url, data).then(response => {
           this.fullscreenLoading = !this.fullscreenLoading;
-          console.log(response);
           if(response[0] === true){
             this.clearAllModal();
             this.addMutation(response[1]);

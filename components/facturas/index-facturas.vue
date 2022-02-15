@@ -19,6 +19,7 @@
                     <th>N° factura</th>
                     <th>Situación</th>
                     <th>Profesional</th>
+                    <th>Tipo</th>
                     <th>Total</th>
                     <th>&nbsp;</th>
                 </tr>
@@ -27,8 +28,9 @@
               <tr v-for="(factura, index) in facturas" :key="index" v-b-modal.modal-view-factura @click.prevent="showFactura(factura)">
                 <td>°{{factura.n_resolucion}} / {{DateTime.fromISO(factura.fecha_resolucion).toFormat('dd-LL-yyyy')}}</td>
                 <td>{{factura.n_factura}}</td>
-                <td>{{factura.situacion_actual.nombre}}</td>
+                <td><strong :class="(factura.situacion_actual.id == 3) ? 'text-success' : 'text-secondary' ">{{factura.situacion_actual.nombre}}</strong></td>
                 <td>{{factura.profesional.nombre_completo}}</td>
+                <td>{{`${factura.tipos.length ? `${factura.tipos.map(t => t.nombre).join(' - ')}` : `--`}`}}</td>
                 <td>${{Intl.NumberFormat('de-DE').format(factura.monto_total)}}</td>
                 <td @click.stop="">
                   <el-dropdown>

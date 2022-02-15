@@ -325,9 +325,11 @@ export default {
 
         let total           = diferencia_days_pao.values.days - days - days_calculo;
 
-        let object          = this.Duration.fromObject({days: total, months:0, years:0}).normalize().toObject();
+        /* let object          = this.Duration.fromObject({days: total, months:0, years:0}).normalize().toObject(); */
 
-        let fecha = periodo_termino_ingresado.plus({days: total, months:0, years:0}).toFormat('dd LLLL yyyy');
+        let object = this.Duration.fromObject({days:total, months:0, years:0}).shiftTo('days', 'months', 'years');
+
+        let fecha           = periodo_termino_ingresado.plus({days: total, months:0, years:0}).toFormat('dd LLLL yyyy');
 
         if(object.days < 0 || object.months < 0 || object.years < 0 ){
           this.textAlert = true;
@@ -369,6 +371,11 @@ export default {
                   });
               }else if(response === 'existe-interrupcion'){
                 this.$alert('No se editó la devolución, ya que el profesional tiene una interrupción en el mismo periodo de devolución ingresado.', 'Error', {
+                    type:'warning',
+                    confirmButtonText: 'OK'
+                  });
+              }else if(response === 'existe-formacion'){
+                this.$alert('No se editó la devolución, ya que el profesional tiene una formación en el mismo periodo de devolución ingresado.', 'Error', {
                     type:'warning',
                     confirmButtonText: 'OK'
                   });

@@ -86,11 +86,22 @@ export default {
           getEscrituras:'calculoPao/getEscrituras'
         }),
         show(devolucion){
-          let fecha_inicio      = this.DateTime.fromISO(devolucion.inicio_devolucion);
-          let fecha_termino     = this.DateTime.fromISO(devolucion.termino_devolucion);
-          let diferencia        = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
+          let fecha_inicio          = this.DateTime.fromISO(devolucion.inicio_devolucion);
+          let fecha_termino         = this.DateTime.fromISO(devolucion.termino_devolucion);
+          let diferencia            = fecha_termino.diff(fecha_inicio, 'days');
+          let diferencia_client     = fecha_termino.diff(fecha_inicio, ['days','months','years']);
 
-          devolucion['diferencia'] = diferencia.values;
+          devolucion['diferencia']  = diferencia_client.values;
+
+          let hora      = devolucion.tipo_contrato.horas;
+          let hora_real = hora/44;
+
+          let plus      = fecha_inicio.plus({days: diferencia.values.days * hora_real, months: 0, years: 0});
+
+          let diff      = plus.diff(fecha_inicio, ['days', 'months', 'years']);
+
+          devolucion['diferencia_calculate'] = diff.values;
+
           this.passingShowDevolucion(devolucion);
         },
         clickEditDevolucion(devolucion) {

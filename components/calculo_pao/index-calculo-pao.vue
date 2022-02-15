@@ -96,15 +96,18 @@
             <!-- TOTAL -->
             <div class="row pt-4">
               <div class="col-md-12 border-bottom border-left border-right">
-                <div class="row pt-lg-4 pb-lg-2">
-                  <div class="col-md-4">
-                    <span tyle="font-size:16px;" class="float-lg-left"><strong class="text-success">TOTAL A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ? `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`}, ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` : `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ? `${Math.round(calculateTotalDevolver.days)} días` : `${Math.round(calculateTotalDevolver.days)} día`}` }}</span>
+                <div class="row pt-lg-4 text-center">
+                  <div class="col-md-3">
+                    <span><strong class="text-success">A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ? `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`}, ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` : `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ? `${Math.round(calculateTotalDevolver.days)} días` : `${Math.round(calculateTotalDevolver.days)} día`}` }}</span>
                   </div>
-                  <div class="col-md-4">
-                    <span tyle="font-size:12px;" class="float-left"><strong class="text-primary">LLEVA</strong>: {{ `${calculateTotalDevolucion.years > 1 ? `${calculateTotalDevolucion.years} años` : `${calculateTotalDevolucion.years} año`}, ${calculateTotalDevolucion.months > 1 ? `${calculateTotalDevolucion.months} meses` : `${calculateTotalDevolucion.months} mes`} y ${Math.round(calculateTotalDevolucion.days) > 1 ? `${Math.round(calculateTotalDevolucion.days)} días` : `${Math.round(calculateTotalDevolucion.days)} día`}` }}</span>
+                  <div class="col-md-3">
+                    <span><strong class="text-primary">LLEVA</strong>: {{ `${calculateTotalDevolucion.years > 1 ? `${calculateTotalDevolucion.years} años` : `${calculateTotalDevolucion.years} año`}, ${calculateTotalDevolucion.months > 1 ? `${calculateTotalDevolucion.months} meses` : `${calculateTotalDevolucion.months} mes`} y ${Math.round(calculateTotalDevolucion.days) > 1 ? `${Math.round(calculateTotalDevolucion.days)} días` : `${Math.round(calculateTotalDevolucion.days)} día`}` }}</span>
                   </div>
-                  <div class="col-md-4">
-                    <span tyle="font-size:14px;" class="float-left"><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ? `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`}, ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` : `${calculateTotalPorDevolver.months} mes`} y ${Math.round(calculateTotalPorDevolver.days) > 1 ? `${Math.round(calculateTotalPorDevolver.days)} días` : `${Math.round(calculateTotalPorDevolver.days)} día`}` }}</span>
+                  <div class="col-md-3">
+                    <span><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ? `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`}, ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` : `${calculateTotalPorDevolver.months} mes`} y ${Math.round(calculateTotalPorDevolver.days) > 1 ? `${Math.round(calculateTotalPorDevolver.days)} días` : `${Math.round(calculateTotalPorDevolver.days)} día`}` }}</span>
+                  </div>
+                  <div class="col-md-3">
+                    <span><strong class="text-info">FINALIZA EL</strong>: {{calculateFechaTermino}}</span>
                   </div>
                 </div>
               </div>
@@ -153,62 +156,137 @@ export default {
             }
         return permiso;
       },
+      calculateFechaTermino(){
+        let arrayFechasPao      = [];
+        let ArrayFechas         = [];
+        let total_pao           = 0;
+        let total_devolucion    = 0;
+        let total_saldo         = 0;
+        let total_interrupcion  = 0;
+        let ultima_fecha_devolucion = '';
+        let fecha_a_finalizar = '';
+        if(this.paos.length){
+          this.paos.forEach(pao => {
+            let fecha_inicio_pao    = this.DateTime.fromISO(pao.periodo_inicio);
+            let fecha_termino_pao   = this.DateTime.fromISO(pao.periodo_termino);
+            let diff_days_pao       = fecha_termino_pao.diff(fecha_inicio_pao, 'days');
+            total_pao               += diff_days_pao.values.days;
+            arrayFechasPao.push(pao.periodo_termino);
+            ArrayFechas.push(pao.periodo_inicio);
+
+               if(pao.devoluciones.length){
+                pao.devoluciones.forEach(devolucion => {
+                    let fecha_inicio_devolucion    = this.DateTime.fromISO(devolucion.inicio_devolucion);
+                    let fecha_termino_devolucion   = this.DateTime.fromISO(devolucion.termino_devolucion);
+                    let days_devolucion            = fecha_termino_devolucion.diff(fecha_inicio_devolucion, 'days');
+                    let hora                       = devolucion.tipo_contrato.horas;
+                    let hora_real                  = hora/44;
+                    total_devolucion              += days_devolucion.values.days *  hora_real;
+                    ArrayFechas.push(devolucion.termino_devolucion);
+                });
+                if(pao.interrupciones.length){
+                  pao.interrupciones.forEach(interrupcion => {
+                      ArrayFechas.push(interrupcion.termino_interrupcion);
+                  });
+                }
+              }
+          });
+          total_saldo                   = total_pao - total_devolucion - total_interrupcion;
+
+          if(ArrayFechas.length){
+            ultima_fecha_devolucion     = ArrayFechas.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
+            ultima_fecha_devolucion     = this.DateTime.fromISO(ultima_fecha_devolucion);
+            fecha_a_finalizar       = ultima_fecha_devolucion.plus({days:total_saldo, months:0, years:0}).toFormat('dd-LL-yyyy');
+            return fecha_a_finalizar;
+          }
+        }
+
+        if(arrayFechasPao.length){
+          let ultima_pao            = arrayFechasPao.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
+          let  ultima_pao_format    = this.DateTime.fromISO(ultima_pao);
+          fecha_a_finalizar         = ultima_pao_format.toFormat('dd-LL-yyyy');
+
+        }else{
+          fecha_a_finalizar = 'Fecha no disponible';
+        }
+          return fecha_a_finalizar;
+      },
       calculateTotalDevolucion(){
         let dias  = 0;
-        let meses = 0;
-        let anos  = 0;
-
         if(this.paos.length){
           this.paos.forEach(pao => {
               if(pao.devoluciones.length){
                 pao.devoluciones.forEach(devolucion => {
                     let fecha_inicio    = this.DateTime.fromISO(devolucion.inicio_devolucion);
                     let fecha_termino   = this.DateTime.fromISO(devolucion.termino_devolucion);
-                    let diferencia      = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
-
+                    let diferencia      = fecha_termino.diff(fecha_inicio, 'days');
                     let hora            = devolucion.tipo_contrato.horas;
                     let hora_real       = hora/44;
-
-                    let plus = fecha_inicio.startOf('day').plus({days: diferencia.values.days * hora_real, months: diferencia.values.months, years: diferencia.values.years});
-
-                    let diff = plus.diff(fecha_inicio, ['days', 'months', 'years']);
-
-                    dias += diff.values.days;
-                    meses += diff.values.months;
-                    anos += diff.values.years;
+                    dias += diferencia.values.days * hora_real;
                 });
               }
           });
         }
-        let object = this.Duration.fromObject({ years: anos, months: meses,  days: dias}).normalize().toObject();
-        /* let mesagge = `${object.years > 1 ? `${object.years} años` : `${object.years} año`}, ${object.months > 1 ? `${object.months} meses` : `${object.months} mes`} y ${Math.round(object.days) > 1 ? `${Math.round(object.days)} días` : `${Math.round(object.days)} día`}`; */
-        return object;
+        Math.round(dias);
+        /* let object  = this.Duration.fromObject({days:Math.round(dias), months:0, years:0}); */
+        let object  = this.Duration.fromObject({days:dias, months:0, years:0});
+        let lleva   = object.shiftTo('days','months','years').toObject();
+
+        return lleva;
       },
       calculateTotalDevolver(){
         let dias  = 0;
-        let meses = 0;
-        let anos  = 0;
-
         if(this.paos.length){
           this.paos.forEach(pao => {
               let fecha_inicio    = this.DateTime.fromISO(pao.periodo_inicio);
               let fecha_termino   = this.DateTime.fromISO(pao.periodo_termino);
-              let diferencia      = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
+              let diferencia      = fecha_termino.diff(fecha_inicio, 'days');
+              dias      += diferencia.values.days;
+          });
+        }
+        let object = this.Duration.fromObject({days: dias});
 
-              dias  += diferencia.values.days;
-              meses += diferencia.values.months;
-              anos  += diferencia.values.years;
+        let devolver = object.shiftTo('days','months','years').toObject();
+
+        return devolver;
+      },
+      calculateTotalPorDevolver(){
+        let dias_pao  = 0;
+
+        let dias_devo = 0;
+
+        if(this.paos.length){
+          this.paos.forEach(pao => {
+            let fecha_inicio_pao    = this.DateTime.fromISO(pao.periodo_inicio);
+            let fecha_termino_pao   = this.DateTime.fromISO(pao.periodo_termino);
+            let diferencia_pao      = fecha_termino_pao.diff(fecha_inicio_pao, 'days');
+
+            dias_pao  += diferencia_pao.values.days;
+
+            if(pao.devoluciones.length){
+                pao.devoluciones.forEach(devolucion => {
+                    let fecha_inicio    = this.DateTime.fromISO(devolucion.inicio_devolucion);
+                    let fecha_termino   = this.DateTime.fromISO(devolucion.termino_devolucion);
+                    let diferencia      = fecha_termino.diff(fecha_inicio, 'days');
+
+                    let hora            = devolucion.tipo_contrato.horas;
+                    let hora_real       = hora/44;
+
+                    dias_devo           += diferencia.values.days * hora_real;
+                });
+              }
           });
         }
 
+        let total = dias_pao - Math.round(dias_devo);
 
+        let total_en_todo = this.Duration.fromObject({days:total});
 
-        let object = this.Duration.fromObject({ years: anos, months: meses,  days: dias}).normalize().toObject();
-        return object;
-      },
-      calculateTotalPorDevolver(){
-        let object = this.Duration.fromObject({ years: this.calculateTotalDevolver.years - this.calculateTotalDevolucion.years, months: this.calculateTotalDevolver.months - this.calculateTotalDevolucion.months,  days: this.calculateTotalDevolver.days - this.calculateTotalDevolucion.days}).normalize().toObject();
-        return object;
+        let total_dias = total_en_todo.as('days');
+
+        let object = this.Duration.fromObject({days:total_dias}).shiftTo('days', 'months', 'years');
+
+        return object.values;
       }
     },
     methods:{

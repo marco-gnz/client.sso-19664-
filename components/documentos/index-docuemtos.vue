@@ -257,6 +257,7 @@
                         <div class="h5 mb-0 pt-lg-4 font-weight-bold text-gray-800">${{Intl.NumberFormat('de-DE').format(factura.monto_total)}}</div>
                         <div class="h6 mb-0 pt-lg-3 text-gray-800">{{factura.situacion_actual.nombre}}</div>
                         <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>Año </i> {{factura.anios_pago.map(a => a).join(' - ')}}</div>
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800">{{`${factura.tipos.length ? `${factura.tipos.map(t => t.nombre).join(' - ')}` : `--`}`}}</div>
                         <div class="mb-0 pt-lg-3 text-gray-800" v-if="factura.observacion">
                           <el-popover
                             placement="top-start"

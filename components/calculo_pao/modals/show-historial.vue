@@ -29,12 +29,17 @@
                       <p v-if="proceso.uuid"><strong>Cod</strong>: #{{proceso.uuid.substring(0,5)}}</p>
                       <p v-if="proceso.uuid_devolucion"><strong>Cod. devolución</strong>: #{{proceso.uuid_devolucion.substring(0,5)}}</p>
                       <p v-if="proceso.tipo_contrato"><strong>Contrato</strong>: {{proceso.tipo_contrato}} hrs.</p>
-                      <p v-if="proceso.diferencia"><strong>Total en días</strong>: {{  `${proceso.diferencia.d} ${proceso.diferencia.d > 1 ? `días` : `día`}, ${proceso.diferencia.m} ${proceso.diferencia.m > 1 ? `meses` : `mes`} y ${proceso.diferencia.y} ${proceso.diferencia.y > 1 ? `años` : `año`}` }}.</p>
+                      <template v-if="proceso.tipo != 'DEVOLUCIÓN' ">
+                        <p v-if="proceso.diferencia"><strong>Total en días</strong>: {{  `${proceso.diferencia.d} ${proceso.diferencia.d > 1 ? `días` : `día`}, ${proceso.diferencia.m} ${proceso.diferencia.m > 1 ? `meses` : `mes`} y ${proceso.diferencia.y} ${proceso.diferencia.y > 1 ? `años` : `año`}` }}.</p>
+                      </template>
+                      <template v-else>
+                        <p><strong>Total contrato</strong>: {{  `${proceso.total.d} ${proceso.total.d > 1 ? `días` : `día`}, ${proceso.total.m} ${proceso.total.m > 1 ? `meses` : `mes`} y ${proceso.total.y} ${proceso.total.y > 1 ? `años` : `año`}` }}</p>
+                      </template>
                       <p v-if="proceso.establecimiento"><strong>Establecimiento</strong>: {{proceso.establecimiento}} - {{proceso.red}}</p>
                       <p v-if="proceso.causal"><strong>Causal</strong>: {{proceso.causal}}</p>
                       <span v-if="proceso.observacion">{{proceso.observacion}}</span>
                       <div class="bottom clearfix pt-3">
-                          <time style="color:#808080;" class="time"><i>Ingresada el {{DateTime.fromISO(proceso.created_at).toFormat('ff')}} - {{proceso.user_add}}</i></time>
+                          <time style="color:#808080;" class="time"><i>Ingresada el {{DateTime.fromSQL(proceso.fecha_add).toFormat('ff')}} - {{proceso.user_add}}</i></time>
                       </div>
                     </el-card>
                    </el-timeline-item>

@@ -56,24 +56,33 @@
             <div class="card-body">
               <div class="form-group">
                 <label>Perfeccionamiento</label>
-                <el-select
-                  size="mini"
-                  style="width:300px;"
-                  :disabled="!checkedEtapas.length"
-                  v-model="perfeccion"
-                  multiple
-                  filterable
-                  collapse-tags
-                  placeholder="Seleccione">
-                  <el-option
-                    v-for="perfeccionamiento in perfeccionamientos"
-                    :key="perfeccionamiento.id"
-                    :value="perfeccionamiento.id"
-                    :label="perfeccionamiento.nombre">
-                    <span style="float: left">{{ perfeccionamiento.nombre }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ perfeccionamiento.tipo.nombre }}</span>
-                  </el-option>
-                </el-select>
+                <div class="row">
+                  <div class="col-md-11">
+                      <el-select
+                        size="mini"
+                        style="width:300px;"
+                        :disabled="!checkedEtapas.length || perfeccionamiento_value == true"
+                        v-model="perfeccion"
+                        multiple
+                        filterable
+                        collapse-tags
+                        placeholder="Seleccione">
+                        <el-option
+                          v-for="perfeccionamiento in perfeccionamientos"
+                          :key="perfeccionamiento.id"
+                          :value="perfeccionamiento.id"
+                          :label="perfeccionamiento.nombre">
+                          <span style="float: left">{{ perfeccionamiento.nombre }}</span>
+                          <span style="float: right; color: #8492a6; font-size: 10px">{{ perfeccionamiento.tipo.nombre }}</span>
+                        </el-option>
+                      </el-select>
+                  </div>
+                  <div class="col-md-1">
+                    <el-tooltip class="item" effect="dark" content="Si: Posee una o más especialidades" placement="top-start">
+                      <el-checkbox :disabled="!checkedEtapas.length" @change="refreshPerfeccionamiento" v-model="perfeccionamiento_value">Si</el-checkbox>
+                    </el-tooltip>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -209,7 +218,7 @@ export default {
     return{
       isIndeterminate: true,
       checkAll: false,
-      url:'',
+      url:''
     };
   },
   mounted(){
@@ -240,6 +249,14 @@ export default {
     },
 
     //filtros
+    perfeccionamiento_value:{
+      get() {
+        return this.$store.getters['profesionales/allPerfeccionamiento']
+      },
+      set() {
+        this.$store.commit('profesionales/SET_ALL_PERFECCIONAMIENTO');
+      }
+    },
     checkedEtapas:{
       get() {
         return this.$store.getters['profesionales/checkedEtapas']
@@ -355,6 +372,11 @@ export default {
       localStorage.setItem('filtros', JSON.stringify(this.searchAll));
       this.getProfesionales();
       this.open();
+    },
+    refreshPerfeccionamiento(){
+      if(this.perfeccionamiento_value === true){
+          this.perfeccion = [];
+      }
     },
     refreshCampos(){
       this.refreshFiltro();

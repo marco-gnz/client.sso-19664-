@@ -37,7 +37,8 @@ export const state = () => ({
     checkedEtapas:[],
     red:'',
     establecimiento:[],
-    active_filtro_avanzado:false
+    active_filtro_avanzado:false,
+    all_perfeccionamiento:false
   },
   offset: 3,
   openModal:false,
@@ -134,6 +135,9 @@ export const mutations = {
   SET_ACTIVE_FILTRO_AVANZADO(state, value){
     state.search.active_filtro_avanzado = value;
   },
+  SET_ALL_PERFECCIONAMIENTO(state){
+    state.search.all_perfeccionamiento = !state.search.all_perfeccionamiento;
+  },
   SET_PARAMS_FILTRO(state, filtroLocalStorage){
     state.search.input                    =  (filtroLocalStorage.input != null) ? filtroLocalStorage.input : '';
     state.search.estados                  = filtroLocalStorage.estados;
@@ -145,6 +149,7 @@ export const mutations = {
     state.search.establecimiento          = filtroLocalStorage.establecimiento;
     state.search.active_filtro_avanzado   = filtroLocalStorage.active_filtro_avanzado;
     state.search.situacion                = filtroLocalStorage.situacion;
+    state.search.all_perfeccionamiento    = filtroLocalStorage.all_perfeccionamiento;
   },
   REFRESH_FILTRO(state){
     state.search.input                    = '';
@@ -158,6 +163,7 @@ export const mutations = {
     state.search.establecimiento          = [];
     state.search.active_filtro_avanzado   = false;
     state.search.situacion                = [];
+    state.search.all_perfeccionamiento    = false;
   }
 };
 
@@ -210,6 +216,9 @@ export const getters = {
   },
   estados(state){
     return state.estados;
+  },
+  allPerfeccionamiento(state){
+    return state.search.all_perfeccionamiento;
   }
 };
 
@@ -228,16 +237,19 @@ export const actions = {
         checkedEtapas:state.search.checkedEtapas,
         establecimiento:state.search.establecimiento,
         estados:state.search.estados,
-        situaciones:state.search.situacion
+        situaciones:state.search.situacion,
+        exist_perfeccionamiento:state.search.all_perfeccionamiento
       }
     }
      );
+
+     console.log(response);
 
     if(response){
       commit('SET_LOADING_NOT_SEARCH');
     }
 
-    commit('SET_PROFESIONALES', response.profesionales.data);
+    commit('SET_PROFESIONALES', response.profesionales);
     commit('SET_PAGINATION_PROFESIONALES', response.pagination);
   },
   async getProfesional({ commit }, uuid){

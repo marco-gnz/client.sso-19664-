@@ -44,7 +44,7 @@
                           <th scope="col">Nombres</th>
                           <th scope="col">Etapa</th>
                           <th scope="col">Situación actual</th>
-                          <th scope="col">N° contacto</th>
+                          <th scope="col">Especialidad</th>
                           <th scope="col">Estado</th>
                           <th>&nbsp;</th>
                         </tr>
@@ -53,13 +53,13 @@
                           <tr v-for="(profesional, index) in profesionales" :key="index" class="click">
                             <td>{{profesional.rut_completo}}</td>
                             <td>{{profesional.apellidos}} {{profesional.nombres}}</td>
-                            <td>{{ (profesional.etapa != null) ? profesional.etapa.nombre : '--' }}</td>
-                            <td>{{ (profesional.situacion_actual != null) ? profesional.situacion_actual.nombre : '--'}}</td>
-                            <td>{{ (profesional.n_contacto != null && profesional.n_contacto != '') ? profesional.n_contacto : '--' }}</td>
+                            <td>{{profesional.etapa}}</td>
+                            <td>{{ (profesional.situacion_actual != null) ? profesional.situacion_actual : '--'}}</td>
+                            <td>{{ (profesional.especialidades.length) ? `${profesional.especialidades.map(e => e).join(' - ')} (${profesional.count_pao} PAO) (${profesional.count_ed} ED - ${profesional.count_ef} EF)` : '--' }}</td>
                             <td>
                               <template v-if="$auth.user.permissions_roles.includes('estado-profesional') || $auth.user.permissions.includes('estado-profesional')">
                                 <el-tooltip :content="`Estado: ${profesional.estado == 1 ? `Habilitado` : `Deshabilitado`}`" placement="top">
-                                  <el-switch :active-value="profesional.estado === 0" :inactive-value="profesional.estado === 1" @change="editStatus(profesional.uuid, index, profesional.estado)" v-loading.fullscreen.lock="fullscreenLoading"></el-switch>
+                                  <el-switch :active-value="profesional.estado === 0" :inactive-value="profesional.estado === 1" @change="editStatus(profesional.uuid, index)" v-loading.fullscreen.lock="fullscreenLoading"></el-switch>
                                 </el-tooltip>
                               </template>
                               <template v-else>
@@ -231,14 +231,11 @@ export default {
             clearTimeout(this.setTimeoutBuscador);
             this.setTimeoutBuscador = setTimeout(this.searchProfesionales, 500);
         },
-        async editStatus(uuid, index, estado) {
+        async editStatus(uuid, index) {
             this.fullscreenLoading = !this.fullscreenLoading;
             const url = `/api/profesionales/profesional/change-status/${uuid}`;
-            const data = {
-                estado: !estado
-            };
             try {
-                await this.$axios.$put(url, data).then(response => {
+                await this.$axios.$put(url).then(response => {
                     this.fullscreenLoading = !this.fullscreenLoading;
                     if (response[0] === true) {
                         this.changeStatusAction({ response: response[1], index: index });

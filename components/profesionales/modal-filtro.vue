@@ -398,7 +398,8 @@ export default {
         checkedEtapas:this.searchAll.checkedEtapas,
         establecimiento:this.searchAll.establecimiento,
         estados:this.searchAll.estados,
-        situaciones:this.searchAll.situacion
+        situaciones:this.searchAll.situacion,
+        exist_perfeccionamiento:this.searchAll.all_perfeccionamiento
       }
 
       await this.$axios.$get(url, {params:data}).then(response => {

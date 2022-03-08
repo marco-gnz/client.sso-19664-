@@ -20,7 +20,7 @@
           <td>{{destinacion.uuid.substring(0, 5)}}</td>
           <td>{{destinacion.establecimiento.sigla}} - {{destinacion.unidad.nombre}}</td>
           <td><strong>{{ (destinacion.grado_complejidad_establecimiento) ? destinacion.grado_complejidad_establecimiento.grado : '---' }}</strong></td>
-          <td>{{DateTime.fromISO(destinacion.inicio_periodo).toFormat('dd LLL yyyy')}} a {{DateTime.fromISO(destinacion.termino_periodo).toFormat('dd LLL yyyy')}}</td>
+          <td>{{DateTime.fromISO(destinacion.inicio_periodo).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(destinacion.termino_periodo).toFormat('dd-LL-yyyy')}}</td>
           <td>{{ (destinacion.situacion_profesional != null) ? destinacion.situacion_profesional.nombre : '--' }}</td>
           <td @click.stop="">
             <el-dropdown>

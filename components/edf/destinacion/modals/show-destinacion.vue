@@ -6,6 +6,8 @@
             <div class="col-md-6">
                 <p><strong>Periodo destinación</strong>: {{DateTime.fromISO(destinacion.inicio_periodo).toFormat('dd LLLL yyyy')}} / {{DateTime.fromISO(destinacion.termino_periodo).toFormat('dd LLLL yyyy')}}</p>
                 <p v-if="destinacion.diferencia"><strong>En días</strong>: {{ `${destinacion.diferencia.years > 1 ? `${destinacion.diferencia.years} años` : `${destinacion.diferencia.years} año`}, ${destinacion.diferencia.months > 1 ? `${destinacion.diferencia.months} meses` : `${destinacion.diferencia.months} mes`} y ${Math.round(destinacion.diferencia.days) > 1 ? `${Math.round(destinacion.diferencia.days)} días` : `${Math.round(destinacion.diferencia.days)} día`}` }}</p>
+                <p><strong>Periodo aumentado</strong>: {{destinacion.aumentar != false ? 'Si' : 'No'}}</p>
+                <p v-if="destinacion.aumentar_observacion"><strong>Observación periodo aumentado</strong>: {{destinacion.aumentar_observacion}}</p>
                 <p v-if="destinacion.establecimiento"><strong>Establecimiento:</strong>: {{destinacion.establecimiento.nombre}} - {{destinacion.establecimiento.red_hospitalaria.sigla}}</p>
                 <p v-if="destinacion.grado_complejidad_establecimiento"><strong>Grado de complejidad</strong>: {{destinacion.grado_complejidad_establecimiento.grado}}</p>
                 <p v-if="destinacion.unidad"><strong>Unidad</strong>: {{destinacion.unidad.nombre}}</p>

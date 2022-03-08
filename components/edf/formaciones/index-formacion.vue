@@ -22,7 +22,7 @@
             <td>{{formacion.centro_formador.nombre}}</td>
             <td>{{ (formacion.fecha_registro != null) ? DateTime.fromISO(formacion.fecha_registro).toFormat('dd-LL-yyyy') : '--'}}</td>
             <td>{{formacion.perfeccionamiento.nombre}} <i>({{formacion.perfeccionamiento.tipo.nombre}})</i></td>
-            <td>{{DateTime.fromISO(formacion.inicio_formacion).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(formacion.termino_formacion).toFormat('dd-LL-yyyy')}}</td>
+            <td>{{formacion.inicio_formacion != null ?  DateTime.fromISO(formacion.inicio_formacion).toFormat('dd-LL-yyyy') : '--'}} / {{formacion.termino_formacion != null ? DateTime.fromISO(formacion.termino_formacion).toFormat('dd-LL-yyyy') : '--'}}</td>
             <td>{{ (formacion.situacion_profesional != null) ? formacion.situacion_profesional.nombre : '--'}}</td>
             <td @click.stop="">
               <el-dropdown>
@@ -69,12 +69,14 @@ export default {
             let dias = 0;
             if (this.formaciones.length) {
                 this.formaciones.forEach(formacion => {
-                    let fecha_inicio = this.DateTime.fromISO(formacion.inicio_formacion);
-                    let fecha_termino = this.DateTime.fromISO(formacion.termino_formacion);
-                    let diferencia = fecha_termino.diff(fecha_inicio, ["days", "months", "years"]);
-                    años += diferencia.values.years;
-                    meses += diferencia.values.months;
-                    dias += diferencia.values.days;
+                    if(formacion.inicio_formacion && formacion.termino_formacion){
+                      let fecha_inicio = this.DateTime.fromISO(formacion.inicio_formacion);
+                      let fecha_termino = this.DateTime.fromISO(formacion.termino_formacion);
+                      let diferencia = fecha_termino.diff(fecha_inicio, ["days", "months", "years"]);
+                      años += diferencia.values.years;
+                      meses += diferencia.values.months;
+                      dias += diferencia.values.days;
+                    }
                 });
                 let total_formacion = this.Duration.fromObject({ years: años, months: meses, days: dias }).normalize().toObject();
                 return total_formacion;

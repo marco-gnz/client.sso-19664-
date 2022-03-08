@@ -73,6 +73,7 @@ export default {
               });
 
               this.formaciones.forEach(formacion => {
+                if(formacion.inicio_formacion && formacion.termino_formacion){
                   let fecha_inicio    = this.DateTime.fromISO(formacion.inicio_formacion);
                   let fecha_termino   = this.DateTime.fromISO(formacion.termino_formacion);
                   let diferencia      = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
@@ -80,6 +81,7 @@ export default {
                   años_formacion    += diferencia.values.years;
                   meses_formacion   += diferencia.values.months;
                   dias_formacion    += diferencia.values.days;
+                }
               });
           }
 

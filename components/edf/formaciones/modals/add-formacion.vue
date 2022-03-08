@@ -61,6 +61,7 @@
               <div class="col-md-6">
                   <label>Periodo de formación</label>
                   <el-date-picker
+                      :clearable="false"
                       v-model="formacion.periodo"
                       type="daterange"
                       range-separator=">"
@@ -70,8 +71,17 @@
                       value-format="yyyy-MM-dd">
                   </el-date-picker>
                   <span class="text-danger" v-if="errors.inicio_formacion">{{errors.inicio_formacion[0]}}</span>
-                  <span class="text-danger" v-if="errors.termino_formacion">{{errors.termino_formacion[0]}}</span>
               </div>
+          </div>
+          <div class="row pt-lg-3">
+            <div class="col-md-3">
+              <el-checkbox v-model="formacion.aumentar">Aumentar periodo</el-checkbox>
+            </div>
+            <div class="col-md-9" v-if="formacion.aumentar">
+              <label class="required">Observación</label>
+              <textarea v-model="formacion.aumentar_observacion" class="form-control" cols="10" rows="5"></textarea>
+              <span class="text-danger" v-if="errors.observacion_aumentar">{{errors.observacion_aumentar[0]}}</span>
+            </div>
           </div>
       </section>
       <section v-if="formacion_pasos === 3">
@@ -86,7 +96,7 @@
           <div class="w-100">
               <button :disabled="formacion_pasos == 0" @click.prevent="paso_formacion_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
               <button v-show="formacion_pasos != 3" @click.prevent="paso_formacion_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
-              <button v-show="formacion_pasos == 3" @click.prevent="addEtapaFormacion" class="mt-3 btn btn-success float-right">Añadir formación <i class="fas fa-plus"></i></button>
+              <button v-show="formacion_pasos == 3" @click.prevent="addFormacionValidate" class="mt-3 btn btn-success float-right">Añadir formación <i class="fas fa-plus"></i></button>
           </div>
       </template>
     </b-modal>
@@ -108,7 +118,9 @@ export default {
           fecha_registro:'',
           periodo:[],
           situacion_profesional:'',
-          observacion:''
+          observacion:'',
+          aumentar:false,
+          aumentar_observacion:''
       },
       perfeccionamientos:[],
       errors:{}
@@ -145,6 +157,19 @@ export default {
         console.log(error);
       });
     },
+    addFormacionValidate(){
+      if(this.formacion.aumentar === true && this.formacion.aumentar_observacion === ''){
+        this.formacion_pasos = 2;
+          this.errors = {observacion_aumentar: []};
+          this.errors.observacion_aumentar[0] = 'Al aumentar el periodo, la observación es obligatoria.';
+      }else if (!this.formacion.periodo[0] || !this.formacion.periodo[1]){
+          this.errors = {inicio_formacion: []};
+          this.errors.inicio_formacion[0] = 'El periodo es obligatorio';
+          this.formacion_pasos = 2;
+      }else{
+        this.addEtapaFormacion();
+      }
+    },
     async addEtapaFormacion(){
       this.fullscreenLoading = !this.fullscreenLoading;
       const url = '/api/profesionales/profesional/edf/add-formacion';
@@ -157,7 +182,9 @@ export default {
         profesional_id:this.profesional.id,
         centro_formador_id:this.formacion.centro_formador,
         perfeccionamiento_id:this.formacion.perfeccionamiento,
-        situacion_profesional_id:this.formacion.situacion_profesional
+        situacion_profesional_id:this.formacion.situacion_profesional,
+        aumentar:this.formacion.aumentar,
+        aumentar_observacion:this.formacion.aumentar_observacion
       };
 
       await this.$axios.$post(url, data).then(response => {
@@ -174,7 +201,7 @@ export default {
             let fecha = this.Duration.fromObject({ years: 0, months: 0,  days: Math.round(response[1])}).normalize().toObject();
             let message = `${fecha.years} ${fecha.years > 1 ? `años` : `años`}, ${fecha.months} ${fecha.months > 1 ? `meses` : `mes`} y ${fecha.days} ${fecha.days > 1 ? `días` : `día`}`;
             const messages = h('div', [
-                            h('div', "Has pasado el límite total de EDF (9 años)."),
+                            h('div', "Has pasado el límite total de EDF (10 años + 4 meses)."),
                             h('div', `Con el periodo ingresado, se contabilizó un total de ${message} de EDF.`)
                             ])
             this.$alert(messages, 'No se ingresó la formación', {

@@ -6,6 +6,8 @@
             <div class="col-md-6">
                 <p><strong>Periodo en formación</strong>: {{DateTime.fromISO(formacion.inicio_formacion).toFormat('dd LLLL yyyy')}} / {{DateTime.fromISO(formacion.termino_formacion).toFormat('dd LLLL yyyy')}}</p>
                 <p v-if="formacion.diferencia"><strong>En días</strong>: {{ `${formacion.diferencia.years > 1 ? `${formacion.diferencia.years} años` : `${formacion.diferencia.years} año`}, ${formacion.diferencia.months > 1 ? `${formacion.diferencia.months} meses` : `${formacion.diferencia.months} mes`} y ${Math.round(formacion.diferencia.days) > 1 ? `${Math.round(formacion.diferencia.days)} días` : `${Math.round(formacion.diferencia.days)} día`}` }}</p>
+                <p><strong>Periodo aumentado</strong>: {{formacion.aumentar != false ? 'Si' : 'No'}}</p>
+                <p v-if="formacion.aumentar_observacion"><strong>Observación periodo aumentado</strong>: {{formacion.aumentar_observacion}}</p>
                 <p v-if="formacion.centro_formador"><strong>Universidad</strong>: {{formacion.centro_formador.nombre}}</p>
                 <p v-if="formacion.perfeccionamiento"><strong>Formación</strong>: {{formacion.perfeccionamiento.nombre}} <i>({{formacion.perfeccionamiento.tipo.nombre}})</i></p>
                 <p><strong>Fecha registro Superintendencia</strong>: {{ (formacion.fecha_registro != null) ? DateTime.fromISO(formacion.fecha_registro).toFormat('dd-LL-yyyy') : '--'}}</p>

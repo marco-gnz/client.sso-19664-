@@ -59,13 +59,15 @@
           <div class="col-md-6">
               <label>Periodo en destinación</label>
               <el-date-picker
+                  :clearable="false"
                   v-model="periodo"
                   type="daterange"
                   range-separator="a"
                   start-placeholder="Inicio"
                   end-placeholder="Término"
                   format="dd-MM-yyyy"
-                  value-format="yyyy-MM-dd">
+                  value-format="yyyy-MM-dd"
+                  size="mini">
               </el-date-picker>
               <span class="text-danger" v-if="errors.inicio_periodo || errors.termino_periodo">{{errors.inicio_periodo[0]}}</span>
           </div>
@@ -76,6 +78,16 @@
                 <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
             </select>
             <span class="text-danger" v-if="errors.situacion_profesional_id">{{errors.situacion_profesional_id[0]}}</span>
+          </div>
+        </div>
+        <div class="row pt-lg-3">
+          <div class="col-md-4">
+            <el-checkbox v-model="aumentar_periodo">Aumentar periodo</el-checkbox>
+          </div>
+          <div class="col-md-8" v-if="aumentar_periodo">
+            <label class="required">Observación</label>
+            <textarea v-model="aumentar_periodo_observacion" class="form-control" cols="10" rows="5"></textarea>
+            <span class="text-danger" v-if="errors.observacion_aumentar">{{errors.observacion_aumentar[0]}}</span>
           </div>
         </div>
       </section>
@@ -91,7 +103,7 @@
           <div class="w-100">
               <button :disabled="destinacion_pasos == 0"  @click.prevent="paso_destinacion_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
               <button v-show="destinacion_pasos != 2"     @click.prevent="paso_destinacion_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
-              <button v-show="destinacion_pasos == 2"     @click.prevent="editDestinacion" v-loading.fullscreen.lock="fullscreenLoading" class="mt-3 btn btn-success float-right">Editar destinación <i class="fas fa-plus"></i></button>
+              <button v-show="destinacion_pasos == 2"     @click.prevent="editDestinacionValidate" v-loading.fullscreen.lock="fullscreenLoading" class="mt-3 btn btn-success float-right">Editar destinación <i class="fas fa-plus"></i></button>
           </div>
       </template>
     </b-modal>
@@ -161,6 +173,22 @@ export default {
         this.$store.commit('edf/DESTINACION_PERIODO', newValue);
       }
     },
+    aumentar_periodo:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.aumentar;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_AUMENTAR', newValue);
+      }
+    },
+    aumentar_periodo_observacion:{
+      get(){
+        return this.$store.state.edf.destinacionEdit.aumentar_observacion;
+      },
+      set (newValue){
+        this.$store.commit('edf/DESTINACION_AUMENTAR_OBSERVACION', newValue);
+      }
+    },
     situacion_profesional:{
       get(){
         return this.$store.state.edf.destinacionEdit.situacion_profesional;
@@ -195,6 +223,15 @@ export default {
       this.campo_clinico = '';
       this.getEstablecimientosAction(this.red);
     },
+    editDestinacionValidate(){
+      if(this.aumentar_periodo === true && this.aumentar_periodo_observacion === null){
+          this.destinacion_pasos = 1;
+          this.errors = {observacion_aumentar: []};
+          this.errors.observacion_aumentar[0] = 'Al aumentar el periodo, la observación es obligatoria.';
+      }else{
+        this.editDestinacion();
+      }
+    },
     async editDestinacion(){
       this.fullscreenLoading = !this.fullscreenLoading;
       const url = `/api/profesionales/profesional/edf/edit-destinacion/${this.destinacion.id}`;
@@ -205,7 +242,9 @@ export default {
         observacion: this.observacion,
         establecimiento_id: this.campo_clinico,
         grado_complejidad_establecimiento_id: this.grado,
-        unidad_id:this.unidad
+        unidad_id:this.unidad,
+        aumentar:this.aumentar_periodo,
+        aumentar_observacion:this.aumentar_periodo_observacion
       };
 
       await this.$axios.$put(url, data).then(response => {
@@ -222,7 +261,7 @@ export default {
             let fecha = this.Duration.fromObject({ years: 0, months: 0,  days: Math.round(response[1])}).normalize().toObject();
             let message = `${fecha.years} ${fecha.years > 1 ? `años` : `años`}, ${fecha.months} ${fecha.months > 1 ? `meses` : `mes`} y ${fecha.days} ${fecha.days > 1 ? `días` : `día`}`;
             const messages = h('div', [
-                            h('div', "Has pasado el límite total de EDF (10 años)."),
+                            h('div', "Has pasado el límite total de EDF (10 años + 4 meses)."),
                             h('div', `Con el periodo ingresado, se contabilizó un total de ${message} de EDF.`)
                             ])
             this.$alert(messages, 'No se ingresó la destinación', {
@@ -237,7 +276,7 @@ export default {
             let fecha = this.Duration.fromObject({ years: 0, months: 0,  days: Math.round(response[1])}).normalize().toObject();
             let message = `${fecha.years} ${fecha.years > 1 ? `años` : `años`}, ${fecha.months} ${fecha.months > 1 ? `meses` : `mes`} y ${fecha.days} ${fecha.days > 1 ? `días` : `día`}`;
             const messages = h('div', [
-                            h('div', "Has pasado el límite total de ED (6 años)."),
+                            h('div', "Has pasado el límite total de ED (6 años + 4 meses)."),
                             h('div', `Con el periodo ingresado, se contabilizó un total de ${message} de ED.`)
                             ])
             this.$alert(messages, 'No se ingresó la destinación', {

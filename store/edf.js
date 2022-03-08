@@ -9,7 +9,9 @@ export const state = () => ({
     unidad:'',
     periodo:[],
     situacion_profesional:'',
-    observacion:''
+    observacion:'',
+    aumentar:false,
+    aumentar_observacion:''
   },
   showDestinacion:{},
   formacionEdit:{
@@ -22,7 +24,9 @@ export const state = () => ({
     periodo:[],
     situacion_profesional:'',
     observacion:'',
-    count_paos:0
+    count_paos:0,
+    aumentar:false,
+    aumentar_observacion:''
   },
   showFormacion:{}
 });
@@ -50,6 +54,8 @@ export const mutations = {
     state.destinacionEdit.periodo[1]                = destinacion.termino_periodo;
     state.destinacionEdit.situacion_profesional     = destinacion.situacion_profesional_id;
     state.destinacionEdit.observacion               = destinacion.observacion;
+    state.destinacionEdit.aumentar                  = destinacion.aumentar != 1 ? false : true;
+    state.destinacionEdit.aumentar_observacion      = destinacion.aumentar_observacion;
   },
   UPDATE_DESTINACION(state, destinacion){
     const indice = state.destinaciones.findIndex(d => d.id === destinacion.id);
@@ -75,6 +81,12 @@ export const mutations = {
     state.destinacionEdit.periodo.push(newValue[0]);
     state.destinacionEdit.periodo.push(newValue[1]);
   },
+  DESTINACION_AUMENTAR(state, newValue){
+    state.destinacionEdit.aumentar = newValue;
+  },
+  DESTINACION_AUMENTAR_OBSERVACION(state, newValue){
+    state.destinacionEdit.aumentar_observacion = newValue;
+  },
   DESTINACION_SITUACION_PROFESIONAL(state, newValue){
     state.destinacionEdit.situacion_profesional = newValue;
   },
@@ -94,6 +106,8 @@ export const mutations = {
     state.formacionEdit.situacion_profesional   = formacion.situacion_profesional_id;
     state.formacionEdit.observacion             = formacion.observacion;
     state.formacionEdit.count_paos              = (formacion.paos != null) ? formacion.paos.length : 0;
+    state.formacionEdit.aumentar                = formacion.aumentar  != 1 ? false : true;
+    state.formacionEdit.aumentar_observacion    = formacion.aumentar_observacion;
   },
   FORMACION_CENTRO_FORMADOR(state, newValue){
     state.formacionEdit.centro_formador  = newValue;
@@ -120,6 +134,12 @@ export const mutations = {
   },
   FORMACION_SITUACION_PROFESIONAL(state, newValue){
     state.formacionEdit.situacion_profesional = newValue;
+  },
+  FORMACION_AUMENTAR(state, newValue){
+    state.formacionEdit.aumentar = newValue;
+  },
+  FORMACION_AUMENTAR_OBSERVACION(state, newValue){
+    state.formacionEdit.aumentar_observacion = newValue;
   },
   STORE_FORMACION(state, formacion){
     state.formaciones = [formacion, ...state.formaciones];

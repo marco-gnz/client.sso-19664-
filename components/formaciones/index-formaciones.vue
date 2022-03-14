@@ -10,6 +10,7 @@
       </div>
       <div class="row pt-lg-3">
         <EditFormacion />
+        <ShowFormacion />
         <div class="col-md-12">
           <template v-if="formaciones.length">
               <table class="table table-xs pt-2">
@@ -25,7 +26,7 @@
                       </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(especialidad, index) in formaciones" :key="index">
+                    <tr v-for="(especialidad, index) in formaciones" :key="index" @click.prevent="show(especialidad)" v-b-modal.modal-show-especialidad class="click">
                       <td>{{especialidad.centro_formador.nombre}}</td>
                       <td>{{especialidad.perfeccionamiento.tipo.nombre}}</td>
                       <td>{{especialidad.perfeccionamiento.nombre}}</td>
@@ -70,6 +71,7 @@
 import {mapActions, mapGetters, mapMutations} from 'vuex';
 import ModalCreate from "./modals/ModalCreate.vue";
 import EditFormacion from './modals/edit-formacion.vue';
+import ShowFormacion from './modals/show-formacion.vue';
 export default {
     props: ['profesional'],
     data() {
@@ -92,6 +94,7 @@ export default {
           removeFormacionAction:'formaciones/REMOVE_FORMACION',
           removeFormacionPaoAction:'calculoPao/REMOVE_FORMACION_PROFESIONAL',
           passingFormacion:'edf/PASSING_FORMACION',
+          passingShowFormacion:'edf/SHOW_FORMACION'
         }),
         deleteEspecialidad(id){
           this.$confirm('¿Eliminar formación?. Se eliminará todo registro asociado a la formación (Devoluciones PAO, documentos, etc...)', 'Alerta', {
@@ -106,6 +109,14 @@ export default {
           this.getCentrosFormadres();
           this.getPerfeccionamiento(especialidad.perfeccionamiento.tipo.id);
           this.passingFormacion(especialidad);
+        },
+        show(especialidad){
+          let fecha_inicio      = this.DateTime.fromISO(especialidad.inicio_formacion);
+          let fecha_termino     = this.DateTime.fromISO(especialidad.termino_formacion);
+          let diferencia        = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
+
+          especialidad['diferencia'] = diferencia.values;
+          this.passingShowFormacion(especialidad);
         },
         async removeFormacion(id){
           const url = `/api/profesionales/profesional/remove-formacion/${id}`;
@@ -144,7 +155,7 @@ export default {
     mounted(){
       this.getFormacionesAction(this.$route.params.id);
     },
-    components: { ModalCreate, EditFormacion }
+    components: { ModalCreate, EditFormacion, ShowFormacion }
 }
 </script>
 

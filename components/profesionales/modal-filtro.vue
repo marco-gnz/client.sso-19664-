@@ -8,7 +8,7 @@
               <label class="required">Etapa de profesional</label>
               <el-checkbox-group v-model="checkedEtapas">
                 <el-checkbox v-for="etapa in etapas" :label="etapa.id" :key="etapa.id">
-                  <el-popover transition="el-fade-in-linear" placement="top-start" width="300" trigger="hover" :content="etapa.nombre"><span slot="reference">{{etapa.sigla}}</span></el-popover>
+                  <el-popover transition="el-fade-in-linear" placement="top-start" width="300" trigger="hover" close-delay="10" :content="etapa.nombre"><span slot="reference">{{etapa.sigla}}</span></el-popover>
                 </el-checkbox>
               </el-checkbox-group>
             </div>

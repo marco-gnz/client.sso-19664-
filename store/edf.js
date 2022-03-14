@@ -78,8 +78,14 @@ export const mutations = {
   },
   DESTINACION_PERIODO(state, newValue){
     state.destinacionEdit.periodo = [];
-    state.destinacionEdit.periodo.push(newValue[0]);
-    state.destinacionEdit.periodo.push(newValue[1]);
+    if(newValue != null){
+      state.destinacionEdit.periodo.push(newValue[0]);
+      state.destinacionEdit.periodo.push(newValue[1]);
+    }else{
+      state.destinacionEdit.periodo.push('');
+      state.destinacionEdit.periodo.push('');
+    }
+
   },
   DESTINACION_AUMENTAR(state, newValue){
     state.destinacionEdit.aumentar = newValue;
@@ -103,7 +109,7 @@ export const mutations = {
     state.formacionEdit.origen                  = formacion.origen;
     state.formacionEdit.periodo[0]              = (formacion.inicio_formacion != null) ? formacion.inicio_formacion : state.formacionEdit.periodo = [];
     state.formacionEdit.periodo[1]              = (formacion.termino_formacion != null) ? formacion.termino_formacion : state.formacionEdit.periodo = [];
-    state.formacionEdit.situacion_profesional   = formacion.situacion_profesional_id;
+    state.formacionEdit.situacion_profesional   = formacion.situacion_profesional_id != null ? formacion.situacion_profesional_id : '';
     state.formacionEdit.observacion             = formacion.observacion;
     state.formacionEdit.count_paos              = (formacion.paos != null) ? formacion.paos.length : 0;
     state.formacionEdit.aumentar                = formacion.aumentar  != 1 ? false : true;
@@ -126,8 +132,13 @@ export const mutations = {
   },
   FORMACION_PERIODO(state, newValue){
     state.formacionEdit.periodo = [];
-    state.formacionEdit.periodo.push(newValue[0]);
-    state.formacionEdit.periodo.push(newValue[1]);
+    if(newValue != null){
+      state.formacionEdit.periodo.push(newValue[0]);
+      state.formacionEdit.periodo.push(newValue[1]);
+    }else{
+      state.formacionEdit.periodo.push('');
+      state.formacionEdit.periodo.push('');
+    }
   },
   FORMACION_OBSERVACION(state, newValue){
     state.formacionEdit.observacion  = newValue;

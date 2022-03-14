@@ -47,7 +47,7 @@
                 <span class="text-danger" v-if="errors.fecha_registro">{{errors.fecha_registro[0]}}</span>
               </div>
               <div class="col-md-6">
-                <label>Situación actual de profesional</label>
+                <label>Situación profesional</label>
                 <select class="form-control" v-model="formacion.situacion_profesional">
                     <option value="">-- Seleccione situación actual --</option>
                     <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>

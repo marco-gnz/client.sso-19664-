@@ -46,14 +46,23 @@
         </section>
         <section v-if="especialidad_pasos === 1">
           <div class="row pt-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Fecha de registro Superintendencia</label>
                 <input type="date" class="form-control" v-model="especialidad.fecha_registro">
                 <span class="text-danger" v-if="errors.fecha_registro">{{errors.fecha_registro[0]}}</span>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Situación profesional</label>
+                <select class="form-control" v-model="especialidad.situacion_profesional">
+                    <option value="">-- Seleccione situación actual --</option>
+                    <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
               <label>Motivo de formación</label>
               <select class="form-control" v-model="especialidad.origen">
                 <option value="" selected disabled>-- Seleccione motivo --</option>
@@ -84,11 +93,19 @@
               </div>
             </div>
         </section>
+        <section v-if="especialidad_pasos === 3">
+          <div class="row pt-4 d-flex justify-content-center">
+            <div class="col-md-10">
+              <label>Observación</label>
+              <textarea v-model="especialidad.observacion" class="form-control" cols="10" rows="5" placeholder="Ingrese observación..."></textarea>
+            </div>
+          </div>
+        </section>
         <template #modal-footer>
             <div class="w-100">
                 <button :disabled="especialidad_pasos == 0" @click.prevent="especialidad_pasos_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
-                <button v-show="especialidad_pasos != 2" @click.prevent="especialidad_pasos_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
-                <button v-show="especialidad_pasos == 2" @click.prevent="addFormacion" class="mt-3 btn btn-success float-right" v-loading.fullscreen.lock="fullscreenLoading">Añadir formación<i class="fas fa-plus"></i></button>
+                <button v-show="especialidad_pasos != 3" @click.prevent="especialidad_pasos_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
+                <button v-show="especialidad_pasos == 3" @click.prevent="addFormacion" class="mt-3 btn btn-success float-right" v-loading.fullscreen.lock="fullscreenLoading">Añadir formación<i class="fas fa-plus"></i></button>
             </div>
         </template>
     </b-modal>
@@ -108,6 +125,7 @@ export default {
           tipo_perfeccionamiento:'',
           perfeccionamiento:'',
           fecha_registro:'',
+          situacion_profesional:'',
           origen:'',
           periodo:[],
           observacion:''
@@ -123,7 +141,8 @@ export default {
   computed:{
     ...mapGetters({
             centrosFormadores: 'mantenedores/centrosFormadores',
-            tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos'
+            tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos',
+            situacionesActual:'mantenedores/situacionesActual'
         })
   },
   methods:{
@@ -156,6 +175,7 @@ export default {
         profesional_id: this.profesional.id,
         fecha_registro: this.especialidad.fecha_registro,
         origen:this.especialidad.origen,
+        situacion_profesional_id:this.especialidad.situacion_profesional,
         inicio_formacion: this.especialidad.periodo[0],
         termino_formacion: this.especialidad.periodo[1],
         observacion: this.especialidad.observacion,

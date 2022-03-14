@@ -44,14 +44,23 @@
       </section>
       <section v-if="especialidad_pasos === 1">
           <div class="row pt-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Fecha de registro Superintendencia</label>
                 <input type="date" class="form-control" v-model="fecha_registro">
                 <span class="text-danger" v-if="errors.fecha_registro">{{errors.fecha_registro[0]}}</span>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Situación profesional</label>
+                <select class="form-control" v-model="situacion_profesional">
+                    <option value="">-- Seleccione situación actual --</option>
+                    <option v-for="(situacion, index) in situacionesActual" :key="index" :value="situacion.id">{{situacion.nombre}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
               <label>Motivo de formación</label>
               <select class="form-control" v-model="origen">
                 <option value="" selected disabled>-- Seleccione motivo --</option>
@@ -95,11 +104,19 @@
               </template>
             </div>
         </section>
+        <section v-if="especialidad_pasos === 3">
+          <div class="row pt-4 d-flex justify-content-center">
+            <div class="col-md-10">
+              <label>Observación</label>
+              <textarea v-model="observacion" class="form-control" cols="10" rows="5" placeholder="Ingrese observación..."></textarea>
+            </div>
+          </div>
+        </section>
       <template #modal-footer>
           <div class="w-100">
               <button :disabled="especialidad_pasos == 0" @click.prevent="paso_formacion_volver" class="mt-3 btn btn-default float-left"><i class="fas fa-arrow-left"></i> Volver</button>
-              <button v-show="especialidad_pasos != 2" @click.prevent="paso_formacion_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
-              <button v-show="especialidad_pasos == 2" @click.prevent="editFormacion" class="mt-3 btn btn-success float-right" v-loading.fullscreen.lock="fullscreenLoading">Editar formación <i class="fas fa-plus"></i></button>
+              <button v-show="especialidad_pasos != 3" @click.prevent="paso_formacion_siguiente" class="mt-3 btn btn-primary float-right">Siguiente <i class="fas fa-arrow-right"></i></button>
+              <button v-show="especialidad_pasos == 3" @click.prevent="editFormacion" class="mt-3 btn btn-success float-right" v-loading.fullscreen.lock="fullscreenLoading">Editar formación <i class="fas fa-plus"></i></button>
           </div>
       </template>
     </b-modal>
@@ -161,6 +178,14 @@ export default {
         this.$store.commit('edf/FORMACION_FECHA_REGISTRO', newValue);
       }
     },
+    situacion_profesional:{
+      get(){
+        return this.$store.state.edf.formacionEdit.situacion_profesional;
+      },
+      set (newValue){
+        this.$store.commit('edf/FORMACION_SITUACION_PROFESIONAL', newValue);
+      }
+    },
     origen:{
       get(){
         return this.$store.state.edf.formacionEdit.origen;
@@ -175,6 +200,14 @@ export default {
       },
       set (newValue){
         this.$store.commit('edf/FORMACION_PERIODO', newValue);
+      }
+    },
+    observacion:{
+      get(){
+        return this.$store.state.edf.formacionEdit.observacion;
+      },
+      set (newValue){
+        this.$store.commit('edf/FORMACION_OBSERVACION', newValue);
       }
     },
   },
@@ -198,8 +231,10 @@ export default {
         origen:this.origen,
         centro_formador_id: this.centro_formador,
         perfeccionamiento_id: this.perfeccionamiento,
-        inicio_formacion: this.periodo[0],
+        situacion_profesional_id:this.situacion_profesional,
+        inicio_formacion:  this.periodo[0],
         termino_formacion: this.periodo[1],
+        observacion:this.observacion
       };
 
       this.$axios.$put(url, data).then(response => {

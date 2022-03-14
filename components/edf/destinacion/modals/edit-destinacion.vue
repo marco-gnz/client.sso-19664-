@@ -59,7 +59,6 @@
           <div class="col-md-6">
               <label>Periodo en destinación</label>
               <el-date-picker
-                  :clearable="false"
                   v-model="periodo"
                   type="daterange"
                   range-separator="a"

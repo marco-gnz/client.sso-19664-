@@ -63,7 +63,7 @@ export default {
     }),
     async editFactura(){
       this.fullscreenLoading = !this.fullscreenLoading;
-      const url = `/api/profesionales/profesional/documentos/factura/edit-factura/${this.factura.uuid}`;
+      const url = `/api/profesionales/profesional/documentos/factura/edit-factura/situacion/${this.factura.uuid}`;
 
       const data = {
         situacion_factura_id: this.situacion

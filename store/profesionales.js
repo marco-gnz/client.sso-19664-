@@ -243,8 +243,6 @@ export const actions = {
     }
      );
 
-     console.log(response);
-
     if(response){
       commit('SET_LOADING_NOT_SEARCH');
     }

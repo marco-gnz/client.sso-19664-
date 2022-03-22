@@ -76,7 +76,7 @@
                         <div class="h5 mb-0 pt-lg-4 font-weight-bold text-gray-800">${{Intl.NumberFormat('de-DE').format(convenio.valor_arancel)}}</div>
                         <div class="h6 mb-0 pt-lg-3 text-gray-800">{{ (convenio.especialidad != null ? convenio.especialidad.centro_formador.nombre : '') }}</div>
                         <!-- <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>Arancel año </i> {{ (convenio.anios_arancel) ? convenio.anios_arancel.map(a => a).join(' - ') : '--' }}</div> -->
-                        <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>{{ (convenio.anios_arancel.length) ? `Arancel año ${convenio.anios_arancel.map(a => a).join(' - ')}` : '' }}</i> </div>
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>{{ (convenio.anios_arancel != null) ? `Arancel año ${convenio.anios_arancel.map(a => a).join(' - ')}` : '' }}</i> </div>
                         <div class="mb-0 pt-lg-3 text-gray-800" v-if="convenio.observacion">
                           <el-popover
                             placement="top-start"
@@ -227,7 +227,7 @@
                   <div class="card-header color-header">
                     <div class="row">
                       <div class="col-md-10">
-                          <div class="text-xs font-weight-bold text-info text-uppercase mb-1">°{{factura.n_resolucion}} / {{DateTime.fromISO(factura.fecha_resolucion).toFormat('dd-LL-yyyy')}}</div>
+                          <div class="text-xs font-weight-bold text-info text-uppercase mb-1">°{{factura.n_resolucion != null ? factura.n_resolucion : '--'}} / {{factura.fecha_resolucion != null ? DateTime.fromISO(factura.fecha_resolucion).toFormat('dd-LL-yyyy') : '--'}}</div>
                       </div>
                       <div class="col-md-2">
                         <el-dropdown class="float-right" v-if="$auth.user.permissions_roles.includes('eliminar-factura') || $auth.user.permissions.includes('eliminar-factura')">
@@ -253,10 +253,11 @@
                   <div class="card-body">
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
-                        <div class="h6 mb-0 pt-lg-2 text-gray-800">N° {{factura.n_factura}}</div>
+                        <div class="h6 mb-0 pt-lg-2 text-gray-800">N° {{factura.n_factura != null ? factura.n_factura : '--'}}</div>
                         <div class="h5 mb-0 pt-lg-4 font-weight-bold text-gray-800">${{Intl.NumberFormat('de-DE').format(factura.monto_total)}}</div>
-                        <div class="h6 mb-0 pt-lg-3 text-gray-800">{{factura.situacion_actual.nombre}}</div>
-                        <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>Año </i> {{factura.anios_pago.map(a => a).join(' - ')}}</div>
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800">{{factura.centro_formador != null ? factura.centro_formador.nombre : '--'}}</div>
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800">{{factura.situacion_actual != null ? factura.situacion_actual.nombre : '--'}}</div>
+                        <div class="h6 mb-0 pt-lg-3 text-gray-800"><i>Año </i> {{factura.anios_pago != null ? factura.anios_pago.map(a => a).join(' - ') : '--'}}</div>
                         <div class="h6 mb-0 pt-lg-3 text-gray-800">{{`${factura.tipos.length ? `${factura.tipos.map(t => t.nombre).join(' - ')}` : `--`}`}}</div>
                         <div class="mb-0 pt-lg-3 text-gray-800" v-if="factura.observacion">
                           <el-popover
@@ -280,7 +281,7 @@
                             width="400"
                             trigger="hover"
                             :content="`Última actualización: ${DateTime.fromSQL(factura.fecha_update).toFormat('ff')} - ${factura.user_update != null ? `${factura.user_update.sigla}` : `--`}`">
-                            <span slot="reference" :class="factura.fecha_update ? 'observacion' : '' "><i>{{ DateTime.fromSQL(factura.fecha_add).toFormat('ff') }} - {{factura.user_add.sigla}}</i></span>
+                            <span slot="reference" :class="factura.fecha_update ? 'observacion' : '' "><i>{{ factura.fecha_add != null ? DateTime.fromSQL(factura.fecha_add).toFormat('ff') : '--'}} - {{factura.user_add != null ? factura.user_add.sigla : '--'}}</i></span>
                           </el-popover>
                         </div>
                     </div>

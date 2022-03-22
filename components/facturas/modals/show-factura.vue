@@ -5,18 +5,10 @@
           <div class="col-md-6">
             <div class="row">
               <div class="col-md-6">
-                <p><strong>N° de resolución</strong>:</p>
+                <p><strong>N° de resolución factura</strong>:</p>
               </div>
               <div class="col-md-6">
-                <p>{{factura.n_resolucion}}</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <p><strong>Fecha de resolución</strong>:</p>
-              </div>
-              <div class="col-md-6">
-                <p>{{DateTime.fromISO(factura.fecha_resolucion).toFormat('dd LLLL yyyy')}}</p>
+                <p>{{factura.n_resolucion != null ? factura.n_resolucion : 'sin n°'}}/{{factura.fecha_resolucion != null ? DateTime.fromISO(factura.fecha_resolucion).toFormat('dd-LL-yyyy'): 'sin fecha'}}</p>
               </div>
             </div>
             <div class="row">
@@ -24,15 +16,71 @@
                 <p><strong>N° de factura</strong>:</p>
               </div>
               <div class="col-md-6">
-                <p>{{factura.n_factura}}</p>
+                <p>{{factura.n_factura != null ? factura.n_factura : 'sin n°'}}/{{factura.fecha_emision_factura != null ? DateTime.fromISO(factura.fecha_emision_factura).toFormat('dd-LL-yyyy'):'sin fecha factura'}}</p>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
-                <p><strong>Fecha emisión factura</strong>:</p>
+                <p><strong>N° de resolución convenio</strong>:</p>
               </div>
               <div class="col-md-6">
-                <p>{{DateTime.fromISO(factura.fecha_emision_factura).toFormat('dd LLLL yyyy')}}</p>
+                <p>{{factura.n_resolucion_convenio != null ? factura.n_resolucion_convenio : 'sin n°'}}/{{factura.fecha_convenio != null ? DateTime.fromISO(factura.fecha_convenio).toFormat('dd-LL-yyyy'):'sin fecha convenio'}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Año académico</strong>:</p>
+              </div>
+              <div class="col-md-6">
+                <p>{{factura.anio_academico != null ? DateTime.fromISO(factura.anio_academico).toFormat('dd-LL-yyyy'):'--'}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Año pago</strong>:</p>
+              </div>
+              <div class="col-md-6">
+                <p>{{factura.anios_pago != null ? factura.anios_pago.map(a => a).join(' - ') : '--'}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Monto total</strong>:</p>
+              </div>
+              <div class="col-md-6">
+                <p>${{factura.monto_total != null ? Intl.NumberFormat('de-DE').format(factura.monto_total) : '0'}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Tipo de factura</strong>:</p>
+              </div>
+              <div class="col-md-6">
+                <p>{{`${factura.tipos != null ? `${factura.tipos.map(t => t.nombre).join(' - ')}` : `--`}`}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Envío finanzas</strong>:</p>
+              </div>
+              <div class="col-md-6">
+                <p>{{factura.envio_finanza != false ? 'Si' : 'No'}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Situación factura</strong>:</p>
+              </div>
+              <div class="col-md-6">
+                <p>{{factura.situacion_actual != null ? factura.situacion_actual.nombre : '--'}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Fecha de pago</strong>:</p>
+              </div>
+              <div class="col-md-6">
+                <p>{{factura.fecha_pago != null ? DateTime.fromISO(factura.fecha_pago).toFormat('dd-LL-yyyy'):'--'}}</p>
               </div>
             </div>
             <div class="row">
@@ -40,7 +88,7 @@
                 <p><strong>Fecha vencimiento factura</strong>:</p>
               </div>
               <div class="col-md-6">
-                <p>{{DateTime.fromISO(factura.fecha_vencimiento_factura).toFormat('dd LLLL yyyy')}}</p>
+                <p>{{factura.fecha_vencimiento_factura != null ? DateTime.fromISO(factura.fecha_vencimiento_factura).toFormat('dd-LL-yyyy') : '--'}}</p>
               </div>
             </div>
             <div class="row">
@@ -48,50 +96,27 @@
                 <p><strong>Cargo al Item</strong>:</p>
               </div>
               <div class="col-md-6">
-                <p>{{factura.cargo_item}}</p>
+                <p>{{factura.cargo_item != null ? factura.cargo_item : '--'}}</p>
               </div>
             </div>
-            <div class="row" v-if="factura.anios_pago">
+            <div class="row">
               <div class="col-md-6">
-                <p><strong>Año pago</strong>:</p>
+                <p><strong>observación</strong>:</p>
               </div>
               <div class="col-md-6">
-                <p>{{factura.anios_pago.map(a => a).join(' - ')}}</p>
-              </div>
-            </div>
-            <div class="row" v-if="factura.monto_total">
-              <div class="col-md-6">
-                <p><strong>Monto total</strong>:</p>
-              </div>
-              <div class="col-md-6">
-                <p>${{Intl.NumberFormat('de-DE').format(factura.monto_total)}}</p>
-              </div>
-            </div>
-            <div class="row" v-if="factura.situacion_actual">
-              <div class="col-md-6">
-                <p><strong>Situación actual</strong>:</p>
-              </div>
-              <div class="col-md-6">
-                <p>{{factura.situacion_actual.nombre}}</p>
-              </div>
-            </div>
-            <div class="row" v-if="factura.convenio">
-              <div class="col-md-6">
-                <p><strong>Convenio</strong>:</p>
-              </div>
-              <div class="col-md-6">
-                <p>{{factura.convenio.n_resolucion}} / {{DateTime.fromISO(factura.convenio.fecha_resolucion).toFormat('dd-LL-yyyy')}}</p>
+                <p>{{factura.observacion != null ? factura.observacion : '--'}}</p>
               </div>
             </div>
           </div>
+
+
           <div class="col-md-6">
-            <template v-if="factura.profesional">
               <div class="row">
                 <div class="col-md-4">
-                  <p><strong>Rut Profesional</strong>:</p>
+                  <p><strong>Rut profesional</strong>:</p>
                 </div>
                 <div class="col-md-8">
-                  <p>{{factura.profesional.rut_completo}}</p>
+                  <p>{{factura.profesional != null ? factura.profesional.rut_completo : '--'}}</p>
                 </div>
               </div>
               <div class="row">
@@ -99,32 +124,31 @@
                   <p><strong>Profesional</strong>:</p>
                 </div>
                 <div class="col-md-8">
-                  <p>{{factura.profesional.nombre_completo}}</p>
+                  <p>{{factura.profesional != null ? factura.profesional.nombre_completo : '--'}}</p>
                 </div>
               </div>
-            </template>
-            <div class="row" v-if="factura.tipo_contrato_profesional">
+            <div class="row">
               <div class="col-md-4">
-                <p><strong>Contrato profesional</strong>:</p>
+                <p><strong>Horas contrato</strong>:</p>
               </div>
               <div class="col-md-8">
-                <p>{{factura.tipo_contrato_profesional.nombre}}</p>
+                <p>{{factura.tipo_contrato_profesional != null ? factura.tipo_contrato_profesional.nombre : '--'}}</p>
               </div>
             </div>
-            <div class="row" v-if="factura.centro_formador">
+            <div class="row">
               <div class="col-md-4">
-                <p><strong>Centro formador convenio</strong>:</p>
+                <p><strong>C.F./Universidad</strong>:</p>
               </div>
               <div class="col-md-8">
-                <p>{{factura.centro_formador.nombre}}</p>
+                <p>{{factura.centro_formador != null ? factura.centro_formador.nombre : '--'}}</p>
               </div>
             </div>
-            <div class="row" v-if="factura.red_hospitalaria">
+            <div class="row">
               <div class="col-md-4">
                 <p><strong>Red hospitalaria</strong>:</p>
               </div>
               <div class="col-md-8">
-                <p>{{factura.red_hospitalaria.nombre}}</p>
+                <p>{{factura.red_hospitalaria != null ? factura.red_hospitalaria.nombre : '--'}}</p>
               </div>
             </div>
             <template v-if="factura.perfeccionamiento">

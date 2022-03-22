@@ -7,6 +7,7 @@
       <div class="col-md-6">
         <button v-if="$auth.user.permissions_roles.includes('ingresar-factura') || $auth.user.permissions.includes('ingresar-factura')" v-b-modal.modal-add-factura class="btn btn-success float-right">Ingresar factura</button>
         <ModalAddFactura />
+        <ModalEditFactura />
       </div>
     </div>
     <div class="row pt-lg-3">
@@ -15,10 +16,10 @@
           <table class="table table-xs pt-2">
             <thead>
                 <tr>
-                    <th>N° resolución</th>
                     <th>N° factura</th>
+                    <th>Centro formador / Universidad</th>
                     <th>Situación</th>
-                    <th>Profesional</th>
+                    <th>Año</th>
                     <th>Tipo</th>
                     <th>Total</th>
                     <th>&nbsp;</th>
@@ -26,10 +27,10 @@
             </thead>
             <tbody>
               <tr v-for="(factura, index) in facturas" :key="index" v-b-modal.modal-view-factura @click.prevent="showFactura(factura)">
-                <td>°{{factura.n_resolucion}} / {{DateTime.fromISO(factura.fecha_resolucion).toFormat('dd-LL-yyyy')}}</td>
-                <td>{{factura.n_factura}}</td>
-                <td><strong :class="(factura.situacion_actual.id == 3) ? 'text-success' : 'text-secondary' ">{{factura.situacion_actual.nombre}}</strong></td>
-                <td>{{factura.profesional.nombre_completo}}</td>
+                <td>{{factura.n_factura != null ? factura.n_factura : '--'}} / {{factura.fecha_emision_factura != null ? DateTime.fromISO(factura.fecha_emision_factura).toFormat('dd-LL-yyyy') : '--'}}</td>
+                <td>{{factura.centro_formador != null ? factura.centro_formador.nombre : '--'}}</td>
+                <td><strong :class="(factura.situacion_actual != null ? factura.situacion_actual.id == 3 : '') ? 'text-success' : 'text-secondary' ">{{factura.situacion_actual != null ? factura.situacion_actual.nombre : '--'}}</strong></td>
+                <td>{{factura.anios_pago != null ? factura.anios_pago.map(a => a).join(' - ') : '--'}}</td>
                 <td>{{`${factura.tipos.length ? `${factura.tipos.map(t => t.nombre).join(' - ')}` : `--`}`}}</td>
                 <td>${{Intl.NumberFormat('de-DE').format(factura.monto_total)}}</td>
                 <td @click.stop="">
@@ -39,7 +40,10 @@
                       </span>
                       <el-dropdown-menu slot="dropdown">
                         <template v-if="$auth.user.permissions_roles.includes('estado-factura') || $auth.user.permissions.includes('estado-factura')">
-                          <el-dropdown-item icon="el-icon-edit" v-b-modal.modal-edit-situacion @click.native="updateEstado(factura)">Cambiar situación</el-dropdown-item>
+                          <el-dropdown-item icon="el-icon-edit" v-b-modal.modal-edit-situacion @click.native="updateEstado(factura)">Modificar situación</el-dropdown-item>
+                        </template>
+                        <template>
+                          <el-dropdown-item icon="el-icon-edit" @click.native="clickEditFactura(factura)" v-b-modal.modal-edit-factura>Editar</el-dropdown-item>
                         </template>
                         <template v-if="$auth.user.permissions_roles.includes('eliminar-factura') || $auth.user.permissions.includes('eliminar-factura')">
                           <el-popconfirm
@@ -82,8 +86,9 @@ import {mapActions, mapGetters, mapMutations} from 'vuex';
 import ModalAddFactura from "./modals/modal-add-factura.vue";
 import ModaEditSituacion from './modals/moda-edit-situacion.vue';
 import ShowFactura from './modals/show-factura.vue';
+import ModalEditFactura from './modals/modal-edit-factura.vue';
 export default {
-    components: { ModalAddFactura, ModaEditSituacion, ShowFactura },
+    components: { ModalAddFactura, ModaEditSituacion, ShowFactura, ModalEditFactura },
     data(){
       return{
         fullscreenLoading:false
@@ -131,6 +136,9 @@ export default {
           this.fullscreenLoading = !this.fullscreenLoading;
           console.log(error);
         });
+      },
+      clickEditFactura(factura){
+        this.passingSituacionAction(factura);
       }
     }
 }

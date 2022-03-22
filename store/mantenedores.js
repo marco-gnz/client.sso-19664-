@@ -19,6 +19,7 @@ export const state = () => ({
   perfeccionamientos:[],
   situacionesActual:[],
   tipoConvenios:[],
+  anios:[],
 
   pagination:{
     total:0,
@@ -275,6 +276,9 @@ export const mutations = {
   UPDATE_ETAPA(state, etapa){
     const indice = state.etapas.findIndex(e => e.id === etapa.id);
     state.etapas.splice(indice, 1, etapa);
+  },
+  SET_ANIOS(state, anios){
+    state.anios = anios;
   }
 };
 
@@ -338,6 +342,9 @@ export const getters = {
   },
   tipoConvenios(state){
     return state.tipoConvenios;
+  },
+  anios(state){
+    return state.anios;
   }
 };
 
@@ -397,7 +404,7 @@ export const actions = {
       const response = await this.$axios.$get('/api/mantenedores/redes-hospitalarias');
       commit('SET_REDES_HOSPITALARIAS', response);
     },
-    async getEstablecimientos({ commit }, red_hospitalaria){
+    async getEstablecimientos({ commit}, red_hospitalaria){
       const response = await this.$axios.$get('/api/mantenedores/redes-hospitalarias/establecimientos', {params: {red_hospitalaria:red_hospitalaria}});
         commit('SET_ESTABLECIMIENTOS', response);
     },
@@ -459,6 +466,10 @@ export const actions = {
     async getTipoConvenio({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/tipo-convenios');
       commit('SET_TIPO_CONVENIOS', response);
+    },
+    async getAnios({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/anios');
+      commit('SET_ANIOS', response);
     },
 };
 

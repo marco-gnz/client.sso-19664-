@@ -136,6 +136,24 @@
                                         <span class="text-danger" v-if="errors.calidad_juridica_id">{{errors.calidad_juridica_id[0]}}</span>
                                     </div>
                                 </div>
+                                <div class="row pt-lg-4">
+                                  <div class="col-md-6">
+                                    <label class="font-weight-bold">Establecimientos profesional</label><br>
+                                    <el-select
+                                        style="width: 380px;"
+                                        v-model="profesional.establecimientos"
+                                          multiple
+                                          size="mini"
+                                          placeholder="Seleccione establecimiento">
+                                          <el-option
+                                              v-for="(establecimiento, index) in establecimientos"
+                                              :key="index"
+                                              :label="establecimiento.nombre"
+                                              :value="establecimiento.id">
+                                        </el-option>
+                                      </el-select>
+                                  </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row pt-lg-2">
@@ -179,7 +197,8 @@ export default {
             planta:'',
             situacion_actual:'',
             etapa_actual:'',
-            calidad_juridica:''
+            calidad_juridica:'',
+            establecimientos:[]
           },
           getProfesional:{},
           errors:{}
@@ -191,7 +210,8 @@ export default {
         calidades: 'mantenedores/calidades',
         generos: 'mantenedores/generos',
         etapas: 'mantenedores/etapas',
-        situacionesActual:'mantenedores/situacionesActual'
+        situacionesActual:'mantenedores/situacionesActual',
+        establecimientos:'mantenedores/allEstablecimientos'
       })
     },
     mounted(){
@@ -200,6 +220,7 @@ export default {
       this.getGeneros();
       this.getEtapas();
       this.getSituacionesActual();
+      this.getAllEstablecimientos();
     },
     methods:{
           ...mapActions({
@@ -207,7 +228,8 @@ export default {
             getCalidades: 'mantenedores/getCalidades',
             getGeneros: 'mantenedores/getGeneros',
             getEtapas: 'mantenedores/getEtapas',
-            getSituacionesActual:'mantenedores/getSituacionesActual'
+            getSituacionesActual:'mantenedores/getSituacionesActual',
+            getAllEstablecimientos:'mantenedores/getAllEstablecimientos',
           }),
          async existProfesional(){
            this.fullscreenLoading = true;
@@ -258,7 +280,8 @@ export default {
               calidad_juridica_id: this.profesional.calidad_juridica,
               planta_id: this.profesional.planta,
               genero_id:this.profesional.genero,
-              situacion_actual_id:this.profesional.situacion_actual
+              situacion_actual_id:this.profesional.situacion_actual,
+              establecimientos:this.profesional.establecimientos
             };
 
             await this.$axios.$post(url, data).then(response => {

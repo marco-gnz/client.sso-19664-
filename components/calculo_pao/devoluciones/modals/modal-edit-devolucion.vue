@@ -42,7 +42,6 @@
               <el-date-picker
                   slot="reference"
                   v-model="periodo.periodo"
-                  :picker-options="removeDates"
                   type="daterange"
                   range-separator="a"
                   start-placeholder="Periodo de inicio"

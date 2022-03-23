@@ -16,7 +16,9 @@ export const state = () => ({
     planta:'',
     etapa:'',
     calidad:'',
-    situacion_actual:''
+    situacion_actual:'',
+    red:'',
+    establecimientos:[]
   },
   pagination:{
     total:0,
@@ -90,6 +92,13 @@ export const mutations = {
     state.datosPersonalesEdit.etapa                     = (profesional.etapas_id != null) ? profesional.etapas_id : '';
     state.datosPersonalesEdit.calidad                   = (profesional.calidad_juridica_id != null) ? profesional.calidad_juridica_id : '';
     state.datosPersonalesEdit.situacion_actual          = (profesional.situacion_actual_id != null) ? profesional.situacion_actual_id : '';
+    state.datosPersonalesEdit.establecimientos          = profesional.establecimientos.length ? profesional.establecimientos.map(e => e.id) : [];
+  },
+  PROFESIONAL_SET_RED(state, newValue){
+    state.datosPersonalesEdit.red = newValue;
+  },
+  PROFESIONAL_SET_ESTABLECIMIENTOS(state, newValue){
+    state.datosPersonalesEdit.establecimientos = newValue;
   },
   UPDATE_STATUS_PROFESIONAL(state, object){
     const indice = state.profesionales.findIndex(p => p.id === object.response.id);

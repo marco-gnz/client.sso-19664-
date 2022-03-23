@@ -97,6 +97,24 @@
                         <span class="text-danger" v-if="errors.calidad_juridica_id">{{errors.calidad_juridica_id[0]}}</span>
                     </div>
                 </div>
+                <div class="row pt-lg-4">
+                  <div class="col-md-6">
+                    <label class="font-weight-bold">Establecimientos profesional</label><br>
+                    <el-select
+                        style="width: 380px;"
+                        v-model="establecimiento"
+                          multiple
+                          size="mini"
+                          placeholder="Seleccione establecimiento">
+                          <el-option
+                              v-for="(establecimiento, index) in establecimientos"
+                              :key="index"
+                              :label="establecimiento.nombre"
+                              :value="establecimiento.id">
+                        </el-option>
+                      </el-select>
+                  </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -130,10 +148,27 @@ export default {
         calidades: 'mantenedores/calidades',
         generos: 'mantenedores/generos',
         etapas: 'mantenedores/etapas',
-        situacionesActual:'mantenedores/situacionesActual'
+        situacionesActual:'mantenedores/situacionesActual',
+        establecimientos:'mantenedores/allEstablecimientos'
       }),
       datosPersonalesEdit(){
         return {...this.$store.state.profesionales.datosPersonalesEdit}
+      },
+      red:{
+        get() {
+          return this.$store.state.profesionales.datosPersonalesEdit.red;
+        },
+        set(newValue) {
+          this.$store.commit('profesionales/PROFESIONAL_SET_RED', newValue);
+        }
+      },
+      establecimiento:{
+        get() {
+          return this.$store.state.profesionales.datosPersonalesEdit.establecimientos;
+        },
+        set(newValue) {
+          this.$store.commit('profesionales/PROFESIONAL_SET_ESTABLECIMIENTOS', newValue);
+        }
       }
     },
     mounted(){
@@ -143,6 +178,7 @@ export default {
       this.getEtapas();
       this.getSituacionesActual();
       this.getProfesional(this.$route.params.id);
+      this.getAllEstablecimientos();
     },
   methods:{
     ...mapActions({
@@ -152,7 +188,8 @@ export default {
       getEtapas: 'mantenedores/getEtapas',
       getSituacionesActual:'mantenedores/getSituacionesActual',
       getProfesional: 'profesionales/getProfesional',
-      errorStatus401:'errors/redirectSessionExpired'
+      errorStatus401:'errors/redirectSessionExpired',
+      getAllEstablecimientos:'mantenedores/getAllEstablecimientos',
     }),
     ...mapMutations({
       updateProfesionalAction: 'profesionales/UPDATE_PROFESIONAL'
@@ -176,11 +213,13 @@ export default {
               calidad_juridica_id: this.datosPersonalesEdit.calidad,
               planta_id: this.datosPersonalesEdit.planta,
               genero_id:this.datosPersonalesEdit.genero,
-              situacion_actual_id:this.datosPersonalesEdit.situacion_actual
+              situacion_actual_id:this.datosPersonalesEdit.situacion_actual,
+              establecimientos:this.establecimiento
             };
 
       await this.$axios.$put(url, data).then(response => {
         if(response[0] === true){
+          this.selectEstablecimiento = true;
           this.updateProfesionalAction(response[1]);
           this.fullscreenLoading = !this.fullscreenLoading;
           this.$message({

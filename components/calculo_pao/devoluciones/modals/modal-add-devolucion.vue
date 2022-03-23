@@ -43,7 +43,6 @@
                       slot="reference"
                       :clearable="false"
                       v-model="devolucion.periodo"
-                      :picker-options="removeDates"
                       type="daterange"
                       range-separator="a"
                       start-placeholder="Periodo de inicio"

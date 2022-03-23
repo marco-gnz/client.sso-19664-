@@ -20,6 +20,7 @@ export const state = () => ({
   situacionesActual:[],
   tipoConvenios:[],
   anios:[],
+  allEstablecimientos:[],
 
   pagination:{
     total:0,
@@ -279,6 +280,9 @@ export const mutations = {
   },
   SET_ANIOS(state, anios){
     state.anios = anios;
+  },
+  SET_ALL_ESTABLECIMIENTOS(state, establecimientos){
+    state.allEstablecimientos = establecimientos;
   }
 };
 
@@ -345,6 +349,9 @@ export const getters = {
   },
   anios(state){
     return state.anios;
+  },
+  allEstablecimientos(state){
+    return state.allEstablecimientos;
   }
 };
 
@@ -470,6 +477,11 @@ export const actions = {
     async getAnios({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/anios');
       commit('SET_ANIOS', response);
+    },
+    async getAllEstablecimientos({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/establecimientos/all');
+
+      commit('SET_ALL_ESTABLECIMIENTOS', response);
     },
 };
 

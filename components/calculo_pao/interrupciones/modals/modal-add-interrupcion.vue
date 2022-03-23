@@ -28,7 +28,6 @@
                 <label>Ingrese periodo de interrupción</label>
                 <el-date-picker
                     v-model="interrupcion.periodo"
-                    :picker-options="removeDates"
                     type="daterange"
                     range-separator=">"
                     start-placeholder="Inicio"

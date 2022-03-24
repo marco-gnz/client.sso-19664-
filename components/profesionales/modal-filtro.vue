@@ -5,11 +5,12 @@
         <div class="col-md-6">
           <div class="card-body">
             <div class="form-group">
-              <label class="required">Etapa de profesional</label>
-              <el-checkbox-group v-model="checkedEtapas">
-                <el-checkbox v-for="etapa in etapas" :label="etapa.id" :key="etapa.id">
-                  <el-popover transition="el-fade-in-linear" placement="top-start" width="300" trigger="hover" close-delay="10" :content="etapa.nombre"><span slot="reference">{{etapa.sigla}}</span></el-popover>
-                </el-checkbox>
+              <label class="required">Etapa de profesional</label><br>
+              <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"><strong>Marcar todas</strong></el-checkbox>
+                <el-checkbox-group v-model="checkedEtapas">
+                      <el-checkbox v-for="etapa in etapas" :label="etapa.id" :key="etapa.id" class="mb-3 mr-4" @change="handleCheckedCitiesChange">
+                        <el-popover transition="el-fade-in-linear" placement="top-start" width="300" trigger="hover" :close-delay="2" :content="etapa.nombre"><span slot="reference">{{etapa.sigla}}</span></el-popover>
+                    </el-checkbox>
               </el-checkbox-group>
             </div>
           </div>
@@ -32,7 +33,7 @@
           <div class="col-md-6">
             <div class="card-body">
               <div class="form-group">
-                <label>Situación actual</label>
+                <label>Situación actual</label><br>
                 <el-select
                   :disabled="checkedEtapas.length === 0"
                   size="mini"
@@ -93,7 +94,7 @@
           <div class="col-md-6">
             <div class="card-body">
               <div class="form-group">
-                <label>Etapa destinación (ED)</label>
+                <label>Etapa destinación (ED)</label><br>
                 <el-date-picker
                   size="mini"
                   v-model="fechaEtapaDestinacion"
@@ -110,7 +111,7 @@
           <div class="col-md-6">
             <div class="card-body">
               <div class="form-group">
-                <label>Etapa formación (EF)</label>
+                <label>Etapa formación (EF)</label><br>
                 <el-date-picker
                   size="mini"
                   v-model="fechaEtapaFormacion"
@@ -130,52 +131,8 @@
         <div class="row">
           <div class="col-md-6">
             <div class="card-body">
-              <div class="form-group">
-                <label>Seleccione Red</label>
-                <el-select size="mini" style="width:300px;" v-model="red" placeholder="Seleccione red" @change="getEstablecimientosChange">
-                  <el-option
-                    v-for="red in redesHospitalariasUserAuth"
-                    :key="red.id"
-                    :label="red.nombre"
-                    :value="red.id">
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card-body">
-              <div class="form-group">
-                <label>Establecimiento <i>dest./devolu./desempeño</i></label>
-                <el-select
-                size="mini"
-                style="width:300px;"
-                :disabled="red === '' || establecimientos.length === 0"
-                v-model="establecimiento"
-                multiple
-                filterable
-                collapse-tags
-                placeholder="Seleccione">
-                  <el-option
-                    v-for="establecimiento in establecimientos"
-                    :key="establecimiento.id"
-                    :label="establecimiento.nombre"
-                    :value="establecimiento.id">
-                    <span style="float: left; font-size: 12px;">{{ establecimiento.nombre }}</span>
-                    <!-- <span style="float: right; color: #8492a6; font-size: 13px">{{ (establecimiento.grado_complejidad != null) ? `°${establecimiento.grado_complejidad.grado}` : '--' }}</span> -->
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-      <template v-if="checkedEtapas.includes(1)">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card-body">
-              <div class="form-group">
-                <label>Etapa devolución (PAO)</label>
+              <div class="form-group" v-if="checkedEtapas.includes(1)">
+                <label>Etapa devolución (PAO)</label><br>
                 <el-date-picker
                   size="mini"
                   v-model="fechaPao"
@@ -186,6 +143,30 @@
                   start-placeholder="Inicio"
                   end-placeholder="Término">
                 </el-date-picker>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Establ. <i>funciones/destinaci./devoluciones</i></label><br>
+                <el-select
+                size="mini"
+                style="width:300px;"
+                v-model="establecimiento"
+                multiple
+                filterable
+                collapse-tags
+                placeholder="Seleccione">
+                  <el-option
+                    v-for="establecimiento in establecimientos"
+                    :key="establecimiento.id"
+                    :label="establecimiento.nombre"
+                    :value="establecimiento.id">
+                    <span style="float: left; font-size: 12px">{{ establecimiento.nombre.length > 30 ? establecimiento.nombre.substring(0, 30)+'...' : establecimiento.nombre}}</span>
+                    <span style="float: right; color: #8492a6; font-size: 12px">{{ establecimiento.red_hospitalaria != null ? establecimiento.red_hospitalaria.sigla : '--' }}</span>
+                  </el-option>
+                </el-select>
               </div>
             </div>
           </div>
@@ -226,6 +207,7 @@ export default {
     this.getPerfeccionamientosAll();
     this.getRedesHospitalariasUserAuth();
     this.getSituacionesActual();
+    this.getAllEstablecimientos();
   },
   computed:{
     searchAll(){
@@ -341,7 +323,7 @@ export default {
       etapas:'mantenedores/etapas',
       perfeccionamientos:'mantenedores/perfeccionamientos',
       redesHospitalariasUserAuth:'mantenedores/redesHospitalariasUserAuth',
-      establecimientos:'mantenedores/establecimientos',
+      establecimientos:'mantenedores/allEstablecimientos',
       estados:'profesionales/estados',
       situacionesActual:'mantenedores/situacionesActual'
     })
@@ -352,26 +334,27 @@ export default {
       getPerfeccionamientosAll:'mantenedores/getPerfeccionamientosAllFiltro',
       getProfesionales: "profesionales/getProfesionales",
       getRedesHospitalariasUserAuth:'mantenedores/getRedesHospitalariasUserAuth',
-      getEstablecimientosAction: 'mantenedores/getEstablecimientos',
       open: "profesionales/updateModal",
       refresEstablecimientoAction:'profesionales/refreshEstablecimiento',
       cargando: 'profesionales/loadingApi',
-      getSituacionesActual:'mantenedores/getSituacionesActual'
+      getSituacionesActual:'mantenedores/getSituacionesActual',
+      getAllEstablecimientos:'mantenedores/getAllEstablecimientos'
     }),
     ...mapMutations({
       currentPageAction: "profesionales/SET_CURRENT_PAGE",
       refreshFiltro:'profesionales/REFRESH_FILTRO'
     }),
-    getEstablecimientosChange(){
-      this.refresEstablecimientoAction();
-      this.getEstablecimientosAction(this.red);
-    },
     searchProfesionales(){
       this.currentPageAction(1);
       this.activeFiltroAvanzado = true;
       localStorage.setItem('filtros', JSON.stringify(this.searchAll));
       this.getProfesionales();
       this.open();
+    },
+    handleCheckedCitiesChange(value){
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.etapas.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.etapas.length;
     },
     refreshPerfeccionamiento(){
       if(this.perfeccionamiento_value === true){
@@ -382,9 +365,10 @@ export default {
       this.refreshFiltro();
       localStorage.removeItem('filtros');
       this.getProfesionales();
+      this.checkAll = false;
     },
     handleCheckAllChange(val) {
-      this.search.checkedEtapas = val ? this.etapas : [];
+      this.checkedEtapas = val ? this.etapas.map(e => e.id) : [];
       this.isIndeterminate = false;
     },
     async excelReport(){

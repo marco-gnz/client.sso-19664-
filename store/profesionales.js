@@ -251,7 +251,6 @@ export const actions = {
       }
     }
      );
-
     if(response){
       commit('SET_LOADING_NOT_SEARCH');
     }

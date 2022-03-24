@@ -104,6 +104,7 @@
                         style="width: 380px;"
                         v-model="establecimiento"
                           multiple
+                          filterable
                           size="mini"
                           placeholder="Seleccione establecimiento">
                           <el-option
@@ -111,6 +112,8 @@
                               :key="index"
                               :label="establecimiento.nombre"
                               :value="establecimiento.id">
+                              <span style="float: left">{{ establecimiento.nombre.length > 30 ? establecimiento.nombre.substring(0, 30)+'...' : establecimiento.nombre}}</span>
+                              <span style="float: right; color: #8492a6; font-size: 13px">{{ establecimiento.red_hospitalaria != null ? establecimiento.red_hospitalaria.sigla : '--' }}</span>
                         </el-option>
                       </el-select>
                   </div>

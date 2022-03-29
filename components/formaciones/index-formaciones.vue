@@ -88,7 +88,8 @@ export default {
         ...mapActions({
           getFormacionesAction: 'formaciones/getFormaciones',
           getCentrosFormadres:'mantenedores/getCentrosFormadres',
-          getPerfeccionamiento:'mantenedores/getPerfeccionamientoDynamic'
+          getPerfeccionamiento:'mantenedores/getPerfeccionamientoDynamic',
+          getCampoClinicoHabilitados:'mantenedores/getCampoClinicoHabilitados'
         }),
         ...mapMutations({
           removeFormacionAction:'formaciones/REMOVE_FORMACION',
@@ -154,6 +155,7 @@ export default {
     },
     mounted(){
       this.getFormacionesAction(this.$route.params.id);
+      this.getCampoClinicoHabilitados();
     },
     components: { ModalCreate, EditFormacion, ShowFormacion }
 }

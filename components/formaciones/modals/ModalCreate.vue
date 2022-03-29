@@ -14,7 +14,7 @@
           <div class="row pt-4">
             <div class="col-md-4">
               <div class="form-group">
-                <label>Centro formador</label>
+                <label class="required">Centro formador</label>
                 <select class="form-control" v-model="especialidad.centro_formador">
                     <option value="" selected disabled>-- Seleccione centro --</option>
                     <option v-for="(centro, index) in centrosFormadores" :key="index" :value="centro.id">{{centro.nombre}}</option>
@@ -24,7 +24,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Tipo de perfeccionamiento</label>
+                <label class="required">Tipo de perfeccionamiento</label>
                 <select class="form-control" v-model="especialidad.tipo_perfeccionamiento" @change="perfeccionamientoGet">
                     <option value="" selected disabled>-- Seleccione tipo --</option>
                     <option v-for="(tipo, index) in tipoPerfeccionamientos" :key="index" :value="tipo.id">{{tipo.nombre}}</option>
@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Perfeccionamientos</label>
+                <label class="required">Perfeccionamientos</label>
                 <select :disabled="especialidad.tipo_perfeccionamiento == '' || perfeccionamientos.length == 0"  class="form-control" v-model="especialidad.perfeccionamiento">
                     <option value="" selected disabled>-- Seleccione perfeccionamiento --</option>
                     <option v-for="(perfeccionamiento, index) in perfeccionamientos" :key="index" :value="perfeccionamiento.id">{{perfeccionamiento.nombre}}</option>
@@ -63,7 +63,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <label>Motivo de formación</label>
+              <label class="required">Motivo de formación</label>
               <select class="form-control" v-model="especialidad.origen">
                 <option value="" selected disabled>-- Seleccione motivo --</option>
                 <option value="PAO">Registro de PAO</option>
@@ -77,6 +77,13 @@
         </section>
         <section v-if="especialidad_pasos === 2">
             <div class="row pt-4 d-flex justify-content-center">
+              <div class="col-md-6">
+                <label>Camplo clínico</label>
+                <select class="form-control" v-model="especialidad.campo_clinico">
+                    <option value="">-- Seleccione campo clínico --</option>
+                    <option v-for="(campo, index) in camposClinicos" :key="index" :value="campo.id">{{campo.nombre}}</option>
+                </select>
+              </div>
               <div class="col-md-6">
                 <label>Periodo de formación</label>
                 <el-date-picker
@@ -127,6 +134,7 @@ export default {
           fecha_registro:'',
           situacion_profesional:'',
           origen:'',
+          campo_clinico:'',
           periodo:[],
           observacion:''
       },
@@ -142,7 +150,8 @@ export default {
     ...mapGetters({
             centrosFormadores: 'mantenedores/centrosFormadores',
             tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos',
-            situacionesActual:'mantenedores/situacionesActual'
+            situacionesActual:'mantenedores/situacionesActual',
+            camposClinicos:'mantenedores/camposClinicos'
         })
   },
   methods:{
@@ -180,7 +189,8 @@ export default {
         termino_formacion: this.especialidad.periodo[1],
         observacion: this.especialidad.observacion,
         centro_formador_id: this.especialidad.centro_formador,
-        perfeccionamiento_id: this.especialidad.perfeccionamiento
+        perfeccionamiento_id: this.especialidad.perfeccionamiento,
+        campo_clinico_id:this.especialidad.campo_clinico
       };
 
       await this.$axios.$post(url, data).then(response => {
@@ -195,11 +205,11 @@ export default {
             });
             this.clearAllModal();
           }else if(response === 'fechas-entrelazadas'){
+            this.especialidad_pasos = 2;
             this.$alert('No se ingresó la formación, ya que el profesional tiene un registro en el mismo periodo de formación ingresado...', 'Error', {
               type:'warning',
               confirmButtonText: 'OK'
             });
-            this.clearAllModal();
           }else{
             this.$message.error('No se ingreso la formación. Error de servidor');
             this.clearAllModal();

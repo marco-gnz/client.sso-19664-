@@ -6,8 +6,9 @@
             <div class="col-md-6">
                 <p><strong>Periodo en formación</strong>: {{DateTime.fromISO(formacion.inicio_formacion).toFormat('dd LLLL yyyy')}} / {{DateTime.fromISO(formacion.termino_formacion).toFormat('dd LLLL yyyy')}}</p>
                 <p v-if="formacion.diferencia"><strong>En días</strong>: {{ `${formacion.diferencia.years > 1 ? `${formacion.diferencia.years} años` : `${formacion.diferencia.years} año`}, ${formacion.diferencia.months > 1 ? `${formacion.diferencia.months} meses` : `${formacion.diferencia.months} mes`} y ${Math.round(formacion.diferencia.days) > 1 ? `${Math.round(formacion.diferencia.days)} días` : `${Math.round(formacion.diferencia.days)} día`}` }}</p>
-                <p v-if="formacion.centro_formador"><strong>Universidad</strong>: {{formacion.centro_formador.nombre}}</p>
-                <p v-if="formacion.perfeccionamiento"><strong>Formación</strong>: {{formacion.perfeccionamiento.nombre}} <i>({{formacion.perfeccionamiento.tipo.nombre}})</i></p>
+                <p><strong>Universidad</strong>: {{formacion.centro_formador != null ? formacion.centro_formador.nombre : '--'}}</p>
+                <p><strong>Formación</strong>: {{formacion.perfeccionamiento != null ? formacion.perfeccionamiento.nombre : '--'}} <i>({{formacion.perfeccionamiento != null ? formacion.perfeccionamiento.tipo.nombre : '--'}})</i></p>
+                <p><strong>Campo clínico</strong>: {{formacion.campo_clinico != null ? formacion.campo_clinico.nombre : '--'}}</p>
                 <p><strong>Fecha registro superintendencia</strong>: {{ (formacion.fecha_registro != null) ? DateTime.fromISO(formacion.fecha_registro).toFormat('dd-LL-yyyy') : '--'}}</p>
                 <p><strong>Situación profesional</strong>: {{ (formacion.situacion_profesional != null) ? formacion.situacion_profesional.nombre : '--'}}</p>
             </div>

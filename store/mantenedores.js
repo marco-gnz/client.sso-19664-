@@ -21,6 +21,7 @@ export const state = () => ({
   tipoConvenios:[],
   anios:[],
   allEstablecimientos:[],
+  campos_clinicos:[],
 
   pagination:{
     total:0,
@@ -71,6 +72,11 @@ export const state = () => ({
     sigla:'',
     nombre:''
   },
+  campo_clinico:{
+    id:'',
+    cod_sirh:'',
+    nombre:''
+  }
 });
 
 export const mutations = {
@@ -283,7 +289,28 @@ export const mutations = {
   },
   SET_ALL_ESTABLECIMIENTOS(state, establecimientos){
     state.allEstablecimientos = establecimientos;
-  }
+  },
+  SET_CAMPOS_CLINICOS(state, campos_clinicos){
+      state.campos_clinicos = campos_clinicos;
+  },
+  ADD_CAMPO_CLINICO(state, campoClinico){
+    state.campos_clinicos.unshift(campoClinico);
+  },
+  UPDATE_CAMPO_CLINICO(state, campo){
+    const indice = state.campos_clinicos.findIndex(c => c.id === campo.id);
+    state.campos_clinicos.splice(indice, 1, campo);
+  },
+  PASSING_CAMPO_CLINICO(state, campoClinico){
+    state.campo_clinico.id        = campoClinico.id;
+    state.campo_clinico.cod_sirh  = campoClinico.cod_sirh;
+    state.campo_clinico.nombre    = campoClinico.nombre;
+  },
+  CAMPO_CLINICO_COD_SIRH(state, cod_sirh){
+    state.campo_clinico.cod_sirh = cod_sirh;
+  },
+  CAMPO_CLINICO_NOMBRE(state, nombre){
+    state.campo_clinico.nombre = nombre;
+  },
 };
 
 export const getters = {
@@ -352,6 +379,9 @@ export const getters = {
   },
   allEstablecimientos(state){
     return state.allEstablecimientos;
+  },
+  camposClinicos(state){
+    return state.campos_clinicos;
   }
 };
 
@@ -480,8 +510,15 @@ export const actions = {
     },
     async getAllEstablecimientos({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/establecimientos/all');
-
       commit('SET_ALL_ESTABLECIMIENTOS', response);
+    },
+    async getCampoClinico({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/campos-clinicos');
+      commit('SET_CAMPOS_CLINICOS', response);
+    },
+    async getCampoClinicoHabilitados({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/campos-clinicos/habilitados');
+      commit('SET_CAMPOS_CLINICOS', response);
     },
 };
 

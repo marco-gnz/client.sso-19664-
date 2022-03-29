@@ -14,7 +14,7 @@
         <div class="row pt-4">
           <div class="col-md-4">
               <div class="form-group">
-                <label>Centro formador</label>
+                <label class="required">Centro formador</label>
                 <select class="form-control" v-model="centro_formador">
                     <option value="" selected disabled>-- Seleccione centro --</option>
                     <option v-for="(centro, index) in centrosFormadores" :key="index" :value="centro.id">{{centro.nombre}}</option>
@@ -24,7 +24,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Tipo de perfeccionamiento</label>
+                <label class="required">Tipo de perfeccionamiento</label>
                 <select class="form-control" v-model="tipo_perfeccionamiento" @change="perfeccionamientoGet">
                     <option value="" selected disabled>-- Seleccione tipo --</option>
                     <option v-for="(tipo, index) in tipoPerfeccionamientos" :key="index" :value="tipo.id">{{tipo.nombre}}</option>
@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="col-md-3">
-              <label>Perfeccionamiento</label>
+              <label class="required">Perfeccionamiento</label>
               <select :disabled="tipo_perfeccionamiento == '' || perfeccionamientos.length == 0" class="form-control" v-model="perfeccionamiento">
                   <option value="" selected disabled>-- Seleccione perfeccionamiento --</option>
                   <option v-for="(perfeccionamiento, index) in perfeccionamientos" :key="index" :value="perfeccionamiento.id">{{perfeccionamiento.nombre}}</option>
@@ -75,6 +75,13 @@
         </section>
         <section v-if="especialidad_pasos === 2">
             <div class="row pt-4 d-flex justify-content-center">
+              <div class="col-md-6">
+                <label>Camplo clínico</label>
+                <select class="form-control" v-model="campo_clinico">
+                    <option value="">-- Seleccione campo clínico --</option>
+                    <option v-for="(campo, index) in camposClinicos" :key="index" :value="campo.id">{{campo.nombre}}</option>
+                </select>
+              </div>
               <template v-if="formacion.count_paos > 0">
                 <div class="col-md-6">
                   <el-alert
@@ -141,7 +148,8 @@ export default {
         centrosFormadores:'mantenedores/centrosFormadores',
         tipoPerfeccionamientos: 'mantenedores/tipoPerfeccionamientos',
         situacionesActual:'mantenedores/situacionesActual',
-        perfeccionamientos:'mantenedores/perfeccionamientos'
+        perfeccionamientos:'mantenedores/perfeccionamientos',
+        camposClinicos:'mantenedores/camposClinicos'
     }),
     formacion(){
       return {...this.$store.state.edf.formacionEdit}
@@ -194,6 +202,14 @@ export default {
         this.$store.commit('edf/FORMACION_ORIGEN', newValue);
       }
     },
+    campo_clinico:{
+      get(){
+        return this.$store.state.edf.formacionEdit.campo_clinico;
+      },
+      set (newValue){
+        this.$store.commit('edf/FORMACION_CAMPO_CLINICO', newValue);
+      }
+    },
     periodo:{
       get(){
         return this.$store.state.edf.formacionEdit.periodo;
@@ -234,6 +250,7 @@ export default {
         situacion_profesional_id:this.situacion_profesional,
         inicio_formacion:  this.periodo[0],
         termino_formacion: this.periodo[1],
+        campo_clinico_id:this.campo_clinico,
         observacion:this.observacion
       };
 
@@ -247,7 +264,16 @@ export default {
               type: 'success'
           });
           this.clearAllModal();
-        }
+        }else if(response === 'fechas-entrelazadas'){
+          this.especialidad_pasos = 2;
+            this.$alert('No se editó la formación, ya que el profesional tiene un registro en el mismo periodo de formación ingresado...', 'Error', {
+              type:'warning',
+              confirmButtonText: 'OK'
+            });
+          }else{
+            this.$message.error('No se editó la formación. Error de servidor');
+            this.clearAllModal();
+          }
       }).catch(error => {
         this.fullscreenLoading = !this.fullscreenLoading;
         console.log(error);

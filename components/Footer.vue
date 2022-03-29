@@ -3,7 +3,7 @@
     <footer class="sticky-footer bg-white efect">
         <div class="container my-auto">
             <div class="copyright text-center my-auto">
-                <span class="text-footer">Sistema 19664  | <strong>Depto. Gestión de las Personas - SSO 2021</strong></span>
+                <span class="text-footer">S19  | <strong>Depto. Gestión de las Personas - SSO 2021</strong></span>
             </div>
         </div>
     </footer>

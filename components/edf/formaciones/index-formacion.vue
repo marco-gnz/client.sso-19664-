@@ -83,9 +83,13 @@ export default {
             }
         }
     },
+    mounted(){
+      this.getCentrosFormadres();
+    },
     methods: {
         ...mapActions({
-          getTipoPerfeccionamientos:'mantenedores/getTipoPerfeccionamientos'
+          getTipoPerfeccionamientos:'mantenedores/getTipoPerfeccionamientos',
+          getCentrosFormadres:'mantenedores/getCentrosFormadoresFormaciones',
         }),
         ...mapMutations({
             deleteAction: "edf/REMOVE_FORMACION",

@@ -87,7 +87,7 @@ export default {
     methods:{
         ...mapActions({
           getFormacionesAction: 'formaciones/getFormaciones',
-          getCentrosFormadres:'mantenedores/getCentrosFormadres',
+          getCentrosFormadres:'mantenedores/getCentrosFormadoresFormaciones',
           getPerfeccionamiento:'mantenedores/getPerfeccionamientoDynamic',
           getCampoClinicoHabilitados:'mantenedores/getCampoClinicoHabilitados'
         }),

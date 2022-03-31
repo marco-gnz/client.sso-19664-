@@ -116,7 +116,6 @@ export default {
     };
   },
   mounted(){
-    this.getCentrosFormadres();
     this.perfeccionamientoGet(this.tipo_perfeccionamiento);
   },
   computed:{
@@ -204,9 +203,6 @@ export default {
   methods:{
     ...mapMutations({
       updateFormacion:'edf/UPDATE_FORMACION'
-    }),
-    ...mapActions({
-        getCentrosFormadres:'mantenedores/getCentrosFormadres'
     }),
     async perfeccionamientoGet(tipo){
       const url = '/api/mantenedores/tipo-perfeccionamientos/perfeccionamientos';

@@ -126,9 +126,6 @@ export default {
       errors:{}
     };
   },
-  mounted(){
-    this.getCentrosFormadres();
-  },
   computed:{
     ...mapGetters({
         centrosFormadores:'mantenedores/centrosFormadores',
@@ -139,9 +136,6 @@ export default {
   methods:{
     ...mapMutations({
       addFormacionToProfesional:'edf/STORE_FORMACION'
-    }),
-    ...mapActions({
-        getCentrosFormadres:'mantenedores/getCentrosFormadres'
     }),
     async perfeccionamientoGet(){
       const url = '/api/mantenedores/tipo-perfeccionamientos/perfeccionamientos';

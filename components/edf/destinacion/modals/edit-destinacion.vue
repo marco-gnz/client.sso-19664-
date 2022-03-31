@@ -28,7 +28,7 @@
                   <option value="" selected disabled>-- Seleccione establecimiento --</option>
                   <option v-for="(campo, index) in establecimientos" :key="index" :value="campo.id">{{campo.nombre}}</option>
               </select>
-              <span class="pt-2" v-if="red != '' && establecimientos.length == 0"><i>No existen establecimientos con ° de complejidad</i></span>
+              <span class="pt-2" v-if="red != '' && establecimientos.length == 0"><i>No existen establecimientos.</i></span>
               <span class="text-danger" v-if="errors.establecimiento_id">{{errors.establecimiento_id[0]}}</span>
             </div>
           </div>

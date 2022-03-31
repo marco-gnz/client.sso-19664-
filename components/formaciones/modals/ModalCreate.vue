@@ -143,7 +143,6 @@ export default {
     };
   },
   mounted(){
-      this.getCentrosFormadres();
       this.getTipoPerfeccionamientos();
   },
   computed:{
@@ -156,7 +155,6 @@ export default {
   },
   methods:{
     ...mapActions({
-            getCentrosFormadres: 'mantenedores/getCentrosFormadres',
             getTipoPerfeccionamientos: 'mantenedores/getTipoPerfeccionamientos'
         }),
     ...mapMutations({

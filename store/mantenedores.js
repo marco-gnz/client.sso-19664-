@@ -125,6 +125,9 @@ export const mutations = {
   SET_CENTROS_FORMADORES(state, centros_formadores){
     state.centros_formadores = centros_formadores;
   },
+  SET_CENTROS_FORMADORES_FORMACIONES(state, centros_formadores){
+    state.centros_formadores = centros_formadores;
+  },
   ADD_CENTRO_FORMADOR(state, centro){
     state.centros_formadores.unshift(centro);
   },
@@ -418,6 +421,11 @@ export const actions = {
       const response = await this.$axios.$get('/api/mantenedores/etapas');
 
       commit('SET_ETAPAS', response);
+    },
+    async getCentrosFormadoresFormaciones({commit}){
+      const response = await this.$axios.$get('/api/mantenedores/centros-formadores/formaciones');
+
+      commit('SET_CENTROS_FORMADORES_FORMACIONES', response);
     },
     async getCentrosFormadres({ commit }, object){
       let search      = (object != undefined) ? object.search : '';

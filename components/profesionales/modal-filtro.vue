@@ -376,9 +376,9 @@ export default {
       const url   = '/api/profesionales/excel-search';
       const data  = {
         perfeccion: this.searchAll.perfeccion,
-        f_ed: this.searchAll.fechaEtapaDestinacion,
-        f_ef:this.searchAll.fechaEtapaFormacion,
-        f_pao:this.searchAll.fechaPao,
+        f_ed: this.searchAll.f_ed,
+        f_ef:this.searchAll.f_ef,
+        f_pao:this.searchAll.f_pao,
         checkedEtapas:this.searchAll.checkedEtapas,
         establecimiento:this.searchAll.establecimiento,
         estados:this.searchAll.estados,

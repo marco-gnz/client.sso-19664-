@@ -81,9 +81,9 @@ export default {
     show(interrupcion){
       let fecha_inicio      = this.DateTime.fromISO(interrupcion.inicio_interrupcion);
       let fecha_termino     = this.DateTime.fromISO(interrupcion.termino_interrupcion);
-      let diferencia        = fecha_termino.diff(fecha_inicio, ['days', 'months', 'years']);
+      let diferencia        = fecha_termino.diff(fecha_inicio, 'days');
 
-      interrupcion['diferencia'] = diferencia.values;
+      interrupcion['diferencia'] = this.Duration.fromObject({days: diferencia.values.days+1, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
       this.passingShowInterrupcion(interrupcion);
     },
     async deleteInterrupcion(interrupcion, index){

@@ -88,19 +88,14 @@ export default {
         show(devolucion){
           let fecha_inicio          = this.DateTime.fromISO(devolucion.inicio_devolucion);
           let fecha_termino         = this.DateTime.fromISO(devolucion.termino_devolucion);
-          let diferencia            = fecha_termino.diff(fecha_inicio, 'days');
-          let diferencia_client     = fecha_termino.diff(fecha_inicio, ['days','months','years']);
+          let dias_diferencia            = fecha_termino.diff(fecha_inicio, 'days');
 
-          devolucion['diferencia']  = diferencia_client.values;
+          devolucion['diferencia']  = this.Duration.fromObject({days: dias_diferencia.values.days+1, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
 
           let hora      = devolucion.tipo_contrato.horas;
           let hora_real = hora/44;
 
-          let plus      = fecha_inicio.plus({days: diferencia.values.days * hora_real, months: 0, years: 0});
-
-          let diff      = plus.diff(fecha_inicio, ['days', 'months', 'years']);
-
-          devolucion['diferencia_calculate'] = diff.values;
+          devolucion['diferencia_calculate'] = this.Duration.fromObject({days: (dias_diferencia.values.days+1)*hora_real, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
 
           this.passingShowDevolucion(devolucion);
         },

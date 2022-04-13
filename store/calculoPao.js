@@ -97,8 +97,14 @@ export const mutations = {
     state.devolucionEdit.observacion = newValue;
   },
   PERIODO_DEVOLUCION(state, periodo){
-    state.devolucionEdit.periodo[0] = periodo[0];
-    state.devolucionEdit.periodo[1] = periodo[1];
+    state.devolucionEdit.periodo = [];
+    if(periodo != null){
+      state.devolucionEdit.periodo.push(periodo[0]);
+      state.devolucionEdit.periodo.push(periodo[1]);
+    }else{
+      state.devolucionEdit.periodo.push('');
+      state.devolucionEdit.periodo.push('');
+    }
   },
   TIPO_CONTRATO(state, contrato){
     state.devolucionEdit.tipo_contrato = contrato;

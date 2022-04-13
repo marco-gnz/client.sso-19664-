@@ -1,6 +1,6 @@
 <template>
   <div v-if="factura">
-    <b-modal id="modal-view-factura" :title="`Información factura #${factura.n_resolucion}`" size="lg"  hide-footer>
+    <b-modal id="modal-view-factura" :title="`Información factura ${factura.n_factura != null ? `#${factura.n_factura}` : `sin número`}`" size="lg"  hide-footer>
         <div class="row">
           <div class="col-md-6">
             <div class="row">

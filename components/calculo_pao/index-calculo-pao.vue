@@ -7,7 +7,7 @@
         <div class="col-md-6">
           <button v-if="$auth.user.permissions_roles.includes('ingresar-calculo-pao') || $auth.user.permissions.includes('ingresar-calculo-pao')" v-b-modal.modal-add-calculo class="btn btn-success float-right">Ingresar cálculo PAO</button>
           <AddCalculo />
-          <ModalEditDevolucion />
+          <ModalEditDevolucion :totalDiasDevolver="daysTotalDevolver" :daysTotalDevolucion="daysTotalDevolucion" :devolucionesGeneral="pushDevoluciones" />
           <ModalViewDevolucion />
           <ModalShowInterrupcion />
         </div>
@@ -83,7 +83,7 @@
                   </div>
                 </div>
                 <!-- modals devoluciones - interrupciones-->
-                <ModalAddDevolucion :pao="paoSelect"/>
+                <ModalAddDevolucion :pao="paoSelect" :totalDiasDevolver="daysTotalDevolver" :daysTotalDevolucion="daysTotalDevolucion" :devolucionesGeneral="pushDevoluciones"/>
                 <ModalAddInterrupcion :pao="paoSelect"/>
 
                 <!-- modals edits -->
@@ -98,16 +98,16 @@
               <div class="col-md-12 border-bottom border-left border-right">
                 <div class="row pt-lg-4 text-center">
                   <div class="col-md-3">
-                    <span><strong class="text-success">A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ? `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`}, ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` : `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ? `${Math.round(calculateTotalDevolver.days)} días` : `${Math.round(calculateTotalDevolver.days)} día`}` }}</span>
+                    <span><strong class="text-success">A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ? `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`}, ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` : `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ? `${calculateTotalDevolver.days.toFixed(1)} días` : `${calculateTotalDevolver.days.toFixed(1)} día`}` }}</span>
                   </div>
                   <div class="col-md-3">
-                    <span><strong class="text-primary">LLEVA</strong>: {{ `${calculateTotalDevolucion.years > 1 ? `${calculateTotalDevolucion.years} años` : `${calculateTotalDevolucion.years} año`}, ${calculateTotalDevolucion.months > 1 ? `${calculateTotalDevolucion.months} meses` : `${calculateTotalDevolucion.months} mes`} y ${Math.round(calculateTotalDevolucion.days) > 1 ? `${Math.round(calculateTotalDevolucion.days)} días` : `${Math.round(calculateTotalDevolucion.days)} día`}` }}</span>
+                    <span><strong class="text-primary">LLEVA</strong>: {{ `${calculateTotalDevolucion.years > 1 ? `${calculateTotalDevolucion.years} años` : `${calculateTotalDevolucion.years} año`}, ${calculateTotalDevolucion.months > 1 ? `${calculateTotalDevolucion.months} meses` : `${calculateTotalDevolucion.months} mes`} y ${Math.round(calculateTotalDevolucion.days) > 1 ? `${calculateTotalDevolucion.days.toFixed(1)} días` : `${calculateTotalDevolucion.days.toFixed(1)} día`}` }}</span>
                   </div>
                   <div class="col-md-3">
-                    <span><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ? `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`}, ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` : `${calculateTotalPorDevolver.months} mes`} y ${Math.round(calculateTotalPorDevolver.days) > 1 ? `${Math.round(calculateTotalPorDevolver.days)} días` : `${Math.round(calculateTotalPorDevolver.days)} día`}` }}</span>
+                    <span><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ? `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`}, ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` : `${calculateTotalPorDevolver.months} mes`} y ${Math.round(calculateTotalPorDevolver.days) > 1 ? `${calculateTotalPorDevolver.days.toFixed(1)} días` : `${calculateTotalPorDevolver.days.toFixed(1)} día`}` }}</span>
                   </div>
                   <div class="col-md-3">
-                    <span><strong class="text-info">FINALIZA EL</strong>: {{calculateFechaTermino}}</span>
+                    <span><strong class="text-info">FINALIZA EL</strong>: {{fechaTerminarPao}}</span>
                   </div>
                 </div>
               </div>
@@ -145,6 +145,19 @@ export default {
       ...mapGetters({
         paos:'calculoPao/paos'
       }),
+      pushDevoluciones(){
+        let devolucionesGeneralArray = [];
+        if(this.paos.length){
+          this.paos.forEach(pao => {
+              if(pao.devoluciones.length){
+                pao.devoluciones.forEach(devolucion => {
+                    devolucionesGeneralArray.push(devolucion);
+                });
+              }
+          });
+        }
+        return devolucionesGeneralArray;
+      },
       nonePermisos(){
         let permiso = true;
 
@@ -156,32 +169,59 @@ export default {
             }
         return permiso;
       },
+      fechaTerminarPao(){
+        let fecha_final = null;
+        let fecha_max = null;
+        let fecha_max_format = null;
+
+        let ArrayFechasOtros = [];
+        let ArrayFechasPao = [];
+        let total_saldo = 0;
+        if(this.paos.length){
+          this.paos.forEach(pao => {
+            ArrayFechasPao.push(pao.periodo_termino);
+            if(pao.devoluciones.length){
+              pao.devoluciones.forEach(devolucion => {
+                  ArrayFechasOtros.push(devolucion.termino_devolucion);
+              });
+            }
+            if(pao.interrupciones.length){
+              pao.interrupciones.forEach(interrupcion => {
+                  ArrayFechasOtros.push(interrupcion.termino_interrupcion);
+              });
+            }
+          });
+
+            total_saldo = this.daysTotalDevolver - this.daysTotalDevolucion;
+            if(ArrayFechasOtros.length > 0){
+              fecha_max = ArrayFechasOtros.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
+              fecha_max_format     = this.DateTime.fromISO(fecha_max);
+              fecha_final       = fecha_max_format.plus({days:total_saldo, months:0, years:0}).toFormat('dd-LL-yyyy');
+            }else{
+              fecha_max = ArrayFechasPao.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
+              fecha_max_format     = this.DateTime.fromISO(fecha_max);
+              fecha_final           = fecha_max_format.toFormat('dd-LL-yyyy');
+            }
+            return fecha_final;
+
+        }else{
+          return 'fecha no disponible';
+        }
+      },
       calculateFechaTermino(){
         let arrayFechasPao      = [];
         let ArrayFechas         = [];
-        let total_pao           = 0;
-        let total_devolucion    = 0;
         let total_saldo         = 0;
         let total_interrupcion  = 0;
         let ultima_fecha_devolucion = '';
         let fecha_a_finalizar = '';
         if(this.paos.length){
           this.paos.forEach(pao => {
-            let fecha_inicio_pao    = this.DateTime.fromISO(pao.periodo_inicio);
-            let fecha_termino_pao   = this.DateTime.fromISO(pao.periodo_termino);
-            let diff_days_pao       = fecha_termino_pao.diff(fecha_inicio_pao, 'days');
-            total_pao               += diff_days_pao.values.days;
             arrayFechasPao.push(pao.periodo_termino);
             ArrayFechas.push(pao.periodo_inicio);
 
                if(pao.devoluciones.length){
                 pao.devoluciones.forEach(devolucion => {
-                    let fecha_inicio_devolucion    = this.DateTime.fromISO(devolucion.inicio_devolucion);
-                    let fecha_termino_devolucion   = this.DateTime.fromISO(devolucion.termino_devolucion);
-                    let days_devolucion            = fecha_termino_devolucion.diff(fecha_inicio_devolucion, 'days');
-                    let hora                       = devolucion.tipo_contrato.horas;
-                    let hora_real                  = hora/44;
-                    total_devolucion              += days_devolucion.values.days *  hora_real;
                     ArrayFechas.push(devolucion.termino_devolucion);
                 });
                 if(pao.interrupciones.length){
@@ -191,7 +231,7 @@ export default {
                 }
               }
           });
-          total_saldo                   = total_pao - total_devolucion - total_interrupcion;
+          total_saldo = this.daysTotalDevolver - this.daysTotalDevolucion - total_interrupcion;
 
           if(ArrayFechas.length){
             ultima_fecha_devolucion     = ArrayFechas.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
@@ -211,82 +251,66 @@ export default {
         }
           return fecha_a_finalizar;
       },
-      calculateTotalDevolucion(){
-        let dias  = 0;
+      daysTotalInterrupcion(){
+        let total_dias = 0;
+        if(this.paos.length){
+          this.paos.forEach(pao => {
+              if(pao.interrupciones.length){
+                pao.interrupciones.forEach(interrupcion => {
+                    let fecha_inicio    = this.DateTime.fromISO(interrupcion.inicio_interrupcion);
+                    let fecha_termino   = this.DateTime.fromISO(interrupcion.termino_interrupcion);
+                    let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
+                    total_dias          += diferencia_days.values.days+1;
+                });
+              }
+          });
+        }
+        return total_dias;
+      },
+      daysTotalDevolucion(){
+        let total_dias = 0;
         if(this.paos.length){
           this.paos.forEach(pao => {
               if(pao.devoluciones.length){
                 pao.devoluciones.forEach(devolucion => {
                     let fecha_inicio    = this.DateTime.fromISO(devolucion.inicio_devolucion);
                     let fecha_termino   = this.DateTime.fromISO(devolucion.termino_devolucion);
-                    let diferencia      = fecha_termino.diff(fecha_inicio, 'days');
+                    let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
                     let hora            = devolucion.tipo_contrato.horas;
                     let hora_real       = hora/44;
-                    dias += diferencia.values.days * hora_real;
+                    total_dias          += (diferencia_days.values.days+1)*hora_real;
                 });
               }
           });
         }
-        Math.round(dias);
-        /* let object  = this.Duration.fromObject({days:Math.round(dias), months:0, years:0}); */
-        let object  = this.Duration.fromObject({days:dias, months:0, years:0});
-        let lleva   = object.shiftTo('days','months','years').toObject();
-
-        return lleva;
+        return total_dias;
       },
-      calculateTotalDevolver(){
-        let dias  = 0;
+      calculateTotalDevolucion(){
+        let object  = this.Duration.fromObject({days:this.daysTotalDevolucion, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
+        return object;
+      },
+      daysTotalDevolver(){
+        let total_dias = 0;
         if(this.paos.length){
           this.paos.forEach(pao => {
               let fecha_inicio    = this.DateTime.fromISO(pao.periodo_inicio);
               let fecha_termino   = this.DateTime.fromISO(pao.periodo_termino);
-              let diferencia      = fecha_termino.diff(fecha_inicio, 'days');
-              dias      += diferencia.values.days;
+              let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
+              total_dias          += diferencia_days.values.days+1;
           });
         }
-        let object = this.Duration.fromObject({days: dias});
 
-        let devolver = object.shiftTo('days','months','years').toObject();
-
+        return total_dias;
+      },
+      calculateTotalDevolver(){
+        let devolver = this.Duration.fromObject({days: this.daysTotalDevolver, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
         return devolver;
       },
       calculateTotalPorDevolver(){
-        let dias_pao  = 0;
+        let total = this.daysTotalDevolver - this.daysTotalDevolucion;
+        let object = this.Duration.fromObject({days:total, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
 
-        let dias_devo = 0;
-
-        if(this.paos.length){
-          this.paos.forEach(pao => {
-            let fecha_inicio_pao    = this.DateTime.fromISO(pao.periodo_inicio);
-            let fecha_termino_pao   = this.DateTime.fromISO(pao.periodo_termino);
-            let diferencia_pao      = fecha_termino_pao.diff(fecha_inicio_pao, 'days');
-
-            dias_pao  += diferencia_pao.values.days;
-
-            if(pao.devoluciones.length){
-                pao.devoluciones.forEach(devolucion => {
-                    let fecha_inicio    = this.DateTime.fromISO(devolucion.inicio_devolucion);
-                    let fecha_termino   = this.DateTime.fromISO(devolucion.termino_devolucion);
-                    let diferencia      = fecha_termino.diff(fecha_inicio, 'days');
-
-                    let hora            = devolucion.tipo_contrato.horas;
-                    let hora_real       = hora/44;
-
-                    dias_devo           += diferencia.values.days * hora_real;
-                });
-              }
-          });
-        }
-
-        let total = dias_pao - Math.round(dias_devo);
-
-        let total_en_todo = this.Duration.fromObject({days:total});
-
-        let total_dias = total_en_todo.as('days');
-
-        let object = this.Duration.fromObject({days:total_dias}).shiftTo('days', 'months', 'years');
-
-        return object.values;
+        return object;
       }
     },
     methods:{

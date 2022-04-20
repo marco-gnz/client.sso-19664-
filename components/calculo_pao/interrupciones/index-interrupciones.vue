@@ -14,11 +14,12 @@
         <tbody>
 
             <tr v-for="(interrupcion, index) in interrupciones" :key="index" class="click" @click.prevent="show(interrupcion)" v-b-modal.modal-view-interrupcion>
-                <el-tooltip :content="`Interrupción pertenece a devolución con código #${interrupcion.devolucion.uuid.substring(0, 5)}`" placement="bottom">
-                  <td :style="{backgroundColor:interrupcion.devolucion.color}">{{DateTime.fromISO(interrupcion.inicio_interrupcion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(interrupcion.termino_interrupcion).toFormat('dd-LL-yyyy')}}</td>
+                <el-tooltip v-if="interrupcion.devolucion != null" :content="`Interrupción pertenece a devolución con código #${interrupcion.devolucion.uuid.substring(0, 5)}`" placement="bottom">
+                  <td :style="{backgroundColor:interrupcion.devolucion != null ? interrupcion.devolucion.color : ''}">{{DateTime.fromISO(interrupcion.inicio_interrupcion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(interrupcion.termino_interrupcion).toFormat('dd-LL-yyyy')}}</td>
                 </el-tooltip>
-                <td :style="{backgroundColor:interrupcion.devolucion.color}">{{interrupcion.causal.nombre}}</td>
-                <td :style="{backgroundColor:interrupcion.devolucion.color}">{{ (interrupcion.observacion != null) ? `${interrupcion.observacion.substring(0, 14)}...` : `--` }}</td>
+                <td v-else :style="{backgroundColor:interrupcion.devolucion != null ? interrupcion.devolucion.color : ''}">{{DateTime.fromISO(interrupcion.inicio_interrupcion).toFormat('dd-LL-yyyy')}} a {{DateTime.fromISO(interrupcion.termino_interrupcion).toFormat('dd-LL-yyyy')}}</td>
+                <td :style="{backgroundColor:interrupcion.devolucion != null ? interrupcion.devolucion.color : ''}">{{interrupcion.causal.nombre}}</td>
+                <td :style="{backgroundColor:interrupcion.devolucion != null ? interrupcion.devolucion.color : ''}">{{ (interrupcion.observacion != null) ? `${interrupcion.observacion.substring(0, 14)}...` : `--` }}</td>
               <td @click.stop="">
                   <el-dropdown>
                       <span class="el-dropdown-link">

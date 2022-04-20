@@ -13,9 +13,9 @@
         <section v-if="paso_interrupciones === 0">
           <div class="row pt-4 d-flex justify-content-center">
             <div class="col-md-6">
-              <label>Seleccione proceso de devolución (contrato) afectado</label>
+              <label>Seleccione proceso de devolución afectado</label> <i>(Opcional)</i>
               <select class="form-control" v-model="interrupcion.devolucion">
-                <option value="" selected disabled>-- Seleccione devolución --</option>
+                <option value="" selected>-- Seleccione devolución --</option>
                 <option v-for="(devolucion, index) in pao.devoluciones" :key="index" :value="devolucion">#{{devolucion.uuid.substring(0, 5)}} - {{devolucion.establecimiento.sigla}} - {{DateTime.fromISO(devolucion.inicio_devolucion).toFormat('dd LLL yyyy')}} a {{DateTime.fromISO(devolucion.termino_devolucion).toFormat('dd LLL yyyy')}} en {{devolucion.tipo_contrato.nombre}} hrs.</option>
               </select>
               <span class="text-danger" v-if="errors.devolucion_id">{{errors.devolucion_id[0]}}</span>
@@ -25,7 +25,7 @@
         <section v-if="paso_interrupciones === 1">
           <div class="row pt-4 d-flex justify-content-center">
               <div class="col-md-6">
-                <label>Ingrese periodo de interrupción</label>
+                <label class="required">Ingrese periodo de interrupción</label>
                 <el-date-picker
                     v-model="interrupcion.periodo"
                     type="daterange"
@@ -44,7 +44,7 @@
         <section v-if="paso_interrupciones === 2">
           <div class="row pt-4 d-flex justify-content-center">
             <div class="col-md-6">
-              <label>Seleccione causal de interrupción de PAO</label>
+              <label class="required">Seleccione causal de interrupción de PAO</label>
               <select class="form-control" v-model="interrupcion.causal">
                   <option value="" selected disabled>-- Seleccione causal --</option>
                   <option v-for="(causal, index) in causales" :key="index" :value="causal.id">{{causal.nombre}}</option>
@@ -179,7 +179,7 @@ export default {
       const url   = '/api/profesionales/profesional/pao/add-interrupcion';
       const data  = {
         pao_id: this.pao.id,
-        devolucion_id:this.interrupcion.devolucion.id,
+        devolucion_id:this.interrupcion.devolucion != null ? this.interrupcion.devolucion.id : '',
         inicio_interrupcion: this.interrupcion.periodo[0],
         termino_interrupcion: this.interrupcion.periodo[1],
         causal_id:this.interrupcion.causal,
@@ -215,15 +215,16 @@ export default {
         }
       }).catch(error => {
         this.fullscreenLoading = !this.fullscreenLoading;
-        console.log(error.response.data.errors);
-        this.errors = error.response.data.errors;
-
-        if(error.response.data.errors.devolucion_id){
-          this.paso_interrupciones = 0;
-        }else if(error.response.data.errors.inicio_interrupcion || error.response.data.errors.termino_interrupcion){
-          this.paso_interrupciones = 1;
-        }else{
-          this.paso_interrupciones = 2;
+        if(error.response){
+          console.log(error);
+          this.errors = error.response.data.errors;
+          if(error.response.data.errors.devolucion_id){
+            this.paso_interrupciones = 0;
+          }else if(error.response.data.errors.inicio_interrupcion || error.response.data.errors.termino_interrupcion){
+            this.paso_interrupciones = 1;
+          }else{
+            this.paso_interrupciones = 2;
+          }
         }
       });
     },

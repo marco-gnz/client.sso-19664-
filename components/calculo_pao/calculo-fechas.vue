@@ -3,7 +3,7 @@
     <li class="list-group-item media"><strong>Periodo en formación</strong>: <el-popover placement="top-start" width="250" :close-delay="1" trigger="hover" class="clickObservacionFormacion" :content="totalFormacion"><span slot="reference">{{DateTime.fromISO(pao.especialidad.inicio_formacion).toFormat('dd-LL-yyyy')}} / {{DateTime.fromISO(pao.especialidad.termino_formacion).toFormat('dd-LL-yyyy')}}</span></el-popover></li>
     <li class="list-group-item media"><strong>Total a devolver</strong>: <el-popover placement="top-start" width="250" :close-delay="1" trigger="hover" class="clickObservacion" :content="`${DateTime.fromISO(pao.periodo_inicio).toFormat('dd-LL-yyyy')} a ${DateTime.fromISO(pao.periodo_termino).toFormat('dd-LL-yyyy')}`"><span slot="reference">{{totalPaoReferencial}}</span></el-popover></li>
     <li class="list-group-item media"><strong>Devoluciones realizadas</strong>: <span class="text-success">{{ `${totalDevolucion.years} ${totalDevolucion.years > 1 ? `años` : `año`}, ${totalDevolucion.months} ${totalDevolucion.months > 1 ? `meses` : `mes`} y ${totalDevolucion.days.toFixed(1)} ${Math.round(totalDevolucion.days) > 1 ? `días` : `día`}` }}</span></li>
-    <li class="list-group-item media"><strong>Interrupciones realizadas</strong>: <span class="text-danger">{{ `${totalInterrupcion.years} ${totalInterrupcion.years > 1 ? `años` : `año`}, ${totalInterrupcion.months} ${totalInterrupcion.months > 1 ? `meses` : `mes`} y ${Math.round(totalInterrupcion.days)} ${totalInterrupcion.days > 1 ? `días` : `día`}` }}</span></li>
+    <li class="list-group-item media"><strong>Interrupciones realizadas</strong>: <span class="text-danger">{{ `${totalInterrupcion.years} ${totalInterrupcion.years > 1 ? `años` : `año`}, ${totalInterrupcion.months} ${totalInterrupcion.months > 1 ? `meses` : `mes`} y ${totalInterrupcion.days.toFixed(1)} ${totalInterrupcion.days > 1 ? `días` : `día`}` }}</span></li>
   </div>
 </template>
 
@@ -16,12 +16,11 @@ export default {
       tipoContratos:'mantenedores/tipoContratos'
     }),
     totalFormacion(){
-      let inicio          = this.DateTime.fromISO(this.pao.especialidad.inicio_formacion);
-      let termino         = this.DateTime.fromISO(this.pao.especialidad.termino_formacion);
-      let diferencia_formacion_dias  = termino.diff(inicio, 'days');
+      let inicio                      = this.DateTime.fromISO(this.pao.especialidad.inicio_formacion);
+      let termino                     = this.DateTime.fromISO(this.pao.especialidad.termino_formacion);
+      let diferencia_formacion_dias   = termino.diff(inicio, ['days', 'months', 'years']);
 
-      let total = this.Duration.fromObject({days:diferencia_formacion_dias.values.days+1, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
-      let message = `${total.years} ${total.years > 1 ? `años` : `años`}, ${total.months} ${total.months > 1 ? `meses` : `mes`} y ${Math.round(total.days)} ${total.days > 1 ? `días` : `día`}`;
+      let message = `${diferencia_formacion_dias.values.years} ${diferencia_formacion_dias.values.years > 1 ? `años` : `años`}, ${diferencia_formacion_dias.values.months} ${diferencia_formacion_dias.values.months > 1 ? `meses` : `mes`} y ${Math.round(diferencia_formacion_dias.values.days+1)} ${diferencia_formacion_dias.values.days +1 > 1 ? `días` : `día`}`;
       return message;
     },
     totalPaoReferencial(){
@@ -104,7 +103,7 @@ export default {
           let fecha_inicio              = this.DateTime.fromISO(interrupcion.inicio_interrupcion);
           let fecha_termino             = this.DateTime.fromISO(interrupcion.termino_interrupcion);
           let diferencia_interrupcion   = fecha_termino.diff(fecha_inicio, 'days');
-          dias_interrupcion             += diferencia_interrupcion.values.days;
+          dias_interrupcion             += diferencia_interrupcion.values.days+1;
         });
       }
       let total_interrupciones = this.Duration.fromObject({days: dias_interrupcion, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();

@@ -141,11 +141,11 @@ export default {
     calculoPao(especialidad){
       if(especialidad.inicio_formacion != null || especialidad.termino_formacion != null){
         let fecha_inicio_especialidad       = this.DateTime.fromISO(especialidad.inicio_formacion);
-      let fecha_termino_especialidad      = this.DateTime.fromISO(especialidad.termino_formacion);
+        let fecha_termino_especialidad      = this.DateTime.fromISO(especialidad.termino_formacion);
 
       let diff_formacion = fecha_termino_especialidad.diff(fecha_inicio_especialidad, ['days', 'months', 'years']);
 
-      this.diff_anos_especialidad = `${diff_formacion.values.years > 1 ? `${diff_formacion.values.years} años` : `${diff_formacion.values.years} año`}, ${diff_formacion.values.months > 1 ? `${diff_formacion.values.months} meses` : `${diff_formacion.values.months} mes`} y ${Math.round(diff_formacion.values.days) > 1 ? `${Math.round(diff_formacion.values.days)} días` : `${Math.round(diff_formacion.values.days)} día`}`;
+      this.diff_anos_especialidad = `${diff_formacion.values.years > 1 ? `${diff_formacion.values.years} años` : `${diff_formacion.values.years} año`}, ${diff_formacion.values.months > 1 ? `${diff_formacion.values.months} meses` : `${diff_formacion.values.months} mes`} y ${diff_formacion.values.days+1 > 1 ? `${diff_formacion.values.days.toFixed(1)+1} días` : `${diff_formacion.values.days.toFixed(1)+1} día`}`;
 
       let dias = fecha_termino_especialidad.diff(fecha_inicio_especialidad, 'days');
 
@@ -170,9 +170,9 @@ export default {
       this.diff_days                      = diff_pao_calculado.values.days;
       this.pao_estimado.dias              = diff_pao_calculado.values.days;
 
-      let object                          = this.Duration.fromObject({days: calculo_message.values.days, months:calculo_message.values.months, years:calculo_message.values.years}).normalize().toObject();
+      let object                          = this.Duration.fromObject({days: calculo_message.values.days+1, months:calculo_message.values.months, years:calculo_message.values.years}).normalize().toObject();
 
-      this.messagge = `${object.years > 1 ? `${object.years} años` : `${object.years} año`}, ${object.months > 1 ? `${object.months} meses` : `${object.months} mes`} y ${Math.round(object.days) > 1 ? `${Math.round(object.days)} días` : `${Math.round(object.days)} día`}`;
+      this.messagge = `${object.years > 1 ? `${object.years} años` : `${object.years} año`}, ${object.months > 1 ? `${object.months} meses` : `${object.months} mes`} y ${object.days.toFixed(1) > 1 ? `${object.days.toFixed(1)} días` : `${object.days.toFixed(1)} día`}`;
 
       }else{
         this.especialidad_sin_fecha = 'No es posible calcular el PAO. La especialidad no tiene registro de periodo de formación, por lo que no es posible realizar el calculo de PAO.';

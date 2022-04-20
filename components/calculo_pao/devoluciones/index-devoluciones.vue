@@ -88,7 +88,7 @@ export default {
         show(devolucion){
           let fecha_inicio          = this.DateTime.fromISO(devolucion.inicio_devolucion);
           let fecha_termino         = this.DateTime.fromISO(devolucion.termino_devolucion);
-          let dias_diferencia            = fecha_termino.diff(fecha_inicio, 'days');
+          let dias_diferencia       = fecha_termino.diff(fecha_inicio, 'days');
 
           devolucion['diferencia']  = this.Duration.fromObject({days: dias_diferencia.values.days+1, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
 

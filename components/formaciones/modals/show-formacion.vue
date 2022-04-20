@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-6">
                 <p><strong>Periodo en formación</strong>: {{DateTime.fromISO(formacion.inicio_formacion).toFormat('dd LLLL yyyy')}} / {{DateTime.fromISO(formacion.termino_formacion).toFormat('dd LLLL yyyy')}}</p>
-                <p v-if="formacion.diferencia"><strong>En días</strong>: {{ `${formacion.diferencia.years > 1 ? `${formacion.diferencia.years} años` : `${formacion.diferencia.years} año`}, ${formacion.diferencia.months > 1 ? `${formacion.diferencia.months} meses` : `${formacion.diferencia.months} mes`} y ${Math.round(formacion.diferencia.days) > 1 ? `${Math.round(formacion.diferencia.days)} días` : `${Math.round(formacion.diferencia.days)} día`}` }}</p>
+                <p v-if="formacion.diferencia"><strong>En días</strong>: {{ `${formacion.diferencia.years > 1 ? `${formacion.diferencia.years} años` : `${formacion.diferencia.years} año`}, ${formacion.diferencia.months > 1 ? `${formacion.diferencia.months} meses` : `${formacion.diferencia.months} mes`} y ${formacion.diferencia.days.toFixed(1)+1 > 1 ? `${formacion.diferencia.days.toFixed(1)+1} días` : `${formacion.diferencia.days.toFixed(1)+1} día`}` }}</p>
                 <p><strong>Universidad</strong>: {{formacion.centro_formador != null ? formacion.centro_formador.nombre : '--'}}</p>
                 <p><strong>Formación</strong>: {{formacion.perfeccionamiento != null ? formacion.perfeccionamiento.nombre : '--'}} <i>({{formacion.perfeccionamiento != null ? formacion.perfeccionamiento.tipo.nombre : '--'}})</i></p>
                 <p><strong>Campo clínico</strong>: {{formacion.campo_clinico != null ? formacion.campo_clinico.nombre : '--'}}</p>

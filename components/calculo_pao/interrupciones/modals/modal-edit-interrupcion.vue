@@ -17,9 +17,9 @@
         <section v-if="paso_interrupciones_edit === 0">
           <div class="row d-flex justify-content-center">
             <div class="col-md-6">
-              <label>Seleccione proceso de devolución (contrato) afectado</label>
+              <label>Seleccione proceso de devolución afectado</label> <i>(Opcional)</i>
               <select class="form-control" v-model="interrupcion.devolucion">
-                <option value="" selected disabled>-- Seleccione devolución --</option>
+                <option value="" selected>-- Seleccione devolución --</option>
                 <option v-for="(devolucion, index) in interrupcion.devoluciones" :key="index" :value="devolucion.id">{{devolucion.establecimiento.sigla}} - {{DateTime.fromISO(devolucion.inicio_devolucion).toFormat('dd LLL yyyy')}} a {{DateTime.fromISO(devolucion.termino_devolucion).toFormat('dd LLL yyyy')}} en {{devolucion.tipo_contrato.nombre}} hrs.</option>
               </select>
               <span class="text-danger" v-if="errors.devolucion_id">{{errors.devolucion_id[0]}}</span>
@@ -29,7 +29,7 @@
         <section v-if="paso_interrupciones_edit === 1">
           <div class="row d-flex justify-content-center">
             <div class="col-md-6">
-                <label>Periodo de interrupción</label>
+                <label class="required">Periodo de interrupción</label>
                 <el-date-picker
                     v-model="interrupcion.periodo"
                     type="daterange"
@@ -48,7 +48,7 @@
         <section v-if="paso_interrupciones_edit === 2">
           <div class="row pt-4 d-flex justify-content-center">
             <div class="col-md-6">
-              <label>Seleccione causal de interrupción de PAO</label>
+              <label class="required">Seleccione causal de interrupción de PAO</label>
               <select class="form-control" v-model="interrupcion.causal">
                   <option value="" selected disabled>-- Seleccione causal --</option>
                   <option v-for="(causal, index) in causales" :key="index" :value="causal.id">{{causal.nombre}}</option>

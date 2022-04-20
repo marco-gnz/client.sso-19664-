@@ -125,8 +125,10 @@ export const mutations = {
   ADD_INTERRUPCION_PAO(state, interrupcion){
     state.paos[interrupcion.pao_index].interrupciones.push(interrupcion);
 
-    const devolucion = state.paos[interrupcion.pao_index].devoluciones.find(d => d.id === interrupcion.devolucion_id);
-    devolucion.interrupciones.push(interrupcion);
+    if(interrupcion.devolucion_id){
+      const devolucion = state.paos[interrupcion.pao_index].devoluciones.find(d => d.id === interrupcion.devolucion_id);
+      devolucion.interrupciones.push(interrupcion);
+    }
   },
   FRES_TO_DEVOLUCION(state, fresh_devolucion){
     const indice = state.paos[fresh_devolucion.pao_index].devoluciones.map(d => d.id).indexOf(fresh_devolucion.id);
@@ -145,7 +147,7 @@ export const mutations = {
     state.interrupcionEditModal.id            = interrupcion.id;
     state.interrupcionEditModal.index         = interrupcion.index;
     state.interrupcionEditModal.uuid          = interrupcion.uuid;
-    state.interrupcionEditModal.devolucion    = interrupcion.devolucion_id;
+    state.interrupcionEditModal.devolucion    = interrupcion.devolucion_id != null ? interrupcion.devolucion_id : '';
     state.interrupcionEditModal.pao_id        = interrupcion.pao.id;
     state.interrupcionEditModal.periodo[0]    = interrupcion.inicio_interrupcion;
     state.interrupcionEditModal.periodo[1]    = interrupcion.termino_interrupcion;

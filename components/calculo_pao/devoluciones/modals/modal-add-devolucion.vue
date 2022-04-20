@@ -14,14 +14,14 @@
       <section v-if="pao_devolucion == 0">
         <div class="row pt-4 d-flex justify-content-center">
           <div class="col-md-4">
-              <label>Red Hospitalaria</label>
+              <label class="required">Red Hospitalaria</label>
               <select class="form-control" v-model="devolucion.red" @change="getEstablecimientosChange">
                   <option value="" selected disabled>-- Seleccione red --</option>
                   <option v-for="(red, index) in redesHospitalarias" :key="index" :value="red.id">{{red.nombre}}</option>
               </select>
           </div>
           <div class="col-md-4">
-              <label>Campo clínico</label> <i>(Establecimiento)</i>
+              <label class="required">Campo clínico</label> <i>(Establecimiento)</i>
               <select :disabled="devolucion.red === '' || establecimientos.length === 0" class="form-control" v-model="devolucion.campo_clinico">
                   <option value="" selected disabled>-- Seleccione campo --</option>
                   <option v-for="(campo, index) in establecimientos" :key="index" :value="campo.id">{{campo.nombre}} {{ (campo.grado_complejidad != null) ? `- °${campo.grado_complejidad.grado}` : '' }}</option>
@@ -33,7 +33,7 @@
       <section v-if="pao_devolucion == 1">
         <div class="row pt-4 d-flex justify-content-center">
             <div class="col-md-6">
-                <label>Periodo de devolución</label>
+                <label class="required">Periodo de devolución</label>
                 <el-date-picker
                     slot="reference"
                     :clearable="false"
@@ -55,7 +55,7 @@
       <section v-if="pao_devolucion == 2">
         <div class="row pt-4 d-flex justify-content-center">
           <div class="col-md-6">
-              <label>Horas a la semana</label>
+              <label class="required">Horas a la semana</label>
               <select class="form-control" v-model="devolucion.contrato">
                   <option value="" selected disabled>-- Seleccione horas --</option>
                   <option v-for="(hora, index) in tipoContratos" :key="index" :value="hora">{{hora.nombre}}</option>
@@ -69,7 +69,7 @@
         <div class="row pt-4 d-flex justify-content-center">
           <div class="col-md-6">
             <!-- listar solo de acuerdo a la especialidad del pao-->
-            <label>Seleccione escritura pública que se asociará a la devolución</label>
+            <label>Seleccione escritura pública que se asociará a la devolución</label> <i>(Opcional)</i>
               <select :disabled="escrituras.length === 0" class="form-control" v-model="devolucion.escritura" >
                   <option value="" selected disabled>-- Seleccione escritura pública --</option>
                   <option v-for="(escritura, index) in escrituras" :key="index" :value="escritura.id">{{`N° repertorio ${escritura.n_repertorio != null ? escritura.n_repertorio : 'sin n°'}/${escritura.anio_repertorio != null ? escritura.anio_repertorio : 'sin año'}`}} - {{`${escritura.valor_garantia} UF`}} - {{`${escritura.escritura_firmada != 0 ? `Firmada` : `No firmada`}`}}</option>
@@ -79,7 +79,7 @@
         </div>
         <div class="row pt-4 d-flex justify-content-center">
           <div class="col-md-10">
-            <label>Observación</label>
+            <label>Observación</label> <i>(Opcional)</i>
               <textarea v-model="devolucion.observacion" class="form-control" cols="10" rows="5" placeholder="Ingrese observación..."></textarea>
           </div>
         </div>

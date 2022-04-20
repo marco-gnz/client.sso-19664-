@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-7">
                 <p><strong>Periodo interrupción</strong>: {{DateTime.fromISO(interrupcion.inicio_interrupcion).toFormat('dd LLLL yyyy')}} / {{DateTime.fromISO(interrupcion.termino_interrupcion).toFormat('dd LLLL yyyy')}}</p>
-                <p v-if="interrupcion.diferencia"><strong>En días</strong>: {{ `${interrupcion.diferencia.years > 1 ? `${interrupcion.diferencia.years} años` : `${interrupcion.diferencia.years} año`}, ${interrupcion.diferencia.months > 1 ? `${interrupcion.diferencia.months} meses` : `${interrupcion.diferencia.months} mes`} y ${Math.round(interrupcion.diferencia.days) > 1 ? `${Math.round(interrupcion.diferencia.days)} días` : `${Math.round(interrupcion.diferencia.days)} día`}` }}</p>
+                <p v-if="interrupcion.diferencia"><strong>En días</strong>: {{ `${interrupcion.diferencia.years > 1 ? `${interrupcion.diferencia.years} años` : `${interrupcion.diferencia.years} año`}, ${interrupcion.diferencia.months > 1 ? `${interrupcion.diferencia.months} meses` : `${interrupcion.diferencia.months} mes`} y ${interrupcion.diferencia.days.toFixed(1) > 1 ? `${interrupcion.diferencia.days.toFixed(1)} días` : `${interrupcion.diferencia.days.toFixed(1)} día`}` }}</p>
                 <p v-if="interrupcion.devolucion"><strong>Periodo devolución afectado</strong>: #{{interrupcion.devolucion.uuid.substring(0, 5)}}</p>
                 <p v-if="interrupcion.causal"><strong>Causal de interrupción</strong>: {{interrupcion.causal.nombre}}</p>
             </div>

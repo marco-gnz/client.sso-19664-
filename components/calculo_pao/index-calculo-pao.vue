@@ -289,6 +289,7 @@ export default {
         let object  = this.Duration.fromObject({days:this.daysTotalDevolucion, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
         return object;
       },
+      //probar con el profesional rut 16047482
       daysTotalDevolver(){
         let total_dias = 0;
         if(this.paos.length){
@@ -299,7 +300,6 @@ export default {
               total_dias          += diferencia_days.values.days+1;
           });
         }
-
         return total_dias;
       },
       calculateTotalDevolver(){
@@ -309,7 +309,6 @@ export default {
       calculateTotalPorDevolver(){
         let total = this.daysTotalDevolver - this.daysTotalDevolucion;
         let object = this.Duration.fromObject({days:total, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
-
         return object;
       }
     },

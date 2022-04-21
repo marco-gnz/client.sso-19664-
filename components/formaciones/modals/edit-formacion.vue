@@ -110,6 +110,11 @@
                 </div>
               </template>
             </div>
+            <div class="row pt-4 d-flex justify-content-center">
+              <div class="col-md-12">
+                <el-checkbox v-model="contabilizar_periodo">Contabilizar periodo en formación</el-checkbox>
+              </div>
+            </div>
         </section>
         <section v-if="especialidad_pasos === 3">
           <div class="row pt-4 d-flex justify-content-center">
@@ -218,6 +223,14 @@ export default {
         this.$store.commit('edf/FORMACION_PERIODO', newValue);
       }
     },
+    contabilizar_periodo:{
+      get(){
+        return this.$store.state.edf.formacionEdit.contabilizar_periodo;
+      },
+      set (newValue){
+        this.$store.commit('edf/FORMACION_CONTABILIZAR_PERIODO', newValue);
+      }
+    },
     observacion:{
       get(){
         return this.$store.state.edf.formacionEdit.observacion;
@@ -250,6 +263,7 @@ export default {
         situacion_profesional_id:this.situacion_profesional,
         inicio_formacion:  this.periodo[0],
         termino_formacion: this.periodo[1],
+        contabilizar_periodo:this.contabilizar_periodo,
         campo_clinico_id:this.campo_clinico,
         observacion:this.observacion
       };

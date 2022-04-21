@@ -99,6 +99,11 @@
                 <span class="text-danger" v-if="errors.inicio_formacion || errors.termino_formacion">{{errors.inicio_formacion[0]}}</span>
               </div>
             </div>
+            <div class="row pt-4 d-flex justify-content-center">
+              <div class="col-md-12">
+                <el-checkbox v-model="especialidad.contabilizar_periodo">Contabilizar periodo en formación</el-checkbox>
+              </div>
+            </div>
         </section>
         <section v-if="especialidad_pasos === 3">
           <div class="row pt-4 d-flex justify-content-center">
@@ -136,6 +141,7 @@ export default {
           origen:'',
           campo_clinico:'',
           periodo:[],
+          contabilizar_periodo:true,
           observacion:''
       },
       perfeccionamientos:[],
@@ -185,6 +191,7 @@ export default {
         situacion_profesional_id:this.especialidad.situacion_profesional,
         inicio_formacion: this.especialidad.periodo[0],
         termino_formacion: this.especialidad.periodo[1],
+        contabilizar_periodo:this.especialidad.contabilizar_periodo,
         observacion: this.especialidad.observacion,
         centro_formador_id: this.especialidad.centro_formador,
         perfeccionamiento_id: this.especialidad.perfeccionamiento,

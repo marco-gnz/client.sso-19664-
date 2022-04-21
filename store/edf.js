@@ -23,6 +23,7 @@ export const state = () => ({
     origen:'',
     campo_clinico:'',
     periodo:[],
+    contabilizar_periodo:'',
     situacion_profesional:'',
     observacion:'',
     count_paos:0,
@@ -110,6 +111,7 @@ export const mutations = {
     state.formacionEdit.origen                  = formacion.origen;
     state.formacionEdit.periodo[0]              = (formacion.inicio_formacion != null) ? formacion.inicio_formacion : state.formacionEdit.periodo = [];
     state.formacionEdit.periodo[1]              = (formacion.termino_formacion != null) ? formacion.termino_formacion : state.formacionEdit.periodo = [];
+    state.formacionEdit.contabilizar_periodo    = formacion.contabilizar_periodo != 1 ? false : true;
     state.formacionEdit.campo_clinico           = formacion.campo_clinico != null ? formacion.campo_clinico.id : '';
     state.formacionEdit.situacion_profesional   = formacion.situacion_profesional_id != null ? formacion.situacion_profesional_id : '';
     state.formacionEdit.observacion             = formacion.observacion;
@@ -144,6 +146,9 @@ export const mutations = {
       state.formacionEdit.periodo.push('');
       state.formacionEdit.periodo.push('');
     }
+  },
+  FORMACION_CONTABILIZAR_PERIODO(state, newValue){
+    state.formacionEdit.contabilizar_periodo = newValue;
   },
   FORMACION_OBSERVACION(state, newValue){
     state.formacionEdit.observacion  = newValue;

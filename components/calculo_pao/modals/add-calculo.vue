@@ -15,7 +15,7 @@
               <div class="col-md-6">
                   <select class="form-control" v-model="pao.especialidad" @change="calculoPao(pao.especialidad)">
                       <option value="">-- Seleccione formación --</option>
-                      <option :class="(idEspecialidades.includes(especialidad.id)) ? 'text-tachado': ''" v-for="(especialidad, index) in formacionesProfesional" :key="index" :value="especialidad" :disabled="idEspecialidades.includes(especialidad.id)">{{especialidad.perfeccionamiento.tipo.nombre}} ({{especialidad.perfeccionamiento.nombre}})</option>
+                      <option :class="(idEspecialidades.includes(especialidad.id)) ? 'text-tachado': ''" v-for="(especialidad, index) in formacionesProfesional" :key="index" :value="especialidad" :disabled="idEspecialidades.includes(especialidad.id)">{{especialidad.perfeccionamiento.tipo.nombre}} ({{especialidad.perfeccionamiento.nombre}}) - {{especialidad.contabilizar_periodo != false ? 'CONTABLE' : 'NO CONTABLE'}}</option>
                   </select>
                   <span class="text-danger" v-if="errors.especialidad_id">{{errors.especialidad_id[0]}}</span>
                   <el-alert

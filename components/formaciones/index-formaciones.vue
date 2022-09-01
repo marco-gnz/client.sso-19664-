@@ -102,10 +102,12 @@ export default {
         let total_dias = 0;
         if(this.formaciones.length){
           this.formaciones.forEach(formacion => {
+            if(formacion.inicio_formacion && formacion.termino_formacion){
               let fecha_inicio    = this.DateTime.fromISO(formacion.inicio_formacion);
               let fecha_termino   = this.DateTime.fromISO(formacion.termino_formacion);
               let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
               total_dias          += diferencia_days.values.days+1;
+            }
           });
         }
         return total_dias;
@@ -120,10 +122,12 @@ export default {
           let formaciones_filter_contabilizable = this.formaciones.filter(f => f.contabilizar_periodo != false);
           if(formaciones_filter_contabilizable.length){
             formaciones_filter_contabilizable.forEach(formacion => {
-              let fecha_inicio    = this.DateTime.fromISO(formacion.inicio_formacion);
-              let fecha_termino   = this.DateTime.fromISO(formacion.termino_formacion);
-              let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
-              total_dias          += diferencia_days.values.days+1;
+              if(formacion.inicio_formacion && formacion.termino_formacion){
+                let fecha_inicio    = this.DateTime.fromISO(formacion.inicio_formacion);
+                let fecha_termino   = this.DateTime.fromISO(formacion.termino_formacion);
+                let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
+                total_dias          += diferencia_days.values.days+1;
+              }
             });
           }
         }
@@ -139,10 +143,12 @@ export default {
           let formaciones_filter_no_contabilizable = this.formaciones.filter(f => f.contabilizar_periodo != true);
           if(formaciones_filter_no_contabilizable){
               formaciones_filter_no_contabilizable.forEach(formacion => {
-                let fecha_inicio    = this.DateTime.fromISO(formacion.inicio_formacion);
-                let fecha_termino   = this.DateTime.fromISO(formacion.termino_formacion);
-                let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
-                total_dias          += diferencia_days.values.days+1;
+                if(formacion.inicio_formacion && formacion.termino_formacion){
+                  let fecha_inicio    = this.DateTime.fromISO(formacion.inicio_formacion);
+                  let fecha_termino   = this.DateTime.fromISO(formacion.termino_formacion);
+                  let diferencia_days = fecha_termino.diff(fecha_inicio, 'days');
+                  total_dias          += diferencia_days.values.days+1;
+                }
               });
           }
         }

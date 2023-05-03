@@ -104,6 +104,7 @@
                         style="width: 380px;"
                         v-model="establecimiento"
                           multiple
+                          collapse-tags
                           filterable
                           size="mini"
                           placeholder="Seleccione establecimiento">
@@ -114,6 +115,25 @@
                               :value="establecimiento.id">
                               <span style="float: left">{{ establecimiento.nombre.length > 30 ? establecimiento.nombre.substring(0, 30)+'...' : establecimiento.nombre}}</span>
                               <span style="float: right; color: #8492a6; font-size: 13px">{{ establecimiento.red_hospitalaria != null ? establecimiento.red_hospitalaria.sigla : '--' }}</span>
+                        </el-option>
+                      </el-select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="font-weight-bold">Comunas profesional</label><br>
+                    <el-select
+                        style="width: 380px;"
+                        v-model="comuna"
+                          multiple
+                          collapse-tags
+                          filterable
+                          size="mini"
+                          placeholder="Seleccione comuna">
+                          <el-option
+                              v-for="(comuna, index) in comunas"
+                              :key="index"
+                              :label="comuna.nombre"
+                              :value="comuna.id">
+                              <span style="float: left">{{ comuna.nombre }}</span>
                         </el-option>
                       </el-select>
                   </div>
@@ -152,7 +172,8 @@ export default {
         generos: 'mantenedores/generos',
         etapas: 'mantenedores/etapas',
         situacionesActual:'mantenedores/situacionesActual',
-        establecimientos:'mantenedores/allEstablecimientos'
+        establecimientos:'mantenedores/allEstablecimientos',
+        comunas:'mantenedores/comunas'
       }),
       datosPersonalesEdit(){
         return {...this.$store.state.profesionales.datosPersonalesEdit}
@@ -172,6 +193,14 @@ export default {
         set(newValue) {
           this.$store.commit('profesionales/PROFESIONAL_SET_ESTABLECIMIENTOS', newValue);
         }
+      },
+      comuna:{
+        get() {
+          return this.$store.state.profesionales.datosPersonalesEdit.comunas;
+        },
+        set(newValue) {
+          this.$store.commit('profesionales/PROFESIONAL_SET_COMUNAS', newValue);
+        }
       }
     },
     mounted(){
@@ -180,8 +209,9 @@ export default {
       this.getGeneros();
       this.getEtapas();
       this.getSituacionesActual();
-      this.getProfesional(this.$route.params.id);
+      this.getComunas();
       this.getAllEstablecimientos();
+      this.getProfesional(this.$route.params.id);
     },
   methods:{
     ...mapActions({
@@ -193,6 +223,7 @@ export default {
       getProfesional: 'profesionales/getProfesional',
       errorStatus401:'errors/redirectSessionExpired',
       getAllEstablecimientos:'mantenedores/getAllEstablecimientos',
+      getComunas:'mantenedores/getComunas'
     }),
     ...mapMutations({
       updateProfesionalAction: 'profesionales/UPDATE_PROFESIONAL'
@@ -217,7 +248,8 @@ export default {
               planta_id: this.datosPersonalesEdit.planta,
               genero_id:this.datosPersonalesEdit.genero,
               situacion_actual_id:this.datosPersonalesEdit.situacion_actual,
-              establecimientos:this.establecimiento
+              establecimientos:this.establecimiento,
+              comunas:this.comuna
             };
 
       await this.$axios.$put(url, data).then(response => {

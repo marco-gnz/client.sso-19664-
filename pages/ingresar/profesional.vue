@@ -32,9 +32,8 @@
                       </div>
                       <template v-if="exist_rut != null">
                         <div class="row d-flex justify-content-center pt-lg-3">
-                            <p v-if="exist_rut != true">El profesional ya existe en los registros.
-                            </p>
-                        <p v-else>El profesional no existe en los registros</p>
+                            <p v-if="exist_rut != true">El profesional ya existe en los registros. <i class="el-icon-error text-danger"></i></p>
+                        <p v-else>El profesional no existe en los registros <i class="el-icon-success text-success"></i></p>
                         </div>
                       </template>
                      </b-tab>
@@ -156,6 +155,24 @@
                                           </el-option>
                                       </el-select>
                                   </div>
+                                  <div class="col-md-6">
+                                    <label class="font-weight-bold">Comuna profesional</label><br>
+                                    <el-select
+                                        style="width: 380px;"
+                                        v-model="profesional.comunas"
+                                          multiple
+                                          filterable
+                                          size="mini"
+                                          placeholder="Seleccione comuna">
+                                          <el-option
+                                                v-for="(comuna, index) in comunas"
+                                                :key="index"
+                                                :label="comuna.nombre"
+                                                :value="comuna.id">
+                                                <span style="float: left">{{ comuna.nombre }}</span>
+                                          </el-option>
+                                      </el-select>
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -201,7 +218,8 @@ export default {
             situacion_actual:'',
             etapa_actual:'',
             calidad_juridica:'',
-            establecimientos:[]
+            establecimientos:[],
+            comunas:[]
           },
           getProfesional:{},
           errors:{}
@@ -214,7 +232,8 @@ export default {
         generos: 'mantenedores/generos',
         etapas: 'mantenedores/etapas',
         situacionesActual:'mantenedores/situacionesActual',
-        establecimientos:'mantenedores/allEstablecimientos'
+        establecimientos:'mantenedores/allEstablecimientos',
+        comunas:'mantenedores/comunas'
       })
     },
     mounted(){
@@ -224,6 +243,7 @@ export default {
       this.getEtapas();
       this.getSituacionesActual();
       this.getAllEstablecimientos();
+      this.getComunas();
     },
     methods:{
           ...mapActions({
@@ -233,6 +253,7 @@ export default {
             getEtapas: 'mantenedores/getEtapas',
             getSituacionesActual:'mantenedores/getSituacionesActual',
             getAllEstablecimientos:'mantenedores/getAllEstablecimientos',
+            getComunas:'mantenedores/getComunas',
           }),
          async existProfesional(){
            this.fullscreenLoading = true;
@@ -284,7 +305,8 @@ export default {
               planta_id: this.profesional.planta,
               genero_id:this.profesional.genero,
               situacion_actual_id:this.profesional.situacion_actual,
-              establecimientos:this.profesional.establecimientos
+              establecimientos:this.profesional.establecimientos,
+              comunas:this.profesional.comunas
             };
 
             await this.$axios.$post(url, data).then(response => {

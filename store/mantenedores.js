@@ -22,6 +22,7 @@ export const state = () => ({
   anios:[],
   allEstablecimientos:[],
   campos_clinicos:[],
+  comunas:[],
 
   pagination:{
     total:0,
@@ -314,6 +315,9 @@ export const mutations = {
   CAMPO_CLINICO_NOMBRE(state, nombre){
     state.campo_clinico.nombre = nombre;
   },
+  SET_COMUNAS(state, value){
+    state.comunas = value;
+  }
 };
 
 export const getters = {
@@ -385,6 +389,9 @@ export const getters = {
   },
   camposClinicos(state){
     return state.campos_clinicos;
+  },
+  comunas(state){
+    return state.comunas;
   }
 };
 
@@ -393,6 +400,11 @@ export const actions = {
       const response = await this.$axios.$get('/api/mantenedores/plantas');
 
       commit('SET_PLANTAS', response);
+    },
+    async getComunas({ commit }){
+      const response = await this.$axios.$get('/api/mantenedores/comunas');
+
+      commit('SET_COMUNAS', response);
     },
     async getCalidades({ commit }){
       const response = await this.$axios.$get('/api/mantenedores/calidades');

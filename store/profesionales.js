@@ -18,7 +18,8 @@ export const state = () => ({
     calidad:'',
     situacion_actual:'',
     red:'',
-    establecimientos:[]
+    establecimientos:[],
+    comunas:[]
   },
   pagination:{
     total:0,
@@ -40,7 +41,9 @@ export const state = () => ({
     red:'',
     establecimiento:[],
     active_filtro_avanzado:false,
-    all_perfeccionamiento:false
+    all_perfeccionamiento:false,
+    establecimientos:[],
+    comunas:[]
   },
   offset: 3,
   openModal:false,
@@ -92,13 +95,17 @@ export const mutations = {
     state.datosPersonalesEdit.etapa                     = (profesional.etapas_id != null) ? profesional.etapas_id : '';
     state.datosPersonalesEdit.calidad                   = (profesional.calidad_juridica_id != null) ? profesional.calidad_juridica_id : '';
     state.datosPersonalesEdit.situacion_actual          = (profesional.situacion_actual_id != null) ? profesional.situacion_actual_id : '';
-    state.datosPersonalesEdit.establecimientos          = profesional.establecimientos.length ? profesional.establecimientos.map(e => e.id) : [];
+    state.datosPersonalesEdit.establecimientos          = profesional.establecimientos && profesional.establecimientos.length ? profesional.establecimientos.map(e => e.id) : [];
+    state.datosPersonalesEdit.comunas                   = profesional.comunas && profesional.comunas.length ? profesional.comunas.map(c => c.id) : [];
   },
   PROFESIONAL_SET_RED(state, newValue){
     state.datosPersonalesEdit.red = newValue;
   },
   PROFESIONAL_SET_ESTABLECIMIENTOS(state, newValue){
     state.datosPersonalesEdit.establecimientos = newValue;
+  },
+  PROFESIONAL_SET_COMUNAS(state, newValue){
+    state.datosPersonalesEdit.comunas = newValue;
   },
   UPDATE_STATUS_PROFESIONAL(state, object){
     const indice = state.profesionales.findIndex(p => p.id === object.response.id);
@@ -159,20 +166,23 @@ export const mutations = {
     state.search.active_filtro_avanzado   = filtroLocalStorage.active_filtro_avanzado;
     state.search.situacion                = filtroLocalStorage.situacion;
     state.search.all_perfeccionamiento    = filtroLocalStorage.all_perfeccionamiento;
+    state.search.establecimientos         = filtroLocalStorage.establecimientos;
+    state.search.comunas                  = filtroLocalStorage.comunas;
   },
   REFRESH_FILTRO(state){
+    for(let key in state.search){
+      state.search[key] = [];
+    }
     state.search.input                    = '';
-    state.search.estados                  = [];
-    state.search.perfeccion               = [];
-    state.search.f_ed                     = [];
-    state.search.f_ef                     = [];
-    state.search.f_pao                    = [];
-    state.search.checkedEtapas            = [];
     state.search.red                      = '';
-    state.search.establecimiento          = [];
     state.search.active_filtro_avanzado   = false;
-    state.search.situacion                = [];
     state.search.all_perfeccionamiento    = false;
+  },
+  SET_ESTABLECIMIENTO_PROFESIONAL_FILTRO(state, value){
+    state.search.establecimientos = value;
+  },
+  SET_COMUNAS_PROFESIONAL_FILTRO(state, value){
+    state.search.comunas = value;
   }
 };
 
@@ -247,7 +257,9 @@ export const actions = {
         establecimiento:state.search.establecimiento,
         estados:state.search.estados,
         situaciones:state.search.situacion,
-        exist_perfeccionamiento:state.search.all_perfeccionamiento
+        exist_perfeccionamiento:state.search.all_perfeccionamiento,
+        establecimientos:state.search.establecimientos,
+        comunas:state.search.comunas,
       }
     }
      );

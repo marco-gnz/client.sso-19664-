@@ -8,7 +8,7 @@
               <label class="required">Etapa de profesional</label><br>
               <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"><strong>Marcar todas</strong></el-checkbox>
                 <el-checkbox-group v-model="checkedEtapas">
-                      <el-checkbox v-for="etapa in etapas" :label="etapa.id" :key="etapa.id" class="mb-3 mr-4" @change="handleCheckedCitiesChange">
+                      <el-checkbox v-for="etapa in etapas" :label="etapa.id" :key="etapa.id" class="mb-lg-3 mr-lg-4" @change="handleCheckedCitiesChange">
                         <el-popover transition="el-fade-in-linear" placement="top-start" width="300" trigger="hover" :close-delay="2" :content="etapa.nombre"><span slot="reference">{{etapa.sigla}}</span></el-popover>
                     </el-checkbox>
               </el-checkbox-group>
@@ -84,6 +84,55 @@
                     </el-tooltip>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Establecimiento profesional</label><br>
+                <el-select
+                  size="mini"
+                  style="width:300px;"
+                  v-model="establecimiento_profesional"
+                  multiple
+                  filterable
+                  collapse-tags
+                  placeholder="Seleccione">
+                   <el-option
+                    v-for="establecimiento in establecimientos"
+                    :key="establecimiento.id"
+                    :label="establecimiento.nombre"
+                    :value="establecimiento.id">
+                    <span style="float: left; font-size: 12px">{{ establecimiento.nombre.length > 30 ? establecimiento.nombre.substring(0, 30)+'...' : establecimiento.nombre}}</span>
+                    <span style="float: right; color: #8492a6; font-size: 12px">{{ establecimiento.red_hospitalaria != null ? establecimiento.red_hospitalaria.sigla : '--' }}</span>
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Comuna profesional</label><br>
+                <el-select
+                  size="mini"
+                  style="width:300px;"
+                  v-model="comuna_profesional"
+                  multiple
+                  filterable
+                  collapse-tags
+                  placeholder="Seleccione">
+                   <el-option
+                    v-for="comuna in comunas"
+                    :key="comuna.id"
+                    :label="comuna.nombre"
+                    :value="comuna.id">
+                    <span style="float: left; font-size: 12px">{{comuna.nombre}}</span>
+                  </el-option>
+                </el-select>
               </div>
             </div>
           </div>
@@ -208,6 +257,7 @@ export default {
     this.getRedesHospitalariasUserAuth();
     this.getSituacionesActual();
     this.getAllEstablecimientos();
+    this.getComunas();
   },
   computed:{
     searchAll(){
@@ -295,20 +345,36 @@ export default {
         this.$store.commit('profesionales/SET_RED', value);
       }
     },
-    establecimiento:{
-      get() {
-        return this.$store.getters['profesionales/establecimiento']
-      },
-      set(value) {
-        this.$store.commit('profesionales/SET_ESTABLECIMIENTO', value);
-      }
-    },
     situacion:{
       get() {
         return this.$store.getters['profesionales/situacion']
       },
       set(value) {
         this.$store.commit('profesionales/SET_SITUACION_ACTUAL', value);
+      }
+    },
+    establecimiento_profesional:{
+      get() {
+        return this.$store.state.profesionales.search.establecimientos;
+      },
+      set(value) {
+        this.$store.commit('profesionales/SET_ESTABLECIMIENTO_PROFESIONAL_FILTRO', value);
+      }
+    },
+    establecimiento:{
+      get() {
+        return this.$store.state.profesionales.search.establecimiento;
+      },
+      set(value) {
+        this.$store.commit('profesionales/SET_ESTABLECIMIENTO', value);
+      }
+    },
+    comuna_profesional:{
+      get() {
+        return this.$store.state.profesionales.search.comunas;
+      },
+      set(value) {
+        this.$store.commit('profesionales/SET_COMUNAS_PROFESIONAL_FILTRO', value);
       }
     },
     activeFiltroAvanzado:{
@@ -325,7 +391,8 @@ export default {
       redesHospitalariasUserAuth:'mantenedores/redesHospitalariasUserAuth',
       establecimientos:'mantenedores/allEstablecimientos',
       estados:'profesionales/estados',
-      situacionesActual:'mantenedores/situacionesActual'
+      situacionesActual:'mantenedores/situacionesActual',
+      comunas:'mantenedores/comunas'
     })
   },
   methods:{
@@ -338,7 +405,8 @@ export default {
       refresEstablecimientoAction:'profesionales/refreshEstablecimiento',
       cargando: 'profesionales/loadingApi',
       getSituacionesActual:'mantenedores/getSituacionesActual',
-      getAllEstablecimientos:'mantenedores/getAllEstablecimientos'
+      getAllEstablecimientos:'mantenedores/getAllEstablecimientos',
+      getComunas:'mantenedores/getComunas'
     }),
     ...mapMutations({
       currentPageAction: "profesionales/SET_CURRENT_PAGE",
@@ -383,7 +451,9 @@ export default {
         establecimiento:this.searchAll.establecimiento,
         estados:this.searchAll.estados,
         situaciones:this.searchAll.situacion,
-        exist_perfeccionamiento:this.searchAll.all_perfeccionamiento
+        exist_perfeccionamiento:this.searchAll.all_perfeccionamiento,
+        establecimientos:this.searchAll.establecimientos,
+        comunas:this.searchAll.comunas,
       }
 
       await this.$axios.$get(url, {params:data}).then(response => {

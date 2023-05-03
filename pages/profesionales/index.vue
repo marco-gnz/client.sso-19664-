@@ -45,6 +45,8 @@
                           <th scope="col">Etapa</th>
                           <th scope="col">Situación actual</th>
                           <th scope="col">Especialidad</th>
+                          <th scope="col">Establecimiento</th>
+                          <th scope="col">Comuna</th>
                           <th scope="col">Estado</th>
                           <th>&nbsp;</th>
                         </tr>
@@ -56,6 +58,8 @@
                             <td>{{profesional.etapa}}</td>
                             <td>{{ (profesional.situacion_actual != null) ? profesional.situacion_actual : '--'}}</td>
                             <td>{{ (profesional.especialidades.length) ? `${profesional.especialidades.map(e => e).join(' - ')} (${profesional.count_pao} PAO) (${profesional.count_ed} ED - ${profesional.count_ef} EF)` : '--' }}</td>
+                            <td>{{profesional.establecimientos ? profesional.establecimientos : '--'}}</td>
+                            <td>{{profesional.comunas ? profesional.comunas : '--'}}</td>
                             <td>
                               <template v-if="$auth.user.permissions_roles.includes('estado-profesional') || $auth.user.permissions.includes('estado-profesional')">
                                 <el-tooltip :content="`Estado: ${profesional.estado == 1 ? `Habilitado` : `Deshabilitado`}`" placement="top">

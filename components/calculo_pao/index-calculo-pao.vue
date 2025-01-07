@@ -1,120 +1,157 @@
 <template>
-    <div>
-      <div class="row">
-        <div class="col-md-6">
-          <h6>Registro y cálculo de Periodo Asistencial Obligatorio (PAO)</h6>
-        </div>
-        <div class="col-md-6">
-          <button v-if="$auth.user.permissions_roles.includes('ingresar-calculo-pao') || $auth.user.permissions.includes('ingresar-calculo-pao')" v-b-modal.modal-add-calculo class="btn btn-success float-right">Ingresar cálculo PAO</button>
-          <AddCalculo />
-          <ModalEditDevolucion :totalDiasDevolver="daysTotalDevolver" :daysTotalDevolucion="daysTotalDevolucion" :devolucionesGeneral="pushDevoluciones" />
-          <ModalViewDevolucion />
-          <ModalShowInterrupcion />
-        </div>
+  <div>
+    <div class="row">
+      <div class="col-md-6">
+        <h6>Registro y cálculo de Periodo Asistencial Obligatorio (PAO)</h6>
       </div>
-      <div class="row pt-lg-3">
-        <div class="col-md-12">
-            <div class="row pt-4">
-              <div class="col-md-12">
-                <div v-for="(pao, index) in paos" :key="index" class="row pt-lg-4">
-                  <div class="col-md-4">
-                    <div class="card">
-                      <div class="row pt-1 pl-1 pr-1">
-                        <div class="col-md-6">
-                            <i class="fas fa-user-md float-left"></i>
-                        </div>
-                        <div class="col-md-6">
-                          <el-dropdown class="float-right" v-show="nonePermisos">
-                              <span class="el-dropdown-link">
-                                  Opciones<i class="el-icon-arrow-down el-icon--right"></i>
-                              </span>
-                              <el-dropdown-menu slot="dropdown">
-                                <template v-if="pao.estado === 1 && $auth.user.permissions_roles.includes('ingresar-devolucion-pao') || $auth.user.permissions.includes('ingresar-devolucion-pao')">
-                                  <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus" v-b-modal.modal-add-devolucion>Devolución</el-dropdown-item>
-                                </template>
-                                <template v-if="pao.estado === 1 && $auth.user.permissions_roles.includes('ingresar-interrupcion-pao') || $auth.user.permissions.includes('ingresar-interrupcion-pao')">
-                                  <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus" v-b-modal.modal-add-interrupcion>Interrupción</el-dropdown-item>
-                                </template>
-                                <template v-if="$auth.user.permissions_roles.includes('eliminar-calculo-pao') || $auth.user.permissions.includes('eliminar-calculo-pao')">
-                                  <el-dropdown-item :disabled="pao.devoluciones.length > 0  || pao.interrupciones.length > 0" @click.native="clickDeleteDevolucion(pao, index)" icon="el-icon-delete-solid">Eliminar PAO</el-dropdown-item>
-                                </template>
-                              </el-dropdown-menu>
-                          </el-dropdown>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                          <h5 class="card-title">{{pao.especialidad.perfeccionamiento.nombre}}</h5>
-                          <p class="card-text">{{pao.especialidad.perfeccionamiento.tipo.nombre}}</p>
-                          <p><a href="#" @click.prevent="showHistorial(pao)" v-loading.fullscreen.lock="fullscreenLoading">Historial de fechas</a></p>
-                          <template v-if="$auth.user.permissions_roles.includes('estado-calculo-pao') || $auth.user.permissions.includes('estado-calculo-pao')">
-                            <p><el-switch class="pb-1" active-color="#13ce66" active-text="Pao activado" :active-value="pao.estado === 0" :inactive-value="pao.estado === 1" inactive-color="#f46f6f" inactive-text="Pao suspendido" @change="editStatus(pao.uuid, index)" v-loading.fullscreen.lock="fullscreenLoading"></el-switch></p>
+      <div class="col-md-6">
+        <div class="buttons">
+          <button class="btn btn-info is-outlined" @click.prevent="openCartola">Cartola PDF</button>
+          <button
+            v-if="$auth.user.permissions_roles.includes('ingresar-calculo-pao') || $auth.user.permissions.includes('ingresar-calculo-pao')"
+            v-b-modal.modal-add-calculo class="btn btn-success float-right">Ingresar cálculo PAO</button>
+        </div>
+        <AddCalculo />
+        <ModalEditDevolucion :totalDiasDevolver="daysTotalDevolver" :daysTotalDevolucion="daysTotalDevolucion"
+          :devolucionesGeneral="pushDevoluciones" />
+        <ModalViewDevolucion />
+        <ModalShowInterrupcion />
+      </div>
+    </div>
+    <div class="row pt-lg-3">
+      <div class="col-md-12">
+        <div class="row pt-4">
+          <div class="col-md-12">
+            <div v-for="(pao, index) in paos" :key="index" class="row pt-lg-4">
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="row pt-1 pl-1 pr-1">
+                    <div class="col-md-6">
+                      <i class="fas fa-user-md float-left"></i>
+                    </div>
+                    <div class="col-md-6">
+                      <el-dropdown class="float-right" v-show="nonePermisos">
+                        <span class="el-dropdown-link">
+                          Opciones<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <template
+                            v-if="pao.estado === 1 && $auth.user.permissions_roles.includes('ingresar-devolucion-pao') || $auth.user.permissions.includes('ingresar-devolucion-pao')">
+                            <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus"
+                              v-b-modal.modal-add-devolucion>Devolución</el-dropdown-item>
                           </template>
-                          <template v-else>
-                            <p><strong>Estado PAO</strong>: <el-tag size="mini" :type="`${pao.estado != 1 ? `danger` : `success`}`">{{ (pao.estado != 1) ? 'suspendido' : 'activo' }}</el-tag></p>
+                          <template
+                            v-if="pao.estado === 1 && $auth.user.permissions_roles.includes('ingresar-interrupcion-pao') || $auth.user.permissions.includes('ingresar-interrupcion-pao')">
+                            <el-dropdown-item @click.native="passingPao(pao, index)" icon="el-icon-plus"
+                              v-b-modal.modal-add-interrupcion>Interrupción</el-dropdown-item>
                           </template>
-                      </div>
-                      <ul class="list-group list-group-flush">
-                        <!-- cálculo de fechas estimadas -->
-                        <CalculoFechas :pao="pao" />
-                      </ul>
-                      <div class="card-body" v-if="pao.observacion">
-                          <p class="card-text" ><small class="text-muted">{{pao.observacion}}</small></p>
-                      </div>
-                      <div class="card-footer">
-                          <p class="card-text"><small class="text-muted">Ingresada el {{DateTime.fromISO(pao.created_at).toFormat('ff')}} - {{pao.user_add.sigla}}</small></p>
-                      </div>
+                          <template
+                            v-if="$auth.user.permissions_roles.includes('eliminar-calculo-pao') || $auth.user.permissions.includes('eliminar-calculo-pao')">
+                            <el-dropdown-item :disabled="pao.devoluciones.length > 0  || pao.interrupciones.length > 0"
+                              @click.native="clickDeleteDevolucion(pao, index)" icon="el-icon-delete-solid">Eliminar
+                              PAO</el-dropdown-item>
+                          </template>
+                        </el-dropdown-menu>
+                      </el-dropdown>
                     </div>
                   </div>
-                  <div class="col-xs-1 pt-lg-5">
-                    <i class="el-icon-right"></i>
+                  <div class="card-body">
+                    <h5 class="card-title">{{pao.especialidad.perfeccionamiento.nombre}}</h5>
+                    <p class="card-text">{{pao.especialidad.perfeccionamiento.tipo.nombre}}</p>
+                    <p><a href="#" @click.prevent="showHistorial(pao)"
+                        v-loading.fullscreen.lock="fullscreenLoading">Historial de fechas</a></p>
+                    <template
+                      v-if="$auth.user.permissions_roles.includes('estado-calculo-pao') || $auth.user.permissions.includes('estado-calculo-pao')">
+                      <p><el-switch class="pb-1" active-color="#13ce66" active-text="Pao activado"
+                          :active-value="pao.estado === 0" :inactive-value="pao.estado === 1" inactive-color="#f46f6f"
+                          inactive-text="Pao suspendido" @change="editStatus(pao.uuid, index)"
+                          v-loading.fullscreen.lock="fullscreenLoading"></el-switch></p>
+                    </template>
+                    <template v-else>
+                      <p><strong>Estado PAO</strong>: <el-tag size="mini"
+                          :type="`${pao.estado != 1 ? `danger` : `success`}`">{{ (pao.estado != 1) ? 'suspendido' :
+                          'activo' }}</el-tag></p>
+                    </template>
                   </div>
-                  <div class="col-md-7 border-bottom-light border-left-light">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <!-- devoluciones -->
-                        <IndexDevoluciones :devoluciones="pao.devoluciones"/>
-                      </div>
-                    </div>
-                    <div class="row pt-lg-4">
-                      <div class="col-md-12">
-                        <IndexInterrupciones :interrupciones="pao.interrupciones" />
-                      </div>
-                    </div>
+                  <ul class="list-group list-group-flush">
+                    <!-- cálculo de fechas estimadas -->
+                    <CalculoFechas :pao="pao" />
+                  </ul>
+                  <div class="card-body" v-if="pao.observacion">
+                    <p class="card-text"><small class="text-muted">{{pao.observacion}}</small></p>
                   </div>
-                </div>
-                <!-- modals devoluciones - interrupciones-->
-                <ModalAddDevolucion :pao="paoSelect" :totalDiasDevolver="daysTotalDevolver" :daysTotalDevolucion="daysTotalDevolucion" :devolucionesGeneral="pushDevoluciones"/>
-                <ModalAddInterrupcion :pao="paoSelect"/>
-
-                <!-- modals edits -->
-                <ModalEditInterrupcion />
-
-                <ShowHistorial />
-              </div>
-            </div>
-
-            <!-- TOTAL -->
-            <div class="row pt-4">
-              <div class="col-md-12 border-bottom border-left border-right">
-                <div class="row pt-lg-4 text-center">
-                  <div class="col-md-3">
-                    <span><strong class="text-success">A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ? `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`}, ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` : `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ? `${calculateTotalDevolver.days.toFixed(1)} días` : `${calculateTotalDevolver.days.toFixed(1)} día`}` }}</span>
-                  </div>
-                  <div class="col-md-3">
-                    <span><strong class="text-primary">LLEVA</strong>: {{ `${calculateTotalDevolucion.years > 1 ? `${calculateTotalDevolucion.years} años` : `${calculateTotalDevolucion.years} año`}, ${calculateTotalDevolucion.months > 1 ? `${calculateTotalDevolucion.months} meses` : `${calculateTotalDevolucion.months} mes`} y ${Math.round(calculateTotalDevolucion.days) > 1 ? `${calculateTotalDevolucion.days.toFixed(1)} días` : `${calculateTotalDevolucion.days.toFixed(1)} día`}` }}</span>
-                  </div>
-                  <div class="col-md-3">
-                    <span><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ? `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`}, ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` : `${calculateTotalPorDevolver.months} mes`} y ${Math.round(calculateTotalPorDevolver.days) > 1 ? `${calculateTotalPorDevolver.days.toFixed(1)} días` : `${calculateTotalPorDevolver.days.toFixed(1)} día`}` }}</span>
-                  </div>
-                  <div class="col-md-3">
-                    <span><strong class="text-info">FINALIZA EL</strong>: {{fechaTerminarPao}}</span>
+                  <div class="card-footer">
+                    <p class="card-text"><small class="text-muted">Ingresada el
+                        {{DateTime.fromISO(pao.created_at).toFormat('ff')}} - {{pao.user_add.sigla}}</small></p>
                   </div>
                 </div>
               </div>
+              <div class="col-xs-1 pt-lg-5">
+                <i class="el-icon-right"></i>
+              </div>
+              <div class="col-md-7 border-bottom-light border-left-light">
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- devoluciones -->
+                    <IndexDevoluciones :devoluciones="pao.devoluciones" />
+                  </div>
+                </div>
+                <div class="row pt-lg-4">
+                  <div class="col-md-12">
+                    <IndexInterrupciones :interrupciones="pao.interrupciones" />
+                  </div>
+                </div>
+              </div>
             </div>
+            <!-- modals devoluciones - interrupciones-->
+            <ModalAddDevolucion :pao="paoSelect" :totalDiasDevolver="daysTotalDevolver"
+              :daysTotalDevolucion="daysTotalDevolucion" :devolucionesGeneral="pushDevoluciones" />
+            <ModalAddInterrupcion :pao="paoSelect" />
+
+            <!-- modals edits -->
+            <ModalEditInterrupcion />
+
+            <ShowHistorial />
+          </div>
+        </div>
+
+        <!-- TOTAL -->
+        <div class="row pt-4">
+          <div class="col-md-12 border-bottom border-left border-right">
+            <div class="row pt-lg-4 text-center">
+              <div class="col-md-3">
+                <span><strong class="text-success">A DEVOLVER</strong>: {{ `${calculateTotalDevolver.years > 1 ?
+                  `${calculateTotalDevolver.years} años` : `${calculateTotalDevolver.years} año`},
+                  ${calculateTotalDevolver.months > 1 ? `${calculateTotalDevolver.months} meses` :
+                  `${calculateTotalDevolver.months} mes`} y ${Math.round(calculateTotalDevolver.days) > 1 ?
+                  `${calculateTotalDevolver.days.toFixed(1)} días` : `${calculateTotalDevolver.days.toFixed(1)} día`}`
+                  }}</span>
+              </div>
+              <div class="col-md-3">
+                <span><strong class="text-primary">LLEVA</strong>: {{ `${calculateTotalDevolucion.years > 1 ?
+                  `${calculateTotalDevolucion.years} años` : `${calculateTotalDevolucion.years} año`},
+                  ${calculateTotalDevolucion.months > 1 ? `${calculateTotalDevolucion.months} meses` :
+                  `${calculateTotalDevolucion.months} mes`} y ${Math.round(calculateTotalDevolucion.days) > 1 ?
+                  `${calculateTotalDevolucion.days.toFixed(1)} días` : `${calculateTotalDevolucion.days.toFixed(1)}
+                  día`}` }}</span>
+              </div>
+              <div class="col-md-3">
+                <span><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ?
+                  `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`},
+                  ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` :
+                  `${calculateTotalPorDevolver.months} mes`} y ${Math.round(calculateTotalPorDevolver.days) > 1 ?
+                  `${calculateTotalPorDevolver.days.toFixed(1)} días` : `${calculateTotalPorDevolver.days.toFixed(1)}
+                  día`}` }}</span>
+              </div>
+              <div class="col-md-3">
+                <span><strong class="text-info">FINALIZA EL</strong>: {{fechaTerminarPao}}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -385,6 +422,10 @@ export default {
           this.fullscreenLoading = !this.fullscreenLoading;
         });
 
+      },
+      openCartola() {
+        const url = `${process.env.BASE_URL}/profesionales/profesional/${this.$route.params.id}/cartola`;
+        window.open(url, '_blank');
       }
     }
 }

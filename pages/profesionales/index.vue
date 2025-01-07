@@ -71,14 +71,9 @@
                               </template>
                             </td>
                             <td @click.stop="" class="no">
-                                <el-dropdown>
-                                  <span class="el-dropdown-link">Acción<i class="el-icon-arrow-down el-icon--right"></i></span>
-                                  <el-dropdown-menu slot="dropdown">
-                                    <template v-if="$auth.user.permissions_roles.includes('ver-profesional') || $auth.user.permissions.includes('ver-profesional')">
-                                      <el-dropdown-item icon="el-icon-edit"><nuxt-link  :to="'/profesionales/'+profesional.uuid">Ver mas</nuxt-link></el-dropdown-item>
-                                    </template>
-                                  </el-dropdown-menu>
-                                </el-dropdown>
+                              <template v-if="$auth.user.permissions_roles.includes('ver-profesional') || $auth.user.permissions.includes('ver-profesional')">
+                              <el-link :underline="false" type="primary" :href="`/profesionales/${profesional.uuid}`">Ver</el-link>
+                              </template>
                             </td>
                           </tr>
                         </tbody>

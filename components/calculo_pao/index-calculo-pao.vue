@@ -135,7 +135,7 @@
                   `${calculateTotalDevolucion.days.toFixed(1)} días` : `${calculateTotalDevolucion.days.toFixed(1)}
                   día`}` }}</span>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-2 border">
                 <span><strong class="text-danger">LE FALTAN</strong>: {{ `${calculateTotalPorDevolver.years > 1 ?
                   `${calculateTotalPorDevolver.years} años` : `${calculateTotalPorDevolver.years} año`},
                   ${calculateTotalPorDevolver.months > 1 ? `${calculateTotalPorDevolver.months} meses` :
@@ -143,8 +143,15 @@
                   `${calculateTotalPorDevolver.days.toFixed(1)} días` : `${calculateTotalPorDevolver.days.toFixed(1)}
                   día`}` }}</span>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3 border">
                 <span><strong class="text-info">FINALIZA EL</strong>: {{fechaTerminarPao}}</span>
+              </div>
+              <div class="col-md-1 border">
+                <select class="form-control" v-model="hora">
+                  <option value="" selected disabled>--Seleccione-</option>
+                  <option v-for="(hora, index) in tipoContratos" :key="index" :value="hora.horas">{{ hora.nombre }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>
@@ -172,7 +179,8 @@ export default {
     data(){
       return{
         fullscreenLoading:false,
-        paoSelect:''
+        paoSelect: '',
+        hora:44
       };
     },
     mounted(){
@@ -180,7 +188,8 @@ export default {
     },
     computed:{
       ...mapGetters({
-        paos:'calculoPao/paos'
+        paos: 'calculoPao/paos',
+        tipoContratos: "mantenedores/tipoContratos",
       }),
       pushDevoluciones(){
         let devolucionesGeneralArray = [];
@@ -229,11 +238,14 @@ export default {
             }
           });
 
-            total_saldo = this.daysTotalDevolver - this.daysTotalDevolucion;
+          total_saldo = this.daysTotalDevolver - this.daysTotalDevolucion;
+          let hora_real = 44 / this.hora;
+          let total_dias = total_saldo * hora_real;
             if(ArrayFechasOtros.length > 0){
               fecha_max = ArrayFechasOtros.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
               fecha_max_format     = this.DateTime.fromISO(fecha_max);
-              fecha_final       = fecha_max_format.plus({days:total_saldo, months:0, years:0}).toFormat('dd-LL-yyyy');
+              fecha_final = fecha_max_format.plus({ days: total_dias, months: 0, years: 0 }).toFormat('dd-LL-yyyy');
+              console.log(fecha_max);
             }else{
               fecha_max = ArrayFechasPao.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
               fecha_max_format     = this.DateTime.fromISO(fecha_max);
@@ -269,7 +281,6 @@ export default {
               }
           });
           total_saldo = this.daysTotalDevolver - this.daysTotalDevolucion - total_interrupcion;
-
           if(ArrayFechas.length){
             ultima_fecha_devolucion     = ArrayFechas.reduce(function (valor1, valor2) { return new Date(valor1) > new Date(valor2) ? valor1 : valor2; });
             ultima_fecha_devolucion     = this.DateTime.fromISO(ultima_fecha_devolucion);
@@ -345,7 +356,10 @@ export default {
       },
       calculateTotalPorDevolver(){
         let total = this.daysTotalDevolver - this.daysTotalDevolucion;
-        let object = this.Duration.fromObject({days:total, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
+        let hora_real = 44 / this.hora;
+        let total_dias = total * hora_real;
+
+        let object = this.Duration.fromObject({ days: total_dias, months:0, years:0}, { conversionAccuracy: 'longterm' }).normalize().toObject();
         return object;
       }
     },
@@ -424,7 +438,7 @@ export default {
 
       },
       openCartola() {
-        const url = `${process.env.BASE_URL}/profesionales/profesional/${this.$route.params.id}/cartola`;
+        const url = `${process.env.BASE_URL}/profesionales/profesional/${this.$route.params.id}/cartola/${this.hora}`;
         window.open(url, '_blank');
       }
     }

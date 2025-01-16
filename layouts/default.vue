@@ -21,6 +21,7 @@ export default {
       position: relative;
   }
   body {
+    color: #000000 !important;
       margin: 0;
       margin-bottom: 40px;
   }
